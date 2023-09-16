@@ -1,0 +1,9 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 전세자금대출
+ */
+public class RentDepositLoanVO {
+
+}

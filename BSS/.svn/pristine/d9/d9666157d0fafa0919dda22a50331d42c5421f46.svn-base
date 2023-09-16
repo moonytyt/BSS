@@ -1,0 +1,23 @@
+package kr.or.ddit.vocation.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.vocation.vo.VocationVO;
+
+@Mapper
+public interface VocationDAO {
+	/**
+	 * 연가 전체 조회
+	 * @return
+	 */
+	public List<VocationVO> selectVocationList();
+	
+	/**
+	 * 연가 등록
+	 * @param vocationVO
+	 * @return
+	 */
+	public int insertVocation(VocationVO vocationVO);
+}

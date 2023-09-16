@@ -1,0 +1,54 @@
+package kr.or.ddit.training.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.training.service.TrainingService;
+import kr.or.ddit.training.vo.TrainingVO;
+
+/**
+ * 
+ * 직원교육 Insert
+ * 
+ */
+@Controller
+@RequestMapping("/pm/training/trainingInsert.do")
+public class TrainingInsertController {
+
+	@Inject
+	private TrainingService service;
+	
+	//교육등록 하면 열리는 폼
+	@GetMapping
+	public String trainingView() {
+		return "pm/training/trainingInsert";
+	}
+
+	
+	//교육등록에서 [저장]버튼 클릭하면 insert되는 컨트롤러
+	@PostMapping
+	public String trainingInsert(
+		@ModelAttribute("training") TrainingVO training
+		, Errors errors
+		, Model model
+	) {
+		
+		String viewName = null;
+				
+		boolean success = service.createTraining(training);
+		if(success) {
+			viewName = "pm/training/trainingList";
+		}else {
+			model.addAttribute("message", "교육등록 중 문제 발생");
+			viewName = "pm/training/trainingInsert";
+		}
+		return viewName = "redirect:/pm/training/trainingList";
+	}
+}

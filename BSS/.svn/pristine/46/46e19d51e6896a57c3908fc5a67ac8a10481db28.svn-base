@@ -1,0 +1,266 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+공무일정(임시)
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<%--     <link href='${pageContext.request.contextPath }/resources/css/calendar.min.css' rel='stylesheet' /> --%>
+<script src='${pageContext.request.contextPath }/resources/js/calendar.min.js'></script>
+<script>   
+    var calendar;
+    document.addEventListener('DOMContentLoaded', function() {
+    	
+    	let setting = {
+    		url : "${pageContext.request.contextPath }/calendar/companycalendar",
+    		method : "post",
+    		data : "json",
+    		success : function(data) {
+    				
+    	console.log(data);
+    				
+    	var calendarEl = document.getElementById('companycalendar');
+    	calendar = new FullCalendar.Calendar(calendarEl, {
+    		
+    		
+    	// 일정 등록 모달
+    	dateClick: function(info) {
+//     	alert(info.date)
+
+    	const myModal = new bootstrap.Modal(document.getElementById('insertModal'), {
+		})
+		
+    	var eventstartdt = info.dateStr.split('T')[0];
+		var eventenddt = info.dateStr.split('T')[0];
+		
+		
+		document.getElementById('instartDate').value = eventstartdt;
+		document.getElementById('inendDate').value = eventenddt;
+		
+    	myModal.show('modal')
+    	},
+    	
+    	// 헤더 기능
+    	headerToolbar: {
+    	left: 'prevYear,prev,next,nextYear today',
+    	center: 'title',
+    	right: 'multiMonthYear,dayGridMonth'
+    	},
+    	
+    	// 클릭시 수정모달 창이 뜸
+    	eventClick: function(info) {
+		const myModal = new bootstrap.Modal(document.getElementById('updateModal'), {
+		})
+			var eventid = info.event.id;
+			var eventtitle = info.event.title;
+			var eventstartdt = info.event.startStr;
+			var eventenddt = info.event.endStr;
+//     		alert(eventstartdt);
+    		
+//     		// 종료일 변환
+//     		const enddateString = clickedEventEndDate
+//     			  .split('T')[0];
+//     		const date = new Date(enddateString);
+//     		const oneDayMilliseconds = 24 * 60 * 60 * 1000;
+//     		const previousDate = new Date(date.getTime() - oneDayMilliseconds);
+			
+    		// YYYY-MM-DD
+//     		const formattedDate = previousDate.toLocaleDateString('en-CA'); // 'en-CA'로 북미권에서 날짜 표기 형식으로 변경
+    		
+    		document.getElementById('upstartDate').value = eventstartdt.split('T')[0];
+    		document.getElementById('upendDate').value = eventenddt.split('T')[0];
+    		document.getElementById('upeventName').value = eventtitle;
+    		
+    		
+    		
+    		
+		myModal.show('modal');
+//         info.el.style.borderColor = 'blue';
+        },
+    		            	  
+        // 날짜 초기값
+    	initialDate: '2023-09-01',
+        businessHours: true,
+       	events: data,
+    	});
+    	calendar.render();
+    	},
+    	
+    	// 에러발생시 찍히는 현상.		
+    	error : function(jqXHR, status, error) {
+    	console.log(jqXHR)
+    	console.log(status)
+    	console.log(error)
+    	}}
+    	$.ajax(setting);
+    	
+    	// 등록모달 값
+		$(insertModal).on('show.bs.modal',function(event){
+		let $checkDdcCd= $("input:checked").parent('td').siblings('.comscno');
+		if($checkDdcCd.length==1){
+ 			let $modalBody = $(this).find(".modal-body");
+ 			let comSCNO = $checkDdcCd.text();
+			console.log(comscno);
+ 		if(ddcCd){
+ 			let setting = {
+			url : `${pageContext.request.contextPath}/BSS/company/companyInsert.do`,
+// 			dataType : "html",
+			method : "post",
+			data : {
+			comSCNO:comSCNO
+			},
+			success : function(resp) {
+			$modalBody.html(resp);
+			}
+ 		}}
+ 		
+ 		
+	 	// Save 버튼 클릭 이벤트 핸들러 추가
+	 	   $('#eventForm').on('submit', function(event) {
+	 	     event.preventDefault();
+	
+	 	     var formData = new FormData(this);
+	 	});
+	 	
+	 	
+	 	  
+	 	  
+
+ 			
+		$.ajax(setting);
+ 		}
+     	  
+     	});
+    	
+    	
+		$('#insertForm').on('submit', function(event) {
+	 	     event.preventDefault();
+	
+	 	     console.log('insertForm call!!');
+	 	     
+	 	});
+		
+		$('#updateForm').on('submit', function(event) {
+	 	     event.preventDefault();
+
+		});
+		
+    	
+    	// 수정모달 값
+		$(updateModal).on('show.bs.modal',function(event){
+		let $checkDdcCd= $("input:checked").parent('td').siblings('.comscno');
+		
+		
+		//var formData = new FormData(this);  // 클릭 시 input 데이터 값이 배열로 다 들어옴.
+		
+		if($checkDdcCd.length==1){
+ 			let $modalBody = $(this).find(".modal-body");
+ 			let comSCNO = $checkDdcCd.text();
+			console.log(comscno);
+ 		if(ddcCd){
+ 			let setting = {
+			url : `${pageContext.request.contextPath}/BSS/company/companyModify.do`,
+			dataType : "html",
+			method : "post",
+			data : formData,
+			success : function(resp) {
+				
+				
+			$modalBody.html(resp);
+			
+			
+			}
+		}
+ 			
+		$.ajax(setting);
+	 		}
+     	  }
+     	})
+     	
+     	
+      });
+    </script>
+    
+    
+    
+
+</head>
+<body>
+<!-- 	<table class="table table-hover table-bordered">  -->
+<!-- 	<tr> -->
+<%-- 	<td class="col-md-3 COMSCNO">${company.comscno }</td> --%>
+<!-- 	</tr> -->
+<!-- 	</table> -->
+	
+<!-- 등록 모달 -->
+<div class="modal fade" id="insertModal" tabindex="-1" role="dialog"  aria-labelledby="insertModal" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header"><h3 class="modal-title" id="insertModalTitle">일정등록</h3></div>
+         <div class="modal-body">
+            <form id="insertForm">
+               <input type="hidden" id="incomScNo" name="comScNo">
+               <div class="form-group">
+                  <label for="startDate">시작일</label> <input type="date" class="form-control" id="instartDate" name="startDate">
+               </div>
+               <div class="form-group">
+                  <label for="endDate">종료일</label> <input type="date" class="form-control" id="inendDate" name="endDate">
+               </div>
+               <div class="form-group">
+                  <label for="eventName">일정명</label> <input type="text" class="form-control" id="ineventName" name="eventName">
+               </div>
+               <div class="form-group">
+                  <label for="eventLocation">일정위치</label> <input type="text" class="form-control" id="ineventLocation" name="eventLocation">
+               </div>
+               <div class="form-group">
+                  <label for="comTarget">공통일정</label> <input type="checkbox" id="comTarget" name="comTarget" value="">
+               </div>
+               <div class="modal-footer"></div>
+               <button type="submit" class="btn btn-primary">저장</button>
+               <button class="btn btn-secondary" type="button"
+                         data-bs-dismiss="modal">닫기</button>	
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+	
+	
+	
+<!-- 수정 모달 -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"><h3 class="modal-title" id="updateModalTitle">일정수정</h3></div>
+			<div class="modal-body">
+			<form id="updateForm">
+               <input type="hidden" id="comScNo" name="comScNo">
+               <div class="form-group">
+                  <label for="startDate">시작일</label> <input type="date" class="form-control" id="upstartDate" name="startDate">
+               </div>
+               <div class="form-group">
+                  <label for="endDate">종료일</label> <input type="date" class="form-control" id="upendDate" name="endDate">
+               </div>
+               <div class="form-group">
+                  <label for="eventName">일정명</label> <input type="text" class="form-control" id="upeventName" name="eventName">
+               </div>
+               <div class="form-group">
+                  <label for="eventLocation">일정위치</label> <input type="text" class="form-control" id="eventLocation" name="eventLocation">
+               </div>
+               <div class="form-group">
+                  <label for="comTarget">공통일정</label> <input type="checkbox" id="comTarget" name="comTarget" value="">
+               </div>
+				<div class="modal-footer"></div>
+				<button type="submit" class="btn btn-primary">저장</button>
+	            <button id="modifycompany" class="btn btn-secondary" type="button"
+	            data-bs-toggle="modal" data-bs-target="updateModal">닫기</button>
+	            </form>
+	            </div>
+		</div>
+	</div>
+</div>
+	
+	<div id='companycalendar'></div>
+</body>
+</html>
+

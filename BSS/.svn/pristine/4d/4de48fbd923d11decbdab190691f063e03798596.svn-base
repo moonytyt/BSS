@@ -1,0 +1,150 @@
+package kr.or.ddit.messenger.controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.employee.service.EmployeeService;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.mail.vo.MailBoxVO;
+import kr.or.ddit.messenger.service.ChatRoomService;
+import kr.or.ddit.messenger.service.ChatRoomUserService;
+import kr.or.ddit.messenger.vo.ChatRoomVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+@RequestMapping("chatRoom")
+public class ChatRoomController {
+	private final ChatRoomService service;
+	private final ChatRoomUserService userService;
+	
+	@GetMapping("chatRoom.do")
+	public String chatRoomList(
+			Model model
+			, Authentication authentication
+			) {
+		EmployeeVOWrapper wrapper = (EmployeeVOWrapper) authentication.getPrincipal();
+		EmployeeVO employee= wrapper.getRealUser();
+		String empCd = employee.getEmpCd();
+		
+		String empName = employee.getEmpName();
+		
+		ChatRoomVO chatRoom = new ChatRoomVO();
+		chatRoom.setEmpCd(empCd);
+		
+		List<ChatRoomVO> chatRoomList = service.retrieveChatRoomList(empCd);
+		for(int i=0; i < chatRoomList.size(); i++) {
+			int roomNo = chatRoomList.get(i).getRoomNo();
+			int cntEmp = userService.countEmp(roomNo);
+			chatRoomList.get(i).setCntEmp(cntEmp);
+		}
+		
+		model.addAttribute("chatRoomList", chatRoomList);
+		model.addAttribute("empName", empName);
+		model.addAttribute("chatRoom", new ChatRoomVO());
+		
+		return "chat/temp/chatRoomList";
+	}
+	
+	@PostMapping("chatRoom.do")
+	public String chatRoomCreate(
+			@ModelAttribute("chatRoom") ChatRoomVO chatRoom
+	        , Model model,
+	        @RequestParam(name = "roomType") String roomType,
+	        @RequestParam(name = "roomName") String roomName
+	        , Authentication authentication
+	) {
+		EmployeeVOWrapper wrapper = (EmployeeVOWrapper) authentication.getPrincipal();
+		EmployeeVO employee= wrapper.getRealUser();
+		String empCd = employee.getEmpCd();
+		chatRoom.setEmpCd(empCd);
+		String empName = employee.getEmpName();
+		chatRoom.setEmpName(empName);
+		
+		model.addAttribute("empName", empName);
+		
+		String logicalViewName = null;
+		
+	    if ("public".equals(roomType)) {
+	        service.createChatRoom(chatRoom);
+	        userService.insertOne(chatRoom);
+	        
+	        List<ChatRoomVO> chatRoomList = service.retrieveChatRoomList(empCd);
+			for(int i=0; i < chatRoomList.size(); i++) {
+				int roomNo = chatRoomList.get(i).getRoomNo();
+				int cntEmp = userService.countEmp(roomNo);
+				chatRoomList.get(i).setCntEmp(cntEmp);
+			}
+			model.addAttribute("chatRoomList", chatRoomList);
+	        
+	        logicalViewName = "chat/temp/chatRoomList";
+	    } else if ("onceRoom".equals(roomType)) {
+	        
+	    } else {
+	        
+	    }
+	    
+	    return logicalViewName;
+	}
+	
+	@RequestMapping("chatRoomInviteEmp.do")
+	public String chatRoomInviteEmp(
+			Model model
+			, @RequestParam("empCds") String empCds
+			, Authentication authentication
+			) {
+		EmployeeVOWrapper wrapper = (EmployeeVOWrapper) authentication.getPrincipal();
+		EmployeeVO employee= wrapper.getRealUser();
+		String empCd = employee.getEmpCd();
+		String empName = employee.getEmpName();
+		
+		String[] empCdArray = empCds.split(",");
+		ChatRoomVO chatRoom = new ChatRoomVO();
+		
+		for(String empListCd : empCdArray) {
+			chatRoom.setEmpCd(empListCd);
+			//service.createChatRoom(chatRoom);
+		}
+		
+		List<ChatRoomVO> chatRoomList = service.retrieveChatRoomList(empCd);
+		model.addAttribute("chatRoomList", chatRoomList);
+		model.addAttribute("empName", empName);
+		
+		return "chat/temp/chatRoomList";
+	}
+	
+	@RequestMapping("chatRoomOut.do")
+	public void chatRoomOut(
+			Model model
+			, HttpServletResponse response
+			, @RequestParam("roomNo") int roomNo
+			) throws IOException {
+		boolean outRoom = true;
+		
+		outRoom = service.outRoom(roomNo);
+		
+		if(outRoom == true) {
+	        String closeScript = "<script>window.close();</script>";
+	        response.setContentType("text/html; charset=UTF-8");
+	        response.getWriter().print(closeScript);
+		}else {
+
+		}
+	}
+}

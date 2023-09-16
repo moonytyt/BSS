@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
+
+
+<title>공지사항상세조회</title>
+<h5>공지사항상세</h5>
+<hr color="black">
+<div>
+<table class="table table-sm">
+	<tr>
+		<th>제목</th>
+		<td>${ntc.ntcTtl }</td>
+		<th>작성자</th>
+		<td>${ntc.empName }</td>
+		<th>등록일</th>
+		<td>${ntc.ntcDt }</td>
+	</tr>
+</table>
+<table class="table table-borderless">
+	<tr>
+		<td>${ntc.ntcCn }</td>
+	</tr>
+	<tr>
+		<td>
+			<c:if test="${not empty ntc.fileGroup and not empty ntc.fileGroup.detailList }">
+				<c:forEach items="${ntc.fileGroup.detailList}" var="fileDetail">
+					<c:url value="/board/download.do" var="downloadURL">
+						<c:param name="atchFileId" value="${fileDetail.atchFileId}"/>
+						<c:param name="fileSn" value="${fileDetail.fileSn}"/>
+					</c:url>
+					<a href="${downloadURL}">${fileDetail.orignlFileNm}</a>
+				</c:forEach>
+<%-- 		${ntc.atchNo } --%>
+			</c:if>
+		</td>
+	</tr>
+</table>
+</div>
+<div style="position:absolute;right:25px;buttom:0px;">
+			<a href="<c:url value='/board/ntcUpdate'/>" class="btn btn-primary btn-sm">수정</a>
+			<a href="<c:url value='/board/ntcList'/>" class="btn btn-danger btn-sm">삭제</a>
+			<a href="<c:url value='/board/ntcList'/>" class="btn btn-secondary btn-sm">목록으로</a>
+</div>

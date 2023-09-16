@@ -1,0 +1,9 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 주택담보대출
+ */
+public class HomeEquityLoanVO {
+
+}

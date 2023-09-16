@@ -1,0 +1,65 @@
+package kr.or.ddit.employee.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.employee.service.EmployeeService;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+public class EmployeeController {
+	
+	private final EmployeeService service;
+	
+	@ModelAttribute("employee")
+	public EmployeeVO employee() {
+		return new EmployeeVO();
+	}
+	
+	@ModelAttribute("simpleCondition")
+	public SimpleCondition simpleCondition() {
+		return new SimpleCondition();
+	}
+
+	@RequestMapping("/pm/appointments/employeeList")
+	public String employeeList(
+			@RequestParam(name = "page", required = false, defaultValue = "1")
+			long currentPage
+			, @ModelAttribute("simpleCondition") SimpleCondition simpleCondition
+			, Model model
+			) {
+		PaginationInfo<EmployeeVO> paging = new PaginationInfo<>(25, 5);
+		paging.setCurrentPage(currentPage);
+		paging.setSimpleCondition(simpleCondition);
+		
+		List<EmployeeVO> employeeList = service.retrieveEmpList(paging);
+		paging.setDataList(employeeList);
+		model.addAttribute("paging", paging);
+		return "pm/appointments/ajax/employeeList";
+	}
+	
+	@RequestMapping("/pm/appointments/employeeAllList")
+	public String employeeAllList() {
+		return "pm/appointments/employeeAllList";
+	}
+
+	@RequestMapping("/pm/card/employeeCard")
+	public String employeeCard() {
+		return "pm/card/employeeCard";
+	}
+	
+	@RequestMapping("/pm/appointments/resignation")
+	public String resignation() {
+		return "pm/appointments/resignation";
+	}
+	
+}

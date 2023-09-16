@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/organization.css">
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<h3>조직도</h3>
+<div class="tree">
+	<ul>
+		<li><a href="#" data-code="">지점장</a>
+			<ul>
+				<li><a href="#">부지점장</a>
+					<ul>
+						<li><a href="#">경영관리본부</a>
+							<ul>
+								<li><a href="#">시스템관리부</a></li>
+								<li><a href="#">재무회계부</a></li>
+								<li><a href="#">인사총부무</a></li>
+							</ul>	
+						<li><a href="#">IT본부</a>
+							<ul>
+								<li><a href="#">정보지원부</a></li>
+								<li><a href="#">정보관리부</a></li>
+							</ul>	
+						<li><a href="#">기업영업본부</a>
+							<ul>
+								<li><a href="#">기업금융부</a></li>
+								<li><a href="#">시너지영업부</a></li>
+								<li><a href="#">종합금융부</a></li>
+							</ul>	
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="">
+
+</div>

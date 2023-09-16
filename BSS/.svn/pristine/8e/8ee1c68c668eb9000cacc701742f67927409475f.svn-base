@@ -1,0 +1,55 @@
+package kr.or.ddit.organization.cotroller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.employee.service.EmployeeService;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.organization.service.OrganizationService;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import kr.or.ddit.position.vo.PositionVO;
+
+@Controller
+public class OrganizationListController {
+	
+	@Inject
+	private OrganizationService orService;
+	
+	@ModelAttribute("employee")
+	public EmployeeVO employee() {
+		return new EmployeeVO();
+	}
+
+	@ModelAttribute("department")
+	public DepartmentVO department() {
+		return new DepartmentVO();
+	}
+
+	@ModelAttribute("position")
+	public PositionVO position() {
+		return new PositionVO();
+	}
+
+	@RequestMapping("/organization/Organization")
+	public String organization(@RequestParam(name = "page", required = false, defaultValue = "1") long currentPage,
+			@ModelAttribute("simpleCondition") SimpleCondition simpleCondition, Model model) {
+		PaginationInfo<EmployeeVO> paging = new PaginationInfo<>(10, 5);
+		paging.setCurrentPage(currentPage);
+		paging.setSimpleCondition(simpleCondition);
+
+		List<EmployeeVO> employeeList = orService.empList(paging);
+		paging.setDataList(employeeList);
+		model.addAttribute("paging", paging);
+
+		return "organization/Organization";
+	}
+}

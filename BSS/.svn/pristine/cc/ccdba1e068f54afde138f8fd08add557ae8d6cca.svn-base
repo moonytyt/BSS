@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!-- Footer -->
+<footer class="sticky-footer bg-white">
+	<div class="container my-auto">
+		<div class="copyright text-center my-auto">
+			<span>Copyright &copy; Your Website 2021</span>
+		</div>
+	</div>
+	<div id="msgStack"></div>
+</footer>
+<!-- End of Footer -->
+<script>
+	var socket = null;
+
+	$(document).ready(function() {
+		sock = new SockJS("<c:url value='/chat'/>");
+		socket = sock;
+
+		sock.onmessage = onMessage;
+	});
+
+	function onMessage(evt) {
+		var data = evt.data;
+		var msgStackContent = $("#msgStack").html();
+
+		console.log("메시지", data)
+		// toast
+		let toast = "<div class='toast' role='alert' aria-live='assertive' aria-atomic='true'>";
+		toast += "<div class='toast-header'><img src="..." class='rounded me-2' alt=''...''>";
+		toast += "<strong class='me-auto'>"+ data.empNm +"</strong><small class='text-muted'>" + data.getSendTime + "</small>";
+		toast += "<button type='button' class='btn-close' data-bs-dismiss='toast' aria-label=Close'></button>";
+		toast += "</div> <div class='toast-body'>" + data.msgContent + "</div></div>";
+		$("#msgStack").append(toast); // msgStack div에 생성한 toast 추가
+		$(".toast").toast({
+			"animation" : true,
+			"autohide" : false
+		});
+		$('.toast').toast('show');
+		// alert띄워서 확인하는 게 편함!
+	};
+</script>

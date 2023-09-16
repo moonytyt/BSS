@@ -1,0 +1,67 @@
+@charset "UTF-8";
+
+/* 템플릿 css */
+
+	/* 로그인 후 메인, 헤더 폰트 */
+	#navbarNav {
+		font-family: 'MICEGothic Bold';
+	}
+	/* 제목 폰트 */
+	h5 {
+		font-family: 'MICEGothic Bold';
+	/* 	color: var(--navy) !important;  */
+	}
+
+
+/* 공통 사용 가능 */
+
+	/* 에러메세지 붉은 글씨 */
+	.errors {
+	    color: red;
+	    font-size: 12px;
+	}
+	/* 글자 중앙·왼쪽·오른쪽 정렬 */
+	.textCenter {
+		text-align: center !important;
+	}
+	.textLeft {
+		text-align: left !important;
+	}
+	.textRight {
+		text-align: right !important;
+	}
+	.textGray {
+		color: gray !important;
+	}
+	.textColBlack {
+		color : black !important;
+	}
+	
+	.paddingRL{
+		padding-right : 15px !important;
+		padding-left : 15px !important;
+	}
+
+
+/* 개별 jsp 사용 */
+
+	/* main.jsp */
+	.plusR {
+		float: right;
+		/* color: gray; */
+	}
+	.plusR a {
+	    color: gray;
+	}
+
+	/* documentForm.jsp 셀 너비 */
+	.cellWidth {
+		width: 150px;
+		text-align: center;
+	}
+
+	/* trainingDetailApp.jsp */
+	#trainPoster {
+		width : 100%;
+		height : 40vh;
+	}

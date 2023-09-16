@@ -1,0 +1,10 @@
+package kr.or.ddit.vocation.service;
+
+import java.util.List;
+
+import kr.or.ddit.vocation.vo.VocationVO;
+
+public interface VocationService {
+	//연가 전체조회
+	public List<VocationVO> retrieveVocationList();
+}

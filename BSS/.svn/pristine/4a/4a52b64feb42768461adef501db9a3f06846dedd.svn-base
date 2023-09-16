@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.messenger.dao.ChatReadDAO">
+	<insert id="insertRead" parameterType="kr.or.ddit.messenger.vo.ChatReadVO">
+		INSERT INTO CHAT_READ(
+		RECODE_NO
+		, RECODE_READ
+		, RECORE_EMP
+		, RECORE_ROOMNO
+		) VALUES(
+		#{recodeNo,jdbcType=NUMERIC}
+		, 0
+		, #{recoreEmp,jdbcType=VARCHAR}
+		, #{recoreRoomno,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<select id="getNoRead">
+		SELECT *
+		FROM CHAT_READ
+		WHERE RECORE_ROOMNO = #{chatRead.roomNo}
+		AND RECORE_EMP = #{chatRead.empCd}
+		AND RECODE_READ = 0
+	</select>
+</mapper>

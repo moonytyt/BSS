@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.finapi.dao.ManageInfoDAO">
+
+	<select id="selectManageBankList" resultType="kr.or.ddit.finapi.vo.ManageBankVO">
+	
+		SELECT FINANCE_CD, FINANCE_NM
+		FROM MANAGE_BANK
+		
+	</select>
+	
+	<select id="selectStatisticsList" resultType="kr.or.ddit.finapi.vo.StatisticsVO" parameterType="string">
+		SELECT
+		    LIST_NO
+		  , LIST_NM
+		  , LRG_DIV_NM
+		  , SML_DIV_NM
+		FROM
+		    STATISTIC
+		WHERE SML_DIV_NM=#{smlDivNm}
+	</select>
+	
+	<select id="selectAccountList" resultType="kr.or.ddit.finapi.vo.AccountVO" parameterType="string">
+	
+		SELECT
+		    ACCOUNT_CD
+		  , ACCOUNT_NM
+		  , LIST_NO
+		  , LIST_NM
+		FROM
+		    ACCOUNT
+		WHERE LIST_NO=#{listNo}
+	</select>
+	
+	<select id="selectStatisticInfoList" resultType="kr.or.ddit.finapi.vo.StatisticsInfoVO" parameterType="kr.or.ddit.finapi.vo.StatisticsInfoVO">
+		SELECT FINANCE_CD, BASE_MONTH, ACCOUNT_CD, ACCOUNT_NM, FINANCE_NM, A, B, C, D, E
+		FROM STATISTICS_INFO 
+		WHERE FINANCE_CD=#{financeCd} AND ACCOUNT_CD=#{accountCd} AND ACCOUNT_NM=#{accountNm}
+	</select>
+	
+	
+</mapper>

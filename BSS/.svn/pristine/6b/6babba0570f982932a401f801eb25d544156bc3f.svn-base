@@ -1,0 +1,9 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 적금상품
+ */
+public class SavingPrdtVO {
+
+}

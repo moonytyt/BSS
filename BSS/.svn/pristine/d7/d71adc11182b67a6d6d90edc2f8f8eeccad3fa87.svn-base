@@ -1,0 +1,23 @@
+package kr.or.ddit.BoardNtc.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class NtcboardVO {
+
+	@NotBlank
+	private Integer ntcNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String ntcTtl;
+	@NotBlank
+	private String ntcCn;
+	@NotBlank
+	private LocalDate ntcDt;
+	private Integer atchNo;
+}

@@ -1,0 +1,21 @@
+package kr.or.ddit.training.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.training.vo.TrainingApplyVO;
+import kr.or.ddit.training.vo.TrainingVO;
+
+@Mapper
+public interface TrainingApplyDAO {
+	
+	public long selectTotalRecord(PaginationInfo<TrainingApplyVO> paging);
+	
+	/**
+	 * 교육 신청자 전체조회
+	 * @return
+	 */
+	public List<TrainingApplyVO> selectTrainApply();
+}

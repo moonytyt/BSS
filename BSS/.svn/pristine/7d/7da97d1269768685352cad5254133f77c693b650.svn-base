@@ -1,0 +1,10 @@
+package kr.or.ddit.messenger.dao;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.messenger.vo.ChatRecordVO;
+
+@Mapper
+public interface ChatRecordDAO {
+	public int insertMsg(ChatRecordVO chatRecord);
+}

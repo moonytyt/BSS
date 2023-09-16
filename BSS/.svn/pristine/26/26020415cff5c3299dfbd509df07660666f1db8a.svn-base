@@ -1,0 +1,30 @@
+package kr.or.ddit.BoardReq.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import kr.or.ddit.validate.groups.DeleteGroup;
+import kr.or.ddit.validate.groups.UpdateGroup;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of="reqNo")
+public class ReqboardVO {
+	@NotBlank(groups = {UpdateGroup.class, DeleteGroup.class})
+	private Integer reqNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String reqTtl;
+	@NotBlank
+	private String reqCn;
+	@NotBlank
+	private LocalDate reqDt;
+	@NotBlank
+	private Integer reqPw;
+	private String empName;
+	private Integer rnum;
+	
+}

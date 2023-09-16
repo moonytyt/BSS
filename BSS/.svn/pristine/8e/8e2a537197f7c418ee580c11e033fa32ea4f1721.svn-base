@@ -1,0 +1,30 @@
+
+
+package kr.or.ddit.BoardCompl.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import kr.or.ddit.BoardCompl.vo.ComplboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.vo.PaginationInfo;
+
+/**
+ * 칭찬합니다 PL
+ * 
+ */
+@Mapper
+public interface ComplboardDAO {
+
+	public int insertCompl(ComplboardVO compl);
+
+	public ComplboardVO selectCompl(int complNo);
+
+	public long selectTotalRecord(PaginationInfo<ComplboardVO> paging);
+
+	public List<ComplboardVO> selectComplList(PaginationInfo<ComplboardVO> paging);
+	
+	public void deleteCompl(int complNo);
+}

@@ -1,0 +1,36 @@
+package kr.or.ddit.BoardReqcmnt.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.BoardReq.dao.ReqboardDAO;
+import kr.or.ddit.BoardReqcmnt.dao.CommentDAO;
+import kr.or.ddit.BoardReqcmnt.vo.CmntVO;
+
+@Service
+public class CommentServiceImpl implements CommentService {
+
+    @Autowired
+    private CommentDAO commentDAO;
+    
+    @Inject
+    private ReqboardDAO reqDAO;
+
+    @Override
+    public boolean createComment(CmntVO comment) {
+    	boolean success = commentDAO.insertComment(comment) > 0;
+    	if(success) {
+    		reqDAO.updateReqCmnt(comment);
+    	}
+        return success;
+    }
+
+    @Override
+    public List<CmntVO> getCommentsByReqNo(Integer reqNo) {
+        return commentDAO.selectCommentsByReqNo(reqNo);
+    }
+}

@@ -1,0 +1,18 @@
+package kr.or.ddit.department.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class DepDocumentVO {
+	
+	// 수신부서
+	
+	@NotBlank
+	private String docNo;
+	@NotBlank
+	private String depCd;
+	private Integer depDocumentViews;
+
+}

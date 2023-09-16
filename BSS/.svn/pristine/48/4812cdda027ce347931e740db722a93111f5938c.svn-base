@@ -1,0 +1,173 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+공무일정
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<%--     <link href='${pageContext.request.contextPath }/resources/css/calendar.min.css' rel='stylesheet' /> --%>
+<script
+	src='${pageContext.request.contextPath }/resources/js/calendar.min.js'></script>
+<script>
+    var calendar;
+    document.addEventListener('DOMContentLoaded', function() {
+    	
+    	let setting = {
+    			url : "${pageContext.request.contextPath }/calendar/companycalendar",
+    			method : "post",
+    			data : "json",
+    			success : function(data) {
+    				
+    				console.log(data);
+    				
+    				var calendarEl = document.getElementById('companycalendar');
+
+    		        calendar = new FullCalendar.Calendar(calendarEl, {
+    		        	dateClick: function(info) {
+    		        	   alert(info.date)
+    		        	    // change the day's background color just for fun
+    		        	    info.dayEl.style.backgroundColor = 'yellow';
+    		        	   
+    		        	   
+//     		        	   calendar.select( { start, end , allDay , resourceId } )
+    		        	  },
+    		        	  
+    		        	  
+    		        	
+    		        	
+    		            headerToolbar: {
+    		                left: 'prev,next today',
+    		                center: 'title',
+    		                right: 'multiMonthYear,dayGridMonth,timeGridWeek'
+    		              },
+    		              
+    		              eventClick: function(info) {
+    		            	    alert('Event: ' + info.event.title);
+//     		            	    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+//     		            	    alert('View: ' + info.view.type);
+    		            	    
+//     		            	    <td><a href="javascript:;" data-who="${member.memId }" data-bs-toggle="modal" data-bs-target="#exampleModal">${member.memName }</a></td>
+    		            	    
+
+								const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {})
+								console.log(myModal)
+								myModal.show()
+
+    		            	    // change the border color just for fun
+    		            	    info.el.style.borderColor = 'blue';
+    		            	  },
+    		              // 날짜 초기값
+    		          initialDate: '2023-09-01',
+//     		          navLinks: true, // can click day/week names to navigate views
+//     		          editable: true,
+//     		          dayMaxEvents: true, // allow "more" link when too many events
+//     		          selectable: true,
+    		          businessHours: true,
+
+    		          events: data,
+    		          
+//     		          eventClick: function(info) {
+//     		        	    alert('Event: ' + info.event.title);
+//     		        	    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+//     		        	    alert('View: ' + info.view.type);
+//     		       	  },
+//     		       	droppable: true,
+//     		       	dateClick: function(info) { 
+// 						alert(info);
+//     		       	},
+    		       	
+    		        });
+
+    		        calendar.render();
+    				
+    				
+
+    			},
+    			error : function(jqXHR, status, error) {
+    				console.log(jqXHR)
+    				console.log(status)
+    				console.log(error)
+    			}
+    		}
+    		$.ajax(setting);
+    	
+    	/*수정을 위한*/
+    	$(staticBackdrop).on('show.bs.modal',function(event){
+     		let $checkDdcCd= $("input:checked").parent('td').siblings('.allowCd');
+     		if($checkDdcCd.length==1){
+     	 		let $modalBody = $(this).find(".modal-body");
+     	 		let allowCd = $checkDdcCd.text();
+     	 		console.log(allowCd);
+     	 		if(ddcCd){
+     	 			let setting = {
+     					url : `${pageContext.request.contextPath}/allow/allowModify.do`,
+     					dataType : "html",
+     					data : {
+     						allowCd:allowCd
+     					},
+     					success : function(resp) {
+     						$modalBody.html(resp);
+     					}
+     				}
+
+     				$.ajax(setting);
+     	 		}
+     		}
+     	})
+    	
+    	
+      });
+    
+   
+    
+    </script>
+
+<style>
+body {
+	margin: 40px 10px;
+	padding: 0;
+	font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
+#calendar {
+	max-width: 1100px;
+	margin: 0 auto;
+}
+</style>
+
+</head>
+<body>
+	<table class="table table-hover table-bordered">
+	<tr>
+	<td class="col-md-3 COMSCNO">${company.comscno }</td>
+	</tr>
+	</table>
+
+	<div class="modal fade" data-url="${viewURL }" id="exampleModal"
+		tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">일정수정</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+
+				<div class="modal-body">
+				<form>
+					
+				</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">닫기</button>
+					<button type="button" class="btn btn-primary">저장후 완료</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id='companycalendar'></div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+package kr.or.ddit.BoardCompl.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @author PC-26
+ * 칭찬합니다 삭제
+ */
+@Controller
+public class complboardDeleteController {
+
+}

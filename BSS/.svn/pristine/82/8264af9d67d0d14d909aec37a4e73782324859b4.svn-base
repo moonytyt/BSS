@@ -1,0 +1,16 @@
+package kr.or.ddit.finapi.vo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+@Data
+public class DescriptionVO {
+	
+	@JsonProperty("column_id")
+	private String columnId;
+	@JsonProperty("column_nm")
+	private String columnNm;
+	
+	
+}

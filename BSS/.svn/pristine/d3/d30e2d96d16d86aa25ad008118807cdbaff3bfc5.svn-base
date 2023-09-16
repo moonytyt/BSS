@@ -1,0 +1,29 @@
+package kr.or.ddit.attendance.controller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.attendance.service.OverTimeService;
+import kr.or.ddit.attendance.vo.OverTimeVO;
+
+@Controller
+public class OverTimeController {
+	
+	@Inject
+	private OverTimeService service;
+	
+	@RequestMapping("/pm/servicemanagement/overTime")
+	public String overTime(
+		Model model	
+	) {
+		List<OverTimeVO> overTime = service.retrieveOverList();
+		model.addAttribute("overTime", overTime);
+		
+		return "pm/servicemanagement/overTime";
+	}
+}

@@ -1,0 +1,52 @@
+package kr.or.ddit.vocation.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.vocation.vo.VocationVO;
+
+@Mapper
+public interface VocationDAO {
+	/**
+	 * 페이징 속성값 갯수 조회
+	 * @param paging
+	 * @return
+	 */
+	public long selectTotalRecord(PaginationInfo paging);
+	
+	/**
+	 * 연가 전체조회 페이징
+	 * @return
+	 */
+	public List<VocationVO> selectVocationPageList(PaginationInfo paging);
+	
+	/**
+	 * 연가 직원 선택 조회(모달)
+	 * @return
+	 */
+	public List<VocationVO> selectOneVocation(String empCd);
+	
+	/**
+	 * 연가 등록
+	 * @param vocationVO
+	 * @return
+	 */
+	public int insertVocation(VocationVO vocationVO);
+	
+	/**
+	 * 연가 수정
+	 * @param vocationVO
+	 * @return
+	 */
+	public int updateVocation(VocationVO vocationVO);
+	
+	/**
+	 * 연가 삭제
+	 * @param vocationVO
+	 * @return
+	 */
+	public int deleteVocation(List<String> vocationCodes);
+}

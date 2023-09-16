@@ -1,0 +1,24 @@
+package kr.or.ddit.edApproval.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class SignpathEmpVO {
+
+	@NotBlank
+	private Integer signpathNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String docNo;
+	private LocalDate seDate;
+	private Integer sdTurn;
+	private String codeMethod; // 결재방법코드
+	private String seReject;
+	private String codeStatus; // 결재상태코드
+
+}

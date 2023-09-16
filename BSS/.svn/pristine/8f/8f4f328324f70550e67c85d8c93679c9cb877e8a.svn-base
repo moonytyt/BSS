@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.vocation.dao.VocationDAO">
+
+	<!-- EMP_CD 연가 선택 조회  -->
+	<select id="selectOneVocation" resultType="kr.or.ddit.vocation.vo.VocationVO" parameterType="string">
+			WITH VACATIONVIEW AS (
+			    SELECT
+			        E.EMP_CD
+	                , VOCATION_CODE
+	                , TRUNC((VOCATION_EDAY - VOCATION_SDAY + 1)) AS VOCATION_USE
+	                , VOCATION_NO
+	                , VOCATION_SDAY
+	                , VOCATION_EDAY
+	                , VOCATION_ADDDATE
+	                , ENP_START
+	                , EMP_NAME
+	                
+			        <![CDATA[
+			        , CASE
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) < 12 THEN 11
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) >= 12 AND MONTHS_BETWEEN(SYSDATE, E.ENP_START) < 24 THEN 12
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) >= 24 AND MONTHS_BETWEEN(SYSDATE, E.ENP_START) < 36 THEN 14
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) >= 36 AND MONTHS_BETWEEN(SYSDATE, E.ENP_START) < 48 THEN 15
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) >= 48 AND MONTHS_BETWEEN(SYSDATE, E.ENP_START) < 60 THEN 17
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) >= 60 AND MONTHS_BETWEEN(SYSDATE, E.ENP_START) < 72 THEN 20
+			            WHEN MONTHS_BETWEEN(SYSDATE, E.ENP_START) >= 72 THEN 21
+			        END AS VOCATION_ALL
+			        ]]>
+			
+			    FROM EMPLOYEE E
+			    	INNER JOIN VOCATION V ON(E.EMP_CD = V.EMP_CD)
+			)
+			SELECT
+			    VV.EMP_CD AS EMP_CD
+                , VV.EMP_NAME
+                , VV.VOCATION_ALL
+			    , VV.VOCATION_USE
+			    , TRUNC((VV.VOCATION_ALL - VV.VOCATION_USE)) AS VOCATION_USEABLE
+                , VV.VOCATION_ADDDATE
+			    , VV.VOCATION_SDAY
+			    , VV.VOCATION_EDAY
+			FROM
+			    VACATIONVIEW VV
+			WHERE VV.EMP_CD = #{empCd, jdbcType=VARCHAR}
+            ORDER BY VV.VOCATION_ADDDATE DESC
+	</select>
+	
+	<!-- 총 페이지 수 조회  -->
+	<select id="selectTotalRecord" resultType="long" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT COUNT(*) FROM VOCATION
+	</select>
+	
+	<!-- 연가 전체 조회 페이징  -->
+	<select id="selectVocationPageList" resultType="kr.or.ddit.vocation.vo.VocationVO" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT B.*
+			FROM(
+				SELECT ROWNUM RNUM, A.*
+			FROM
+			(
+	            SELECT
+					E.EMP_CD
+	                , VOCATION_CODE
+	                , VOCATION_SDAY
+	                , VOCATION_EDAY
+	                , VOCATION_ADDDATE
+	                , EMP_NAME
+				FROM EMPLOYEE E INNER JOIN VOCATION VO ON (E.EMP_CD = VO.EMP_CD)
+				)A
+			)B
+			<![CDATA[
+			WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+			]]>
+			ORDER BY VOCATION_ADDDATE DESC
+	</select>
+
+	<!-- 연가 등록  -->
+	<insert id="insertVocation" parameterType="kr.or.ddit.vocation.vo.VocationVO">
+		INSERT INTO VOCATION
+		(
+			VOCATION_NO
+			, VOCATION_CODE
+			, EMP_CD
+			, VOCATION_SDAY
+			, VOCATION_EDAY
+			, VOCATION_ADDDATE
+		) VALUES
+		(
+			VOCA_SEQ.NEXTVAL
+			, TO_CHAR(SYSDATE, 'YYYY') || '-연가-' || VOCA_SEQ.NEXTVAL
+			, #{empCd, jdbcType=VARCHAR}
+			, #{vocationSday, jdbcType=DATE}
+			, #{vocationEday, jdbcType=DATE}
+			, SYSDATE
+		)
+	</insert>
+
+</mapper>

@@ -1,0 +1,48 @@
+package kr.or.ddit.edDocument.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.edDocument.service.DocumentService;
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+public class DocumentViewController {
+
+	private final DocumentService service;
+
+	/**
+	 * 문서 양식 상세
+	 */
+	@RequestMapping("ed/document/documentForm.do")
+	public String documentForm(
+			@RequestParam(value = "dtGroup", required = false) String dtGroup
+//			, @RequestParam(value = "dtNo", required = false) int dtNo
+			, @RequestParam(value = "dtNo", required = false) Integer dtNo
+			, Model model//
+	) {
+//		System.out.println(">>>>>>>>>> 선택 양식 넘어오나 >>>>>>>>>> "+dtGroup);
+		System.out.println(">>>>>>>>>> 선택 양식 넘어오나 >>>>>>>>>> "+dtNo);
+
+		String viewName = "";
+		if(dtNo != null) {
+			// 선택한 dtGroup으로 해당 양식 내용을 DB에서 조회
+            DocumentTypeVO DocumentCont = service.retrieveDtCont(dtNo);//
+            model.addAttribute("DocumentCont", DocumentCont);//
+			viewName= "ed/document/documentForm";
+			
+		}else {
+			viewName= "ed/document/documentTypeList";
+		}
+		return viewName;
+			
+	}
+}
+
+
+
+

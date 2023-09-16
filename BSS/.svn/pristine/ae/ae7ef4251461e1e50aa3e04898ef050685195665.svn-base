@@ -1,0 +1,30 @@
+package kr.or.ddit.vocation.controller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.vocation.service.VocationService;
+import kr.or.ddit.vocation.vo.VocationVO;
+
+@Controller
+public class VocationController {
+	
+	@Inject
+	private VocationService service;
+	
+	@RequestMapping("/pm/servicemanagement/vocation")
+	public String vacation(
+			Model model
+	) {
+		
+		List<VocationVO> vocation = service.retrieveVocationList();
+		model.addAttribute("vocation", vocation);
+		
+		return "pm/servicemanagement/vocation";
+	}
+}

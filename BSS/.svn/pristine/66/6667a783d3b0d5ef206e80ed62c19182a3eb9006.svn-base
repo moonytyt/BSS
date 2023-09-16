@@ -1,0 +1,84 @@
+package kr.or.ddit.mail.dao;
+
+import java.util.List;
+
+import javax.mail.Message;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.ui.Model;
+
+import kr.or.ddit.mail.vo.MailBoxVO;
+
+@Mapper
+public interface MailBoxDAO {
+	/**
+	 * 이메일 전송시에 메일 보관함에 저장
+	 * @param email
+	 * @return
+	 */
+	public int sendMail(MailBoxVO email);
+	
+	public int insertMail(MailBoxVO mailBox);
+	
+	/**
+	 * 메일함 전체 조회
+	 * @param mailNo
+	 * @return
+	 */
+	public List<MailBoxVO> selectAllMail(String empMail);
+	
+	/**
+	 * 보낸 사람의 메일을 가져옴
+	 * @return
+	 */
+	public List<MailBoxVO> selectSendMailList(String empMail);
+	
+	/**
+	 * 받은 메일을 가져옴
+	 * @return
+	 */
+	public List<MailBoxVO> selectReciveMailList(String empMail);
+	
+	/**
+	 * 메일아이디
+	 * @param empId
+	 * @return
+	 */
+	public String selectMail(String empId);
+	
+	/**
+	 * 토큰 가져오기
+	 * @param mail
+	 * @return
+	 */
+	public String getMailToken(String empId);
+	
+	/**
+	 * 보낸 메일 상세조회
+	 * @param mailNo
+	 * @return
+	 */
+	public MailBoxVO selectSendMailDetail(String mailNo);
+	
+	/**
+	 * 메일 상세 조회
+	 * @param mailNo
+	 * @return
+	 */
+	public MailBoxVO selectMailDetail(String mailNo);
+	
+	/**
+	 * 메일 임시저장 보관함
+	 * @param mail
+	 * @return
+	 */
+	public int mailStorageInfo(MailBoxVO mail);
+	
+	/**
+	 * 임시저장 메일 보관함
+	 * @param empCd
+	 * @return
+	 */
+	public List<MailBoxVO> selectTempMailList(String empCd);
+	
+}

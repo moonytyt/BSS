@@ -1,0 +1,17 @@
+package kr.or.ddit.training.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 
+ * 교육 신청 폼?
+ * 
+ */
+@Controller
+public class TrainingApplyController {
+	@RequestMapping("/etc/trainingApply")
+	public String trainingApply() {
+		return "etc/trainingApply";
+	}
+}

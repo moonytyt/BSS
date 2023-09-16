@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.family.dao.FamilyDAO">
+	<insert id="insertFamily" parameterType="FamilyVO">
+		insert into
+		family
+		(fam_no, emp_cd, fam_name, fam_job, fam_bir, fam_edu
+		, fam_live, fam_note, fam_classify, fam_code)
+		values
+		(
+		#{famNo,jdbcType=VARCHAR}
+		, #{empCd,jdbcType=VARCHAR}
+		, #{famName,jdbcType=VARCHAR}
+		, #{famJob,jdbcType=VARCHAR}
+		, #{famBir,jdbcType=VARCHAR}
+		, #{famEdu,jdbcType=VARCHAR}
+		, #{famLive,jdbcType=CHAR}
+		, #{famNote,jdbcType=CLOB}
+		, #{famClassify,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

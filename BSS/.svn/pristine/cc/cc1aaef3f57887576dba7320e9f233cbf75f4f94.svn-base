@@ -1,0 +1,20 @@
+package kr.or.ddit.vocation.service;
+
+import java.util.List;
+
+import kr.or.ddit.vocation.vo.VocationVO;
+
+public interface VocationService {
+	/**
+	 * 연가 전체 조회
+	 * @return
+	 */
+	public List<VocationVO> retrieveVocationList();
+	
+	/**
+	 * 연가 등록
+	 * @param vocationVO
+	 * @return
+	 */
+	public boolean createVocation(VocationVO vocationVO);
+}

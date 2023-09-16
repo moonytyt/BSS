@@ -1,0 +1,17 @@
+package kr.or.ddit.BoardReq.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @author PC-26
+ * 공지사항 등록
+ */
+@Controller
+public class reqboardUpdateController {
+	
+	   @RequestMapping("board/reqUpdate")
+	   public String dfsdf() {
+	      return "board/reqEdit";
+	   }
+}

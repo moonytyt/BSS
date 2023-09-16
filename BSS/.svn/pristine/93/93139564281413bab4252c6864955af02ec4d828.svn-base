@@ -1,0 +1,19 @@
+package kr.or.ddit.BoardReqcmnt.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class CmntVO {
+	@NotBlank
+	private Integer rcnmtNo;
+	@NotBlank
+	private Integer reqNo;
+	@NotBlank
+	private LocalDate rcnmtDt;
+	@NotBlank
+	private String rcmntCn;
+}

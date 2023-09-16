@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.finapi.dao.DepositDAO">
+	
+	<resultMap type="kr.or.ddit.finapi.vo.DepositVO" id="depositMap" autoMapping="true">
+		<id property="finPrdtCd" column="FIN_PRDT_CD"/>
+		<association property="bank" javaType="kr.or.ddit.finapi.vo.BankVO" autoMapping="true">
+			<collection property="bankOptionList" ofType="kr.or.ddit.finapi.vo.BankOptionVO" autoMapping="true"/>
+		</association>
+		<collection property="depositOptionList" ofType="kr.or.ddit.finapi.vo.DepositOptionVO" autoMapping="true"/>
+	</resultMap>
+	
+	<select id="selectDepositList" resultMap="depositMap">
+		SELECT B.FIN_CO_NO, KOR_CO_NM, B.DCLS_MONTH
+		      , DCLS_CHRG_MAN, HOMP_URL, CAL_TEL
+		      ,D.FIN_PRDT_CD, B.DCLS_MONTH
+		      , FIN_PRDT_NM, JOIN_WAY, MTRT_INT
+		      , SPCL_CND, JOIN_DENY, ETC_NOTE
+		      , MAX_LIMIT, DCLS_STRT_DAY, DCLS_END_DAY
+		      , FIN_CO_SUBM_DAY, JOIN_MEMBER, TOP_FIN_GRP_NO
+		      , SAVE_TRM, INTR_RATE_TYPE, INTR_RATE_TYPE_NM
+		      , INTR_RATE, INTR_RATE2
+		FROM BANK B
+		INNER JOIN DEPOSIT D
+		ON(B.FIN_CO_NO= D.FIN_CO_NO) 
+		INNER JOIN DEPOSIT_OPTION DO ON(D.FIN_PRDT_CD = DO.FIN_PRDT_CD AND D.DCLS_MONTH = DO.DCLS_MONTH AND D.FIN_CO_NO = DO.FIN_CO_NO)
+		WHERE B.KOR_CO_NM='대백저축은행' AND SAVE_TRM='12'
+		AND B.KOR_CO_NM IN
+		(
+		SELECT B.KOR_CO_NM
+		FROM BANK B
+		INNER JOIN BANK_OPTION BO ON(B.FIN_CO_NO=BO.FIN_CO_NO)
+		WHERE AREA_CD='03' AND EXIS_YN='Y'
+		)
+	</select>
+</mapper>

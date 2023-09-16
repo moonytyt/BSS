@@ -1,0 +1,10 @@
+package kr.or.ddit.calendar.service;
+
+import java.util.List;
+
+import kr.or.ddit.calendar.vo.PersonalVO;
+
+public interface PersonalService {
+	public List<PersonalVO> retrieveperList();
+
+}

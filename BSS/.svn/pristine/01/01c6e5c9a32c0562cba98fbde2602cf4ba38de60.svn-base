@@ -1,0 +1,60 @@
+package kr.or.ddit.businesstrip.controller;
+
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.businesstrip.service.BusinessTripService;
+import kr.or.ddit.businesstrip.vo.BusinessTripVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.validate.groups.InsertGroup;
+
+/**
+ * 출장 신청(등록)
+ * 
+ */
+@Controller
+public class BusinessTripInsertController {
+	
+	@Inject
+	private BusinessTripService service;
+	
+	/**
+	 * 출장등록에서 [등록]버튼 클릭하면 insert처리하는 컨트롤러
+	 * @param bTrip
+	 * @param errors
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping("/pm/servicemanagement/businessTripInsert.do")
+	public String businessTripInsert(
+			@Validated(InsertGroup.class) @ModelAttribute("bTrip") BusinessTripVO bTrip
+			, Errors errors
+			, Authentication authentication
+			, Model model
+	) {
+		
+		EmployeeVOWrapper wrapper = (EmployeeVOWrapper) authentication.getPrincipal();
+		String emp = wrapper.getRealUser().getEmpCd();
+		bTrip.setEmpCd(emp); //사원번호
+		
+		if(!errors.hasErrors()) {
+			boolean success = service.createBusinessTrip(bTrip);
+			if(success) {
+				return "redirect:/pm/servicemanagement/businessTrip";
+			}else {
+				model.addAttribute("message", "출장등록 중 문제 발생");
+			}
+		}
+		return "pm/servicemanagement/businessTrip";
+	}
+}

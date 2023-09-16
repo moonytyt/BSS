@@ -1,0 +1,37 @@
+//package kr.or.ddit.BoardCompl.controller;
+//
+//import org.springframework.stereotype.Controller;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+//
+//import kr.or.ddit.BoardCompl.service.ComplboardSerivce;
+//import kr.or.ddit.BoardCompl.vo.ComplboardVO;
+//import lombok.RequiredArgsConstructor;
+//
+///**
+// * @author PC-26
+// * 칭찬합니다 삭제
+// */
+//@RequiredArgsConstructor
+//@Controller
+//public class complboardDeleteController {
+//	private final ComplboardSerivce service;
+//	
+//	@PostMapping("/board/complDelete")
+//	public String complDelete(
+//			ComplboardVO compl, RedirectAttributes redirectAttributes
+//			, @RequestParam(value = "complNo", required = false) int complNo
+//		){
+//		boolean success = service.removeCompl(compl);
+//		String viewName = null;
+//		if(success) {
+//			viewName = "redirect:/board/complList.do";
+//		}else {
+//			redirectAttributes.addFlashAttribute("message", "게시글 삭제 실패, 비밀번호 확인");
+//			viewName = "redirect:/board/boardDetail?what="+compl.getComplNo();
+//		return viewName;
+//	}
+//}
+//}

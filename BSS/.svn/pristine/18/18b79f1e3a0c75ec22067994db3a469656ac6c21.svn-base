@@ -1,0 +1,32 @@
+package kr.or.ddit.finapi.vo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+@Data
+public class StatisticsInfoVO {
+	
+	@JsonProperty("base_month")
+	private String baseMonth;
+	@JsonProperty("finance_cd")
+	private String financeCd;
+	@JsonProperty("finance_nm")
+	private String financeNm;
+	@JsonProperty("account_cd")
+	private String accountCd;
+	@JsonProperty("account_nm")
+	private String accountNm;
+	@JsonProperty("a")
+	private String a;
+	@JsonProperty("b")
+	private String b;
+	@JsonProperty("c")
+	private String c;
+	@JsonProperty("d")
+	private String d;
+	@JsonProperty("e")
+	private String e;
+	
+	
+}

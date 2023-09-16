@@ -1,0 +1,8 @@
+package kr.or.ddit.messenger.service;
+
+import kr.or.ddit.messenger.vo.ChatReadVO;
+
+public interface ChatReadService {
+	
+	public String getNotReadNo(ChatReadVO chatRead);
+}

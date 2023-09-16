@@ -1,0 +1,23 @@
+package kr.or.ddit.training.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.training.dao.TrainingApplyDAO;
+import kr.or.ddit.training.vo.TrainingApplyVO;
+
+@Service
+public class TrainingApplyServiceImpl implements TrainingApplyService {
+	
+	@Inject
+	public TrainingApplyDAO dao;
+	
+	@Override
+	public List<TrainingApplyVO> retrievTrainApplyList() {
+		return dao.selectTrainApply();
+	}
+
+}

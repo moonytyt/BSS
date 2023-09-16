@@ -1,0 +1,39 @@
+package kr.or.ddit.BoardReq.controller;
+
+import java.security.Principal;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.BoardReq.service.ReqboardSerivce;
+import kr.or.ddit.BoardReq.vo.ReqboardVO;
+
+/**
+ * @author PC-26
+ * 공지사항 등록
+ */
+@Controller
+@RequestMapping("board/reqUpdate")
+public class reqboardUpdateController {
+
+//	@Inject
+//	private ReqboardSerivce service;
+//	
+//	@GetMapping
+//	public String getHandler(Principal principal, Model model) {
+//		ReqboardVO req = service.retrieveReq(principal.get);
+//		
+//		model.addAllAttributes("req", req);
+//		
+//	}
+//	
+	
+	
+	   public String dfsdf() {
+	      return "board/reqEdit";
+	   }
+}

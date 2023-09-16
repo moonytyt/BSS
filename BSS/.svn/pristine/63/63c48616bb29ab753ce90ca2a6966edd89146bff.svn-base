@@ -1,0 +1,43 @@
+package kr.or.ddit.edDocument.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import kr.or.ddit.edDocument.vo.DocumentVO;
+
+
+@Mapper
+public interface DocumentDao {
+	
+	/**
+	 * 문서 양식 목록 조회
+	 */
+	public List<DocumentTypeVO> selectDocumentTypeList();
+	
+	/**
+	 * 문서 양식 상세
+	 */
+//	public DocumentTypeVO selectDocumentType(int dtGroup);
+	public DocumentTypeVO selectDtCont(Integer dtNo);
+	
+	/**
+	 * 결재요청함
+	 */
+	public List<DocumentVO> selectReqList();
+	
+	/**
+	 * 참조문서함
+	 */
+	public List<DocumentVO> selectRefList();
+	
+	
+	
+	/**
+	 * 양식 생성(실패,, 나중에 하기)
+	 */
+	public int insertForm(DocumentTypeVO docTypeVO);	
+	
+	
+}

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.edApproval.dao.ApprovalDao">
+
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="simpleCondition neq null and simpleCondition.searchWord neq null and not simpleCondition.searchWord.isEmpty()">
+				<choose>
+					<when test="simpleCondition.searchType eq 'empName'">
+						INSTR(EMP_NAME, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'depName'">
+						INSTR(DEP_NAME, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'poName'">
+						INSTR(PO_NAME, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<otherwise>
+						INSTR(EMP_NAME, #{simpleCondition.searchWord} ) > 0
+						OR
+						INSTR(DEP_NAME, #{simpleCondition.searchWord} ) > 0
+						OR
+						INSTR(PO_NAME, #{simpleCondition.searchWord} ) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="long"
+		parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT COUNT(*)
+		FROM EMPLOYEE EMP
+			INNER JOIN DEPARTMENT DEP ON(EMP.DEP_CD = DEP.DEP_CD)
+		    INNER JOIN POSITION POS ON (EMP.PO_CD = POS.PO_CD)
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectEmpList" resultType="kr.or.ddit.employee.vo.EmployeeVO">
+		SELECT EMP.EMP_CD, EMP.EMP_NAME
+		     , EMP.DEP_CD, DEP.DEP_NAME
+		     , EMP.PO_CD, POS.PO_NAME
+		FROM EMPLOYEE EMP
+		    INNER JOIN DEPARTMENT DEP ON(EMP.DEP_CD = DEP.DEP_CD)
+		    INNER JOIN POSITION POS ON (EMP.PO_CD = POS.PO_CD)
+		    <include refid="searchFrag" />
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,13 @@
+package kr.or.ddit.salary.service;
+
+import java.util.List;
+
+import kr.or.ddit.salary.vo.SalaryDetailVO;
+
+public interface SalaryDetailService {
+
+	public List<SalaryDetailVO> retrieveSalaryDetailList(int salNo);
+
+	public List<SalaryDetailVO> retrieveSalaryDetailList(SalaryDetailVO salaryDetail);
+	
+}

@@ -1,0 +1,15 @@
+package kr.or.ddit.edApproval.service;
+
+import java.util.List;
+
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+public interface ApprovalService {
+	
+	/**
+	 * 결재선 지정 시 직원 검색을 위한 직원 정보
+	 */
+	public List<DepartmentVO> retrieveEmpList(PaginationInfo<DepartmentVO> paging); 
+	
+}

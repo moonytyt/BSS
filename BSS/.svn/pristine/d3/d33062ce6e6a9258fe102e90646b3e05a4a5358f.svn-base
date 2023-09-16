@@ -1,0 +1,52 @@
+package kr.or.ddit.finapi.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 
+ *적금상품 VO
+ * @author moonyt
+ *
+ */
+@Data
+@EqualsAndHashCode(callSuper=false,of={"finPrdtCd","dclsMonth","finCoNo"})
+public class SavingPrdtVO extends BankVO{
+	@JsonProperty("fin_prdt_cd")
+	@NotBlank
+	private String finPrdtCd;
+	@JsonProperty("dcls_month")
+	@NotBlank
+	private String dclsMonth;
+	@JsonProperty("fin_co_no")
+	@NotBlank
+	private String finCoNo;
+	@JsonProperty("fin_prdt_nm")
+	private String finPrdtNm;
+	@JsonProperty("join_way")
+	private String joinWay;
+	@JsonProperty("mtrt_int")
+	private String mtrtInt;
+	@JsonProperty("spcl_cnd")
+	private String spclCnd;
+	@JsonProperty("join_deny")
+	private String joinDeny;
+	@JsonProperty("etc_note")
+	private String etcNote;
+	@JsonProperty("max_limit")
+	private Integer maxLimit;
+	@JsonProperty("dcls_strt_day")
+	private String dclsStrtDay;
+	@JsonProperty("dcls_end_day")
+	private String dclsEndDay;
+	@JsonProperty("fin_co_subm_day")
+	private String finCoSubmDay;
+	@JsonProperty("join_member")
+	private String joinMember;
+	
+	private String topFinGrpNo;
+}

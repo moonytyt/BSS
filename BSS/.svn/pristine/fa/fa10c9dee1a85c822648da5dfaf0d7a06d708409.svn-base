@@ -1,0 +1,13 @@
+package kr.or.ddit.messenger.dao;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.messenger.vo.ChatRoomVO;
+
+@Mapper
+public interface ChatRoomUserDAO {
+	
+	public int empCnt(int roomNo);
+	
+	public int insertMe(ChatRoomVO chatRoom); 
+}

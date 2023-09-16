@@ -1,0 +1,281 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"  prefix="security"%>
+
+<style>
+
+.btn-group, .btn-group-vertical {
+	position: relative;
+	display: block;
+	vertical-align: middle;
+}
+
+.pagination {
+	justify-content: center
+}
+
+#button {
+	display: flex;
+	justify-content: flex-end;
+}
+
+#searchForm {
+	display: block;
+}
+
+.row {
+    display: flex;
+    margin-right: -0.75rem;
+    margin-left: -5.75px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    padding-bottom: 10px;
+}
+
+.attendInsert{
+	display: flex;
+    justify-content: space-evenly;
+}
+.form-control {
+	width: 15%;
+	
+}
+
+/* 출력되는 테이블 스타일 */
+#attendList{
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* 출근부 등록 모달 */
+.modal-header > h5 {
+    text-align: center;
+    margin-top: 10px;
+}
+#modal > .form-control {
+    width: 100%;
+}
+#modalBtn{
+	text-align: end;
+}
+#clock, #clock2 {
+    color: black;
+    font-size: 45px;
+    text-align: center;
+}
+</style>
+
+<h5>출퇴근 조회</h5>
+<hr color="black">
+
+<!-- 출퇴근 사원명/사번으로 검색  -->
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div id="searchUI" class="row">
+				<form:select path="simpleCondition.searchType" class="form-select col-md-1">
+					<form:option value="empName" label="사원명" />
+					<form:option value="empCd" label="사번" />
+					<form:option value="atteDate" label="근무일" />
+				</form:select>
+				<input type="text" class="form-inline form-control col-md-2"
+					id="searchInput" name="searchWord" placeholder="검색을 입력하세요." />
+				 <div>
+				 <c:choose>
+					 <c:when test="${empty haveAtteStime}">
+					 	<button type="button" class="btn btn-secondary" id="atteStime" data-bs-toggle="modal" data-bs-target=".modal" >출근</button>
+					 </c:when>
+					 <c:otherwise>
+					 	<button type="button" class="btn btn-danger" id="atteEnd" data-bs-toggle="modal" data-bs-target="#attendUpdateModal">퇴근</button>
+					 </c:otherwise>
+				 </c:choose>
+				 </div>
+			</div>
+		</div>
+	</div>
+<!-- 출퇴근 사원명/사번으로 검색 끝  -->
+
+
+<!-- 출근시간 등록 모달  -->
+	<div class="modal" id="modal" data-bs-backdrop="static" tabindex="-1">
+		<div class="modal-dialog modal-fullscreen-sm-down">
+			<div class="modal-content">
+				<div class="modal-header">
+					
+					<h5 class="modal-title">출근시간 등록</h5>
+				</div>
+				<div class="modal-body">
+				<h4 id="clock"></h4>
+					<form:form modelAttribute="attend" method="post" action="${pageContext.request.contextPath }/pm/servicemanagement/attendInsert.do">
+						<input type="hidden" name="atteNo" value="${attend.atteNo }" />
+						<table class="table table-bordered table-hover">
+							<tr>
+								<th>직원명</th>
+								<td id="modal">
+								<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empName}</td>
+								
+							</tr>
+							<tr>
+								<th>사번</th>
+								<td id="modal">
+								<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empCd}</td>
+							</tr>
+							
+							<tr>
+								<td id="modalBtn" colspan="2">
+									<button type="submit" class="btn btn-success" value="등록">등록</button>
+								</td>
+							</tr>
+						</table>
+					</form:form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- 출근시간 등록 모달 끝  -->
+
+<!-- 퇴근시간 등록 모달  -->
+	<div class="modal" id="attendUpdateModal" data-bs-backdrop="static" tabindex="-1">
+		<div class="modal-dialog modal-fullscreen-sm-down">
+			<div class="modal-content">
+				<div class="modal-header">
+					
+					<h5 class="modal-title">퇴근시간 등록</h5>
+				</div>
+				<div class="modal-body">
+				<h4 id="clock2"></h4>
+					<form:form modelAttribute="attend" method="post" action="${pageContext.request.contextPath }/pm/servicemanagement/attendUpdate.do">
+						<input type="hidden" name="atteNo" value="${haveAtteStime.atteNo }" />
+						<input type="hidden" name="empCd" value="${authEmployee.empCd}" />
+						<table class="table table-bordered table-hover">
+							<tr>
+								<th>직원명</th>
+								<td id="modal">
+								<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empName}</td>
+							</tr>
+							<tr>
+								<th>사번</th>
+								<td id="modal">
+								<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empCd}</td>
+							</tr>
+							<tr>
+								<td id="modalBtn" colspan="2">
+									<button type="submit" class="btn btn-success" value="등록">등록</button>
+								</td>
+							</tr>
+						</table>
+					</form:form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<!-- 퇴근시간 등록 모달 끝  -->
+
+
+	
+<!-- 출근부 조회되는 폼  -->
+<div id="attendList"></div>
+	<form:form id="searchForm" action="${pageContext.request.contextPath }/pm/servicemanagement/attendList" modelAttribute="simpleCondition">
+		<form:hidden path="searchType" />
+		<form:hidden path="searchWord" />
+		<input type="hidden" name="page" />
+	</form:form>
+</div>
+<!-- 출근부 조회되는 폼 끝-->
+
+<script>
+	
+	/* 출근시간  */
+	const clock = document.getElementById("clock");
+
+	function getClock() {
+		const d = new Date();
+		const h = String(d.getHours()).padStart(2, "0");
+		const m = String(d.getMinutes()).padStart(2, "0");
+		const s = String(d.getSeconds()).padStart(2, "0");
+		
+		let timeString = `\${h}:\${m}:\${s}`;
+		console.log('timeString: '+timeString);
+		
+		clock.innerHTML = timeString;
+	}
+
+	getClock(); //맨처음에 한번 실행
+	setInterval(getClock, 1000); //1초 주기로 새로실행
+
+	/* 출근시간  */
+	const clock2 = document.getElementById("clock2");
+
+	function getClock2() {
+		const dd = new Date();
+		const hh = String(dd.getHours()).padStart(2, "0");
+		const mm = String(dd.getMinutes()).padStart(2, "0");
+		const ss = String(dd.getSeconds()).padStart(2, "0");
+		
+		let timeString2 = `\${hh}:\${mm}:\${ss}`;
+		console.log('timeString2: '+timeString2);
+		
+		clock2.innerHTML = timeString2;
+	}
+
+	getClock2(); //맨처음에 한번 실행
+	setInterval(getClock2, 1000); //1초 주기로 새로실행
+
+	/* 전체조회 페이징  */
+	function fn_paging(page) {
+		searchForm.page.value = page;
+		$(searchForm).submit();
+	}
+
+	/* 직원조회 실행함수 */
+	$(function() {
+		searchEmp();
+	});
+
+	/* 직원조회  */
+	let data = {};
+	function searchEmp() {
+		let setting = {
+			url : `${pageContext.request.contextPath }/pm/servicemanagement/attendList`,
+			method : "",
+			dataType : "text",
+			data : data,
+			success : function(resp) {
+				$('#attendList').html(resp);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR)
+				console.log(status)
+				console.log(error)
+			}
+		}
+		$.ajax(setting);
+	}
+
+	/* 검색한 조회 값의 페이징 */
+	function fn_paging(page) {
+		searchForm.page.value = page;
+		data.page = page;
+		searchEmp();
+	}
+
+	/* 검색  */
+	$(searchInput).on("keyup", function(event) {
+		$(searchUI).find(":input[name]").each(function(idx, input) {
+			let name = input.name;
+			let value = $(input).val();
+			data[name] = value;
+		});
+		fn_paging(1);
+		searchEmp();
+	});
+</script>

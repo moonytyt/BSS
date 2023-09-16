@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.attendance.dao.AttendanceDAO">
+	
+	
+	<select id="selectTotalRecord" resultType="long" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT COUNT(*) FROM ATTENDANCE A
+		INNER JOIN EMPLOYEE E ON(A.EMP_CD = E.EMP_CD)
+		<include refid="searchFrag" />
+	</select>
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="simpleCondition neq null and simpleCondition.searchWord neq null and not simpleCondition.searchWord.isEmpty()">
+				<choose>
+					<when test="simpleCondition.searchType eq 'empName'">
+						INSTR(EMP_NAME, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'empCd'">
+						INSTR(A.EMP_CD, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<otherwise>
+						INSTR(EMP_NAME, #{simpleCondition.searchWord} ) > 0
+						OR
+						INSTR(A.EMP_CD, #{simpleCondition.searchWord} ) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+	<select id="selectAttendList" resultType="kr.or.ddit.attendance.vo.AttendanceVO" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT B.*, d.dep_name
+		 FROM(
+		    SELECT ROWNUM RNUM, A.*
+		    FROM(
+		    select
+		     A.ATTE_NO, E.EMP_NAME, A.EMP_CD, A.ATTE_STIME, A.ATTE_END, A.ATTE_DATE, E.DEP_CD
+		      FROM ATTENDANCE A
+		      inner JOIN EMPLOYEE E ON (A.EMP_CD = E.EMP_CD)
+		         <include refid="searchFrag" />
+		       ORDER BY A.ATTE_NO asc
+		          ) A
+		      ) B
+		      INNER JOIN DEPARTMENT d ON (B.DEP_CD = d.DEP_CD)
+		      <![CDATA[  
+		         WHERE RNUM >=#{startRow}  AND RNUM <=#{endRow} 
+		      ]]>
+	</select>
+	
+	<select id="selectEmpList" resultType="kr.or.ddit.employee.vo.EmployeeVO">
+		SELECT EMP_NAME FROM EMPLOYEE
+	</select>
+	
+	<insert id="insertAttend" parameterType="kr.or.ddit.attendance.vo.AttendanceVO">
+		<selectKey order="BEFORE" keyProperty="atteNo" resultType="int">
+		   SELECT ATTEND_SEQ.NEXTVAL
+		   FROM DUAL
+		</selectKey>
+	
+	INSERT INTO attendance (
+		atte_no
+		, emp_cd
+		, atte_stime
+		, atte_end
+		, atte_date
+	) VALUES (
+		  #{atteNo},
+	      #{empCd},
+	      #{atteStime},
+	      #{atteEnd},
+	      #{atteDate}
+      )
+	</insert>
+	
+</mapper>

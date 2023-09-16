@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+documentIngList.jsp 결재진행함 (수정필요)
+
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>No.</th>
+			<th>문서유형</th>
+			<th>문서제목</th>
+			<th>기안자</th>
+			<th>기안부서</th>
+			<th>기안일시</th>
+			<th>결재자</th>
+<!-- 			<th>결재상태</th> -->
+		</tr>
+	</thead>
+	<tbody>
+	<c:if test="${empty documentIngList }">
+		<tr>
+			<td colspan="7">현재 기안된 문서가 없습니다.</td>
+		</tr>
+	</c:if>
+	<c:if test="${not empty documentIngList }">
+		<c:forEach items="${documentIngList }" var="ing" varStatus="loop">
+		<!-- varStatus 속성 loop 변수를 선언하여 현재 인덱스를 얻기 -->
+			<tr>
+				<td><c:out value="${loop.index + 1}" /></td> <!-- 1번부터 부여하기 위해 +1-->
+				<td>${ing.docType }</td>
+				<td><a href="javascript:;">${ing.docTitle }</a></td>
+				<td>${ing.empName }</td> -->
+				<td>${ing.depName }</td>
+				<td>${ing.docUpdatedate }</td>
+				<td>${ing.emp }</td>
+<!-- 				<td>진행중</td> -->
+			</tr>
+		</c:forEach>
+	</c:if>
+	</tbody>
+</table>
+
+
+<!-- 페이징 혹은 쭉 나오게 -->
+

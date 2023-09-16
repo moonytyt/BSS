@@ -1,0 +1,99 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>  
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<title>문의사항상세조회</title>
+<h5>문의사항상세</h5>
+<hr color="black">
+<div>
+<form:form  method="post" modelAttribute="req" entype="multipart/form-data">
+	<form:hidden path="reqNo" class="form-control" value="${req.reqNo }"/>
+	<form:errors path="reqNo" class="error" />
+<div>
+<table class="table table-bordered table-hover">
+	<tr>
+		<th>글번호 : ${req.reqNo }번</th>
+		<th>제목 : ${req.reqTtl }</th>
+		<th>작성자 : ${req.reqDt}</th>
+		<th>등록일 : ${req.empName }</th>
+	</tr>
+</table>
+<table class="table table-border">
+	<tr>
+		<td>${req.reqCn }</td>
+	</tr>
+</table>
+</div>
+<div style="position:absolute;right:25px;buttom:0px;">
+			<c:url value="/board/reqUpdate" var="reqEdit">
+				<c:param name="what" value="${req.reqNo }" />
+			</c:url>
+			<a href="${reqEdit }" class="btn btn-primary btn-sm">수정</a>
+<!-- 			    <a href="#" class="btn btn-danger btn-sm" onclick="deleteReq()">삭제</a> -->
+			<input type="submit" value="삭제" class="btn btn-danger btn-sm" onclick="return confirm('정말로 삭제하시겠습니까?');"/>
+			<a href="<c:url value='/board/reqAllList'/>" class="btn btn-secondary btn-sm" >목록으로</a>
+</div>
+
+<button id="comment" class="btn btn-primary btn-sm" type="button">댓글 등록</button>
+
+<div id="commentWrite"></div>
+
+</form:form>
+
+</div>
+
+<br><br>
+
+ <div>
+ <table class="table table-border">
+ <tr class="table-secondary">
+        	<th>답글 내용</th>
+        	<th>답글 작성일</th>
+        </tr>
+ <c:if test="${empty reqList }">
+ 	<tr>
+ 		<td colspan="4">등록된 댓글이 없습니다.</td>
+ 	</tr>
+ </c:if>
+ 	
+ 	<c:if test="${not empty reqList }">
+        <c:forEach var="req" items="${reqList}">
+            <tr>
+            	<td>${req.rcmntCn }</td>
+            	<td>${req.rcnmtDt }</td>
+            </tr>
+        </c:forEach>
+       </c:if> 
+   </table>
+</div>
+<script>
+
+function Edit(){
+	window.location.href= '/BBS/board/reqEdit?what=' + ${req.reqNo}
+}
+
+	let reqNum = 0;
+	
+	$('#comment').on('click', function(){
+		let reqHtml = `
+			<input type="hidden" name="rcnmtNo" value="${reqCmnt.rcnmtNo}" />
+			<input type="hidden" name="reqNo" value="${reqCmnt.reqNo}" />
+			<input type="hidden" name="rcnmtDt" value="${reqCmnt.rcnmtDt}" />
+			
+			<form:textarea path="reqCmnt.rcmntCn" class="form-control" type="text" />
+			
+			<c:url value="/board/reqCmnt" var="reqCmnt"></c:url> 
+			
+			<button class="btn btn-primary btn-sm" type="submit">등록</button>
+		
+		`;
+		
+		$('#commentWrite').append(reqHtml);
+		
+		reqNum++;
+	});
+
+</script>

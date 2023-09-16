@@ -1,0 +1,150 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security"%>
+
+<style>
+#node0 {
+	display: flex;
+}
+
+#node1 {
+	float: left;
+	width: 860px;
+	height: 472px;
+	margin-right: 30px;
+}
+
+#node2 {
+    width: 800px;
+	height: 472px;;
+	margin-right: 30px;
+	display: block;
+}
+
+#node3 {
+	display: flex;
+	box-sizing: border-box;
+}
+
+#node4 {
+	width: 860px;
+	height: 460px;
+	display: inline-flex;
+	margin-right: 25px;
+}
+
+#node5 {
+	display: inline-flex;
+    width: 500px;
+	height: 460px;
+	margin-right: 25px;
+}
+
+#node6 {
+	width: 600px;
+}
+
+#node1-1 {
+	display: inline-flex;
+	width: 54%;
+}
+
+#node1-2 {
+	display: flex;
+	padding-top: 25px;
+}
+
+.card {
+	width: 18rem;
+}
+
+.card-body {
+	text-align: center;
+}
+
+#all {
+	padding: 15px 0px 0px 15px;
+    margin: 0px 20px 0px 20px;
+}
+</style>
+
+<div id="all">
+<div id="node0">
+	<div id="node1" class="card">
+		<div class="card-header">환율</div>
+		<div class="card-body">
+			<h5 class="card-title">Special title treatment</h5>
+			<p class="card-text">With supporting text below as a natural
+				lead-in to additional content.</p>
+			<a href="#" class="btn btn-primary">Go somewhere</a>
+		</div>
+	</div>
+	<!-- #node1 end -->
+
+	<div id="node1-1">
+		<div id="node2" class="card">
+			<div class="card-header">캘린더</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural
+					lead-in to additional content.</p>
+				<a href="#" class="btn btn-primary">Go somewhere</a>
+			</div>
+		</div>
+		<div id="node3">
+			<div class="card">
+				<div class="card-header">
+					<img
+						src="${pageContext.request.contextPath }/resources/img/test.png"
+						class="card-img-top" alt="프로필">
+				</div>
+				<div class="card-body">
+					<p class="card-text">이름: 홍길동</p>
+					<p class="card-text">사번: 202020</p>
+					<p class="card-text">부서: 인사부</p>
+					<a href="#" class="btn btn-primary">마이페이지</a>
+				</div>
+			</div>
+		</div>
+		
+		</div>
+		
+	</div>
+	<div id="node1-2">
+		<div id="node4" class="card">
+			<div class="card-header">결재할 서류</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural
+					lead-in to additional content.</p>
+				<a href="#" class="btn btn-primary">Go somewhere</a>
+			</div>
+		</div>
+		<div id="node5" class="card">
+			<div class="card-header">시계?</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural
+					lead-in to additional content.</p>
+				<a href="#" class="btn btn-primary">Go somewhere</a>
+			</div>
+
+			<div class="card-header">뭐든</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural
+					lead-in to additional content.</p>
+				<a href="#" class="btn btn-primary">Go somewhere</a>
+			</div>
+		</div>
+		<div id="node6" class="card">
+			<div class="card-header">???</div>
+			<div class="card-body">
+				<h5 class="card-title">Special title treatment</h5>
+				<p class="card-text">With supporting text below as a natural
+					lead-in to additional content.</p>
+				<a href="#" class="btn btn-primary">Go somewhere</a>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,6 @@
+profileimagePath=/resources/empProfile
+imagePath=/resources/mailFile
+paperImage=/resouces/papers
+atchPath=file:D:/Profile
+atchMailPath=file:D:/Mail
+documentFilePath=/resources/docFile

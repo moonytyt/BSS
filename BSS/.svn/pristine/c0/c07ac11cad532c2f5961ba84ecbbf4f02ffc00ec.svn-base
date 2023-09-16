@@ -1,0 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>인사기록카드
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"  prefix="security"%>
+
+<style>
+	th {
+		text-align:center;
+		width:150px;
+	}
+	
+	#cont {
+		height: 30vh;
+	}
+	
+</style>
+
+<table class="table table-bordered" style="width: 90%; , background-color: white;">
+	<tr>
+		<th colspan="4"><h3>재직증명서</h3></th>
+	</tr>
+	<tr>
+		<th>성명</th>
+		<td>
+		<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empName}</td>
+
+		<th>생년월일</th>
+		<td>
+		<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empId1}</td>
+	</tr>
+	<tr>
+		<th>주소</th>
+		<td colspan="3">
+		<security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empAdd1} - ${authEmployee.empAdd2}</td>
+	</tr>
+	<tr>
+		<th>연락처</th>
+		<td><security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.empHp}</td>
+		<th>담당</th>
+		<td><security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.business.busName}</td>
+	</tr>
+	<tr>
+		<th>입사일자</th>
+		<td><security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.enpStart}</td>
+		<th>직책</th>
+		<td><security:authentication property="principal.realUser" var="authEmployee" />${authEmployee.position.poName}</td>
+	</tr>
+
+	<tr>
+		<th>용도</th>
+		<td colspan="3">제출용</td>
+	</tr>
+	<tr id="cont">
+		<th colspan="4" class="align-middle">상기와 같이 재직하고 있음을 증명합니다.</th>
+	</tr>
+	<tr>
+		<th colspan="4">회사명 : BSS</th>
+	</tr>
+	<tr>
+		<th colspan="4">대표자 : ???</th>
+	</tr>
+
+</table>

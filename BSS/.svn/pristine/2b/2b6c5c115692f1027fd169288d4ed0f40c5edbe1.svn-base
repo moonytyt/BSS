@@ -1,0 +1,127 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>  
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<title>문의사항상세조회</title>
+<h5>문의사항상세</h5>
+<hr color="black">
+<div>
+<form:form action="/board/reqDelete" method="post" modelAttribute="req" entype="multipart/form-data">
+	<form:hidden path="reqNo" class="form-control" value="${req.reqNo }"/>
+	<form:errors path="reqNo" class="error" />
+<div>
+<table class="table table-bordered table-hover">
+	<tr>
+		<th>글번호 : ${req.reqNo }번</th>
+		<th>제목 : ${req.reqTtl }</th>
+		<th>작성자 : ${req.reqDt}</th>
+		<th>등록일 : ${req.empName }</th>
+	</tr>
+</table>
+<table class="table table-border">
+	<tr>
+		<td>${req.reqCn }</td>
+	</tr>
+</table>
+</div>
+<div style="position:absolute;right:25px;buttom:0px;">
+			<c:url value="/board/reqUpdate" var="reqEdit">
+				<c:param name="what" value="${req.reqNo }" />
+			</c:url>
+			<a href="${reqEdit }" class="btn btn-primary btn-sm">수정</a>
+<!-- 			    <a href="#" class="btn btn-danger btn-sm" onclick="deleteReq()">삭제</a> -->
+			<input type="submit" value="삭제" class="btn btn-danger btn-sm" onclick="return confirm('정말로 삭제하시겠습니까?');"/>
+			<a href="<c:url value='/board/reqList'/>" class="btn btn-secondary btn-sm" >목록으로</a>
+</div>
+</form:form>
+</div>
+
+<!-- 관리자권한? -->
+<form:form method="post" modelAttribute="req" entype="multipart/form-data">
+	<form:hidden path="reqNo" class="form-control" value="${req.reqNo }"/>
+	<form:errors path="reqNo" class="error" />
+	
+<!-- 댓글 입력 폼 -->
+<div id="comment" style="border: 1px solid white">
+	<div>
+		<tr>
+            <td>
+<%--                 <form:input path="rcmntCn" class="form-control"/> --%>
+<%--                 <form:errors path="rcmntCn" class="error" /> --%>
+			</td>
+			<td>
+                <input type="button" value="댓글 등록" onclick="createComment();" />
+            </td>
+        </tr>
+    </div>
+</div>
+</form:form>
+    <div id="commentList">
+        <h6>댓글 목록</h6>
+        <c:forEach var="comment" items="${comments}">
+            <p>댓글 내용: ${comment.rcmntCn }</p>
+            <p>댓글 작성일: ${comment.rcnmtDt }</p>
+            <hr>
+        </c:forEach>
+    </div>
+<script>
+	function Edit(){
+		window.location.href= '/BBS/board/reqEdit?what=' + ${req.reqNo}
+	}
+	
+// 	 function deleteReq() {
+// 	        if (confirm('정말로 삭제하시겠습니까?')) {
+// 	            $.ajax({
+// 	                url: '/board/reqDelete',
+// 	                type: 'POST',
+// 	                data: { reqNo: ${req.reqNo} },
+// 	                success: function(response) {
+// 	                    window.location.href = '<c:url value="/board/reqList"/>';
+// 	                },
+// 	                error: function(error) {
+// 	                    console.log('삭제 실패:', error);
+// 	                }
+// 	            });
+// 	        }
+// 	    }
+// 	 function createComment() {
+// 	        var rcmntCn = $('[name=rcmntCn]').val();
+// 	        var reqNo = ${req.reqNo};
+	        
+// 	        $.ajax({
+// 	            url: '/comments/create',
+// 	            type: 'POST',
+// 	            data: { reqNo: reqNo, rcmntCn: rcmntCn },
+// 	            success: function(response) {
+// 	                // 댓글 등록 후 처리 (예: 댓글 목록을 다시 불러와서 갱신)
+// 	                loadComments();
+// 	            },
+// 	            error: function(error) {
+// 	                console.log('댓글 등록 실패:', error);
+// 	            }
+// 	        });
+// 	    }
+
+// 	    function loadComments() {
+// 	        var reqNo = ${req.reqNo};
+// 	        $.ajax({
+// 	            url: '/comments/list',
+// 	            type: 'GET',
+// 	            data: { reqNo: reqNo },
+// 	            success: function(response) {
+// 	                $('#commentList').html(response);
+// 	            },
+// 	            error: function(error) {
+// 	                console.log('댓글 목록 불러오기 실패:', error);
+// 	            }
+// 	        });
+// 	    }
+
+	    // 페이지 로드 시 초기 댓글 목록 불러오기
+// 	    $(document).ready(function() {
+// 	        loadComments();
+// 	    });
+</script>

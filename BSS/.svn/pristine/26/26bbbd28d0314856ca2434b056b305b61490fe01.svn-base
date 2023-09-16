@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+documentIngList.jsp 결재진행함 (db x,임의데이터)
+
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>결재유형</th>
+			<th>문서제목</th>
+			<th>기안자</th>
+			<th>기안부서</th>
+			<th>결재자</th>
+			<th>기안일시</th>
+			<th>결재상태</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<tr>
+			<td>지출결의</td>
+			<td><a href="javascript:;">지출결의서 제출</a></td>
+			<td>김영업</td>
+			<td>영업부</td>
+			<td>영부장</td>
+			<td>2023.07.25 13:10</td>
+			<td>진행중</td>
+		</tr>
+		<tr>
+			<td>휴가</td>
+			<td><a href="javascript:;">휴가신청서</a></td>
+			<td>문영업</td>
+			<td>영업부</td>
+			<td>업과장</td>
+			<td>2023.07.25 11:25</td>
+			<td>진행중</td>
+		</tr>
+	</tbody>
+</table>
+<!-- 나중에 목록에 적용 -->
+<!-- 
+	<tbody>
+	<c:set var="memberList" value="${paging.dataList }" />
+	<c:if test="${empty memberList }">
+		<tr>
+			<td colspan="7">등록된 회원 없음.</td>
+		</tr>
+	</c:if>
+	<c:if test="${not empty memberList }">
+		<c:forEach items="${memberList }" var="member">
+			<tr>
+				<td>${member.rnum }</td>
+				<td><a href="javascript:;" data-who="${member.memId }" data-bs-toggle="modal" data-bs-target="#exampleModal">${member.memName }</a></td>
+				<td>${member.memId }</td>
+			</tr>
+		</c:forEach>
+	</c:if>
+	</tbody>
+-->
+
+
+<!-- 페이징 혹은 쭉 나오게 -->
+

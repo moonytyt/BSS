@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+/* 로그인 후 메인, 헤더 폰트 */
+#navbarNav {
+	font-family: 'MICEGothic Bold';
+}
+/* 제목 폰트 */
+h5 {
+	font-family: 'MICEGothic Bold';
+/* 	color: var(--navy) !important;  */
+}
+
+/* 글자 중앙·왼쪽·오른쪽 정렬 */
+.textCenter {
+	text-align: center !important;
+}
+.textLeft {
+	text-align: left !important;
+}
+.textRight {
+	text-align: right !important;
+}
+
+/* 에러메세지 붉은 글씨 */
+.errors {
+    color: red;
+    font-size: 12px;
+}
+
+
+/* documentForm.jsp 셀 너비 */
+.cellWidth {
+	width: 150px;
+	text-align: center;
+}
+.textGray{
+	color: gray !important;
+}

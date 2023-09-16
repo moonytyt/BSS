@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+createForm.jsp 양식번호,양식분류,양식내용,공통코드
+
+<script
+	src="${pageContext.request.contextPath }/resources/js/ckeditor/ckeditor.js"></script>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<form
+				action="${pageContext.request.contextPath}/ed/document/createForm.do"
+				method="post">
+
+				<input type="submit" value="등록" class="btn btn-success" />
+
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<td class="table-active">양식번호(자동채번필요)</td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="number" name="dtNo"
+							value="${document_type.dtNo }" /><span class="error">${errors["dtNo"]}</span></td>
+						</tr>
+						<tr>
+							<td class="table-active">양식분류</td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" name="dtGroup"
+							value="${document_type.dtGroup }" /><span class="error">${errors["dtGroup"]}</span></td>
+						</tr>
+	
+						<tr>
+							<td class="table-active">문서내용</td>
+						</tr>
+						<tr>
+							<td><textarea class="form-control" name="dtCont"
+							id="docContent">${document_type.dtCont}</textarea> <span
+							class="error">${errors["dtCont"]}</span></td>	
+						</tr>
+						
+						<tr>
+							<td class="table-active">코드(자동채번필요)</td>
+						</tr>
+						<tr>
+							<td><input class="form-control" type="text" name="code"
+								value="${document_type.code }" /><span class="error">${errors["code"]}</span></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	//"docContent" 텍스트 영역에 CKEditor를 적용
+	CKEDITOR.replace('docContent');
+</script>

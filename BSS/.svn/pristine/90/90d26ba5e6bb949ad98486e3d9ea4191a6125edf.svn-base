@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.businesstrip.dao.BusinessTripDAO">
+	
+	<select id="selectBtrip" resultType="kr.or.ddit.businesstrip.vo.BusinessTripVO" parameterType="kr.or.ddit.businesstrip.vo.BusinessTripVO">
+	SELECT TRIP_NO, TRIP_TYPE, TRIP_DATE, TRIP_PURPOSE, TRIP_PLACE, TRIP_SDATE, TRIP_EDATE
+		   ,E.EMP_CD,  E.EMP_NAME
+	FROM EMPLOYEE E
+	LEFT OUTER JOIN TRIP T ON(E.EMP_CD = T.EMP_CD)
+	WHERE 1 = 1
+	
+    <if test="tripType != null and !tripType.isEmpty()">
+        and (TRIP_TYPE = #{tripType, jdbcType=VARCHAR} OR #{tripType, jdbcType=VARCHAR} IS NULL)
+    </if>
+    <if test="tripDate != null">
+        and (TO_CHAR(TRIP_DATE) = #{tripDate, jdbcType=DATE} OR #{tripDate, jdbcType=DATE} IS NULL)
+    </if>
+    <if test="tripPlace != null and !tripPlace.isEmpty()">
+        and (TRIP_PLACE = #{tripPlace, jdbcType=VARCHAR} OR #{tripPlace, jdbcType=DATE} IS NULL)
+    </if>
+    <if test="empName != null and !empName.isEmpty()">
+        and (EMP_NAME = #{empName, jdbcType=VARCHAR} OR #{empName, jdbcType=VARCHAR} IS NULL)
+    </if>
+	</select>
+	
+	
+	<insert id="">
+		<selectKey order="BEFORE" keyProperty="boNo" resultType="int">
+		   SELECT FREEBOARD_SEQ.NEXTVAL
+		   FROM DUAL
+		</selectKey>
+	INSERT INTO trip
+	  ( trip_no,
+		emp_cd,
+		trip_type,
+		trip_date,
+		trip_purpose,
+		trip_place,
+		trip_sdate,
+		trip_edate )
+	SELECT
+		:tripNo,
+		:empCd,
+		:tripType,
+		:tripDate,
+		:tripPurpose,
+		:tripPlace,
+		:tripSdate,
+		:tripEdate
+	FROM EMPLOYEE
+	WHERE NOT EXISTS (
+		SELECT 1
+		FROM trip
+		WHERE emp_cd = :empCd
+    <!-- 여기에 추가로 다른 조건들을 넣어서 중복 체크 가능 (예: AND trip_date = :tripDate) -->
+)
+
+	</insert>
+	
+</mapper>

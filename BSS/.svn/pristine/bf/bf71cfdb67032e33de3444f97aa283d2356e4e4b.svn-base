@@ -1,0 +1,26 @@
+package kr.or.ddit.license.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of = {"licenseCd", "empCd"})
+public class LicenseVO {
+	@NotBlank
+	private Integer licenseCd;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String licenseNm;
+	@NotBlank
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate licenseDate;
+	private String licenseAgency;
+}

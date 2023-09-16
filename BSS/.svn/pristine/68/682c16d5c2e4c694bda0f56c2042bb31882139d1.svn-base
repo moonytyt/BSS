@@ -1,0 +1,23 @@
+package kr.or.ddit.family;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class FamilyVO {
+	
+	@NotBlank
+	private String famNo;
+	@NotBlank
+	private String empCd;
+	private String famName;
+	private String famJob;
+	private String famBir;
+	private String famEdu;
+	private String famLive;
+	private String famNote;
+	private String famClassify;
+	private String code;
+	
+}

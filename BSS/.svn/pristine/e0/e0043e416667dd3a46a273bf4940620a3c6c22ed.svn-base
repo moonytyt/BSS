@@ -1,0 +1,24 @@
+package kr.or.ddit.training.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+/**
+ *  
+ * 교육 신청자 조회
+ *  
+ */
+@Data
+public class TrainingApplyVO {
+
+	@NotBlank
+	private Integer trainNo; //교욱번호
+	@NotBlank
+	private String empCd;	 //직원사번
+	@NotBlank
+	private LocalDate taDate; //신청날짜
+	private String code; 	  //교육취소여부
+}

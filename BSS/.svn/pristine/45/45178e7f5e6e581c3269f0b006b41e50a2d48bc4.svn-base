@@ -1,0 +1,27 @@
+package kr.or.ddit.messenger.service;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.messenger.dao.ChatRoomUserDAO;
+import kr.or.ddit.messenger.vo.ChatRoomVO;
+
+@Service
+public class ChatRoomUserServiceImpl implements ChatRoomUserService{
+	@Inject
+	private ChatRoomUserDAO chatRoomUserDAO;
+
+	@Override
+	public int countEmp(int roomNo) {
+		int cnt = chatRoomUserDAO.empCnt(roomNo);
+		
+		return cnt;
+	}
+
+	@Override
+	public boolean insertOne(ChatRoomVO chatRoom) {
+		int cnt = chatRoomUserDAO.insertMe(chatRoom);
+		return cnt > 0;
+	}
+}

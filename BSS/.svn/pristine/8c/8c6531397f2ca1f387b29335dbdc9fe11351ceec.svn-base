@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.attendance.dao.OverTimeDAO">
+
+	<select id="selectOverList" resultType="kr.or.ddit.attendance.vo.OverTimeVO">
+	WITH OVERVIEW AS (
+		SELECT O.ATTE_NO, O.OVER_START, O.OVER_END, O.OVER_END - O.OVER_START AS OVERALL, O.OVER_CONT, A.EMP_CD
+		FROM ATTENDANCE A
+		INNER JOIN OVERTIME O ON(A.ATTE_NO = O.ATTE_NO)
+	)
+	SELECT E.EMP_NAME, O.ATTE_NO, O.OVER_START, O.OVER_END, O.OVERALL, O.OVER_CONT, O.EMP_CD,
+		EXTRACT(HOUR FROM OVERALL) AS Time,
+		EXTRACT(MINUTE FROM OVERALL) AS Minute
+	FROM EMPLOYEE E
+	INNER JOIN OVERVIEW O ON(E.EMP_CD = O.EMP_CD)
+	</select>
+
+</mapper>

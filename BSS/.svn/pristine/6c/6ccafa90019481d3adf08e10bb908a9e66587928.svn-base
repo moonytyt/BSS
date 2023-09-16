@@ -1,0 +1,20 @@
+package kr.or.ddit.organization.vo;
+
+import java.util.List;
+
+import kr.or.ddit.business.vo.BusinessVO;
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.position.vo.PositionVO;
+import lombok.Data;
+
+@Data
+public class OrganizationVO {
+
+	private DepartmentVO department;
+	private EmployeeVO employee;
+	private PositionVO position;
+	private BusinessVO business;
+	
+	private List<EmployeeVO> employeeList;
+}

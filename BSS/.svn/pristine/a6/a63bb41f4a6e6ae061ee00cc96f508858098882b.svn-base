@@ -1,0 +1,9 @@
+package kr.or.ddit.messenger.vo;
+
+import kr.or.ddit.mail.vo.MailBoxVO;
+import lombok.Data;
+
+@Data
+public class ChatRoomUserVO {
+
+}

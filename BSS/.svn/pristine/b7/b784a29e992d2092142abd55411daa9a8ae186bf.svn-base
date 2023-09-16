@@ -1,0 +1,43 @@
+package kr.or.ddit.calendar.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * @author PC-08 개인 일정
+ */
+public class PersonalVO {
+	@NotBlank
+	@JsonProperty("id")
+	private Integer perScNo;
+	@NotBlank
+	private Integer empCd;
+	@NotBlank
+	@JsonProperty("title")
+	private String perTitle;
+	@NotBlank
+	private String perWriter;
+	@NotBlank
+	private String perCont;
+	@NotBlank
+	@JsonProperty("start")
+	@DateTimeFormat
+	private LocalDate perStart;
+	@NotBlank
+	@JsonProperty("end")
+	@DateTimeFormat
+	private LocalDate perEnd;
+	@NotBlank
+	private Integer perAllday;
+	@NotBlank
+	private String perTextcolor;
+	@NotBlank
+	private String perBackgroundcolor;
+	@NotBlank
+	private String perBordercolor;
+}

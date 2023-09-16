@@ -1,0 +1,5 @@
+package kr.or.ddit.edApproval.service;
+
+public interface ApprovalService {
+
+}

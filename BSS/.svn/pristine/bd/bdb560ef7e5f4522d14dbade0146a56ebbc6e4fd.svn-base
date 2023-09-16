@@ -1,0 +1,22 @@
+package kr.or.ddit.vocation.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+//연가
+@Data
+public class VocationVO {
+	
+	@NotBlank
+	private String vocationCode; //구분
+	@NotBlank
+	private String empCd;		 //직원코드
+	private Integer vocationAll; //총연가
+	private Integer vocationUse; //사용연가
+	
+	private Integer vocationRest; //잔여연가
+	
+	private String empName; //사원명
+	
+}

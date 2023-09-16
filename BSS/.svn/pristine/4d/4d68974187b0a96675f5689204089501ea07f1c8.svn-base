@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.training.dao.TrainingApplyDAO">
+	
+	<!-- 페이징을 위해 레코드 수 조회  -->
+	<select id="selectTotalRecord" resultType="long" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT COUNT(*) FROM TRALINING_APPLICATION
+	</select>
+	
+	<!-- 교육 신청자 전체조회   -->
+	<select id="selectTrainApply" resultType="kr.or.ddit.training.vo.TrainingApplyVO" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		WITH TAVIEW AS (
+		    SELECT ROWNUM RNUM, TA.*
+		    	, E.EMP_NAME
+		    	, E.EMP_CD AS EMPLOYEE_CODE
+		    	, E.DEP_CD AS DEPARTMENT_CODE
+		    FROM TRALINING_APPLICATION TA
+		    INNER JOIN EMPLOYEE E ON(TA.EMP_CD = E.EMP_CD)
+		    WHERE TA.CODE = 'L_01'
+		)
+		SELECT TV.*
+			, T.TRAIN_NAME
+			, D.DEP_NAME
+		FROM TAVIEW TV
+		INNER JOIN TRAINING T ON(TV.TRAIN_NO = T.TRAIN_NO)
+		INNER JOIN DEPARTMENT D ON(TV.DEPARTMENT_CODE = D.DEP_CD)
+		<![CDATA[
+			WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+		]]>
+	</select>
+	
+
+</mapper>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.BoardCompl.dao.ComplboardDAO">
+	
+	<select id="selectTotalRecord" parameterType="kr.or.ddit.vo.PaginationInfo">
+		SELECT COUNT(*)
+		FROM COMPL_BOARD
+	</select>
+	
+	<select id="selectComplList" resultType="kr.or.ddit.BoardCompl.vo.ComplboardVO" parameterType="kr.or.ddit.vo.PaginationInfo">
+	  <![CDATA[ 
+	  			SELECT ROWNUM RNUM, A.*
+	  			FROM(
+	  			SELECT
+		        	COMPL_NO, COMPL_TTL, COMPL_DT
+		        	, (C.DEP_NAME || ' ' || B.EMP_NAME) AS EMP_NAME
+		        FROM COMPL_BOARD A
+		        inner join employee B on( A.emp_cd = B.emp_cd) 
+        	 	inner join department C on(B.dep_cd = C.dep_Cd)
+        	 	WHERE ROWNUM <= 15
+        	 	ORDER BY A.COMPL_NO DESC
+        	 	)A
+        	 	]]>
+	</select>
+	<select id="selectCompl" parameterType="kr.or.ddit.BoardCompl.vo.ComplboardVO">
+		SELECT
+			COMPL_TTL, COMPL_DT, (C.DEP_NAME || ' ' || B.EMP_NAME) AS EMP_NAME, COMPL_CN
+		FROM COMPL_BOARD A
+       		 INNER JOIN EMPLOYEE B ON( A.EMP_CD = B.EMP_CD) 
+        	 INNER JOIN DEPARTMENT C ON(B.DEP_CD = C.DEP_CD)
+        WHERE COMPL_NO = #{complNo}
+	</select>
+	<insert id="insertCompl" parameterType="kr.or.ddit.calendar.vo.CompanyVO">
+		<selectKey order="BEFORE" keyProperty="complNo" resultType="int">
+			SELECT COMPL_SEQ.NEXTVAL AS complNo FROM DUAL		
+		</selectKey>
+		INSERT INTO COMPL_BOARD(
+		   	COMPL_NO
+		  , EMP_CD
+		  , COMPL_EMP_CD
+		  , COMPL_TTL
+		  , COMPL_CN
+		  , COMPL_DT
+		)VALUES(
+		  #{complNo,jdbcType=NUMERIC}
+		, #{empCd,jdbcType=VARCHAR}
+		, #{complEmpCd,jdbcType=VARCHAR}
+		, #{complTtl,jdbcType=VARCHAR}
+		, #{complCn,jdbcType=CLOB}
+		, SYSDATE
+		)
+	</insert>
+	<delete id="deleteCompl">
+		DELETE FROM COMPL_BOARD
+		WHERE COMPL_NO=#{complNO}
+	</delete>
+</mapper>

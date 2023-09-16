@@ -1,0 +1,13 @@
+package kr.or.ddit.BoardNtc.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * @author PC-26
+ * 공지사항 삭제
+ */
+@Controller
+public class NtcboardDeleteController {
+
+}

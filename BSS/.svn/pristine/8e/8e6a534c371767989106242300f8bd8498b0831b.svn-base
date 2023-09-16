@@ -1,0 +1,54 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+    <link href="${pageContext.request.contextPath}/resources/js/fancytree/skin-win8/ui.fancytree.min.css" rel="stylesheet">
+
+    <h4> 조직도 </h4>
+	    <div class="d-flex">
+			    <div class="" id="treeArea" 
+			    	data-source="${pageContext.request.contextPath}/ed/approval/empfancytree.do">
+			    </div>
+			    <div>
+				    <input type="text" id="signpathNm" name="signpathNm" required class="form-control" placeholder="결재선명">
+				    <div id="select">
+				    </div>
+			    </div>
+	    </div>
+    
+    
+<script src="${pageContext.request.contextPath}/resources/js/fancytree/jquery.fancytree-all-deps.min.js"></script>
+<script>
+$(document).ready(function () {
+	let html;
+	let count=1; // 순서를위한
+    $("#treeArea").fancytree({
+        source: {
+            url: $("#treeArea").data("source"),
+            cache: false
+        },
+        activate: function (event, data) {
+            let nodeData = data.node.data;
+            console.log("nodeData : ",nodeData);
+            if(nodeData.empList==null){
+            let html = `<div class='d-flex'><div class='selectEmp' data-empcd=\${nodeData.empCd} >\${nodeData.empPosition}</div>`
+            html += `<select class='selectMethod'>
+	            		<option value='SD_01'>결재</option>
+	            		<option value='SD_02'>협조</option>
+	            		<option value='SD_03'>참조</option>
+	            		<option value='SD_04'>전결</option>
+	            		<option value='SD_05'>대결</option>
+            		</select>
+            		</div>`
+//             let html=`<input type="text" class="selectEmp" name= value='' />`
+// 	            let html=`<input type="text" required name="selectEmp[\${count}]" value="\${nodeData.empCd}">`
+	            $("#select").append(html);
+	            count++;
+            }
+        }
+        // 추가 설정
+    });
+});
+</script>
+
+
+
+

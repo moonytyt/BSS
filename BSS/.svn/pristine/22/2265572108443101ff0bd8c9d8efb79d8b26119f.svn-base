@@ -1,0 +1,62 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<h5>대결자 관리</h5>
+<hr color="black"/>
+delegateApprover.jsp (구현 전)
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			
+			<form role="form">
+			<h4>부재기간</h4>
+				<div class="form-group">
+				<div class="row">
+				<div class="col-md-8">
+					<label for="exampleInputEmail1">
+						시작일자
+					</label>
+					<input type="date" class="form-control" id="exampleInputDate1" />
+				</div>
+				</div>
+				</div>
+				
+				<div class="form-group">
+				<div class="row">
+				<div class="col-md-8">
+					<label for="exampleInputEmail1">
+						종료일자
+					</label>
+					<input type="date" class="form-control" id="exampleInputDate2" />
+				</div>
+				</div>
+				</div>
+				
+			<h4></br>대결자 지정</h4>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="searchInput" placeholder="검색어를 입력하세요" />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-primary" id="searchButton">검색</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="searchInput" 
+                            value="대결자" disabled />
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary">저장</button>
+                        </div>
+                    </div>
+                </div>
+                
+			</form>
+		</div>
+	</div>
+</div>

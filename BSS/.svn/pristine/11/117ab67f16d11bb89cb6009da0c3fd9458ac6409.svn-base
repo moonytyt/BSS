@@ -1,0 +1,9 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 개인신용 대출
+ */
+public class PersonalLoanVO {
+
+}

@@ -1,0 +1,27 @@
+package kr.or.ddit.finapi.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/finApi/")
+public class ManageInfoController {
+
+	@RequestMapping("general")
+	public String general() {
+		return"fin/manageInfo/general";
+	}
+	@RequestMapping("apiBusiness")
+	public String apiBusiness() {
+		return"fin/manageInfo/apiBusiness";
+	}
+	@RequestMapping("finance")
+	public String finance() {
+		return"fin/manageInfo/finance";
+	}
+	@RequestMapping("majorManagement")
+	public String majorManagement() {
+		return"fin/manageInfo/majorManagement";
+	}
+	
+}

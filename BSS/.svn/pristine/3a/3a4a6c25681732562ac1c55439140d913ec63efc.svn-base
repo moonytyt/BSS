@@ -1,0 +1,36 @@
+package kr.or.ddit.BoardCompl.service;
+
+import java.util.List;
+
+import kr.or.ddit.BoardCompl.vo.ComplboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.exception.PKNotFoundException;
+import kr.or.ddit.vo.PaginationInfo;
+
+/**
+ * 공지사항 CRUD, BLL
+ *
+ */
+public interface ComplboardSerivce {
+
+	/**
+	 * @param compl
+	 * @return 
+	 */
+	public boolean createCompl(ComplboardVO compl);
+	/**
+	 * @param complNo
+	 * @return
+	 */
+	public ComplboardVO retrieveCompl(int complNo) throws PKNotFoundException;
+	/**
+	 * @return
+	 */
+	public List<ComplboardVO> retrieveComplList(PaginationInfo<ComplboardVO> paging);
+	/**
+	 * @param compl
+	 * @return
+	 */
+// 	public int complDelete(int complNo);
+	public void deleteCompl(int complNo);
+}

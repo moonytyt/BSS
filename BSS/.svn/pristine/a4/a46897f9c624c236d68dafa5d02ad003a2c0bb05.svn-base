@@ -1,0 +1,13 @@
+package kr.or.ddit.vocation.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.vocation.vo.VocationVO;
+
+@Mapper
+public interface VocationDAO {
+	
+	public List<VocationVO> selectVocationList();
+}

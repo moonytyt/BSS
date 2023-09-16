@@ -1,0 +1,24 @@
+package kr.or.ddit.BoardCompl.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class ComplboardVO {
+	
+	@NotBlank
+	private Integer complNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String complEmpCd;
+	@NotBlank
+	private String complTtl;
+	@NotBlank
+	private String complCn;
+	@NotBlank
+	private LocalDate complDt;
+}

@@ -1,0 +1,5 @@
+package kr.or.ddit.messenger.controller;
+
+public class ChatRoomUserController {
+
+}

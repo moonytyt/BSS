@@ -1,0 +1,20 @@
+package kr.or.ddit.messenger.service;
+
+import kr.or.ddit.messenger.vo.ChatRoomVO;
+
+public interface ChatRoomUserService {
+	
+	/**
+	 * 방에 접속해 있는 인원수 반환
+	 * @param roomNo
+	 * @return
+	 */
+	public int countEmp(int roomNo);
+	
+	/**
+	 * 
+	 * @param chatRoom
+	 * @return
+	 */
+	public boolean insertOne(ChatRoomVO chatRoom);
+}

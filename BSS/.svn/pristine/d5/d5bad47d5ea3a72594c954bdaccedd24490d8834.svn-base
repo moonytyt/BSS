@@ -1,0 +1,395 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<!-- 기안문 작성폼 -->
+
+<!-- 임시 -->
+<style>
+.mar {
+	margin-bottom: 15px;
+}
+</style>
+
+<script
+	src="${pageContext.request.contextPath }/resources/js/ckeditor/ckeditor.js"></script>
+<script
+	src="${pageContext.request.contextPath}/resources/js/fancytree/jquery.fancytree-all-deps.min.js"></script>
+
+<div class="container-fluid">
+	<div class="container m-auto row border border-black">
+		<div class="col-md-12">
+		
+		<!-- controller -->
+		<form:form modelAttribute="document" method="post"> 
+		
+		<div id="test"></div>
+			<div class="row justify-content-end mar">
+				<div class="col-auto">
+					<div class="btn-group">
+					  <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+					    결재선
+					  </button>
+					  <ul class="dropdown-menu">
+					    <li><a class="dropdown-item" id="signPath" data-bs-toggle="modal" data-bs-target="#staticBackdrop1" href="#staticBackdrop1">신규</a></li>
+					    <li><a class="dropdown-item" id="saveSignPath" data-bs-toggle="modal" data-bs-target="#staticBackdrop2" href="#staticBackdrop2" >불러오기</a></li>
+					  </ul>
+					</div>
+					<button type="button" class="btn btn-primary">결재요청</button>
+					<button type="button" class="btn btn-outline-secondary">임시저장</button>
+					<button type="button" class="btn btn-outline-secondary"
+						onclick="goBack()">작성취소</button>
+				</div>
+			</div>
+			<div class="row textCen">
+				<div class="col-md-3">
+					<table class="table table-bordered mb-4">
+						<!-- mb-4: 아래쪽 간격 추가 -->
+						<tr class="textCenter">
+							<td class="table-secondary">결재번호</td>
+						</tr>
+						<tr class="textCenter">
+<!-- 							<td class="textGray">승인 시 자동채번</td> -->
+							<td  class="textGray">
+								<form:hidden path="docSign"/>승인 시 자동채번 
+								<form:errors path="docSign" class="error" />
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="col-md-9">
+					<table class="table table-bordered">
+						<!-- mb-4: 아래쪽 간격 추가 -->
+						<tr class="textCenter">
+							<!-- 나중에 br없애고 세로가운데 정렬하기 -->
+							<td rowspan="3" class="table-secondary "></br>결</br> </br>재</td>
+							<td id="apprMethod0"></td>
+							<td id="apprMethod1"></td>
+							<td id="apprMethod2"></td>
+							<td id="apprMethod3"></td>
+							<td id="apprMethod4"></td>
+						</tr>
+						<tr class="textCenter">
+							<td id="apprEmp0"></td>
+							<td id="apprEmp1"></td>
+							<td id="apprEmp2"></td>
+							<td id="apprEmp3"></td>
+							<td id="apprEmp4"></td>
+						</tr>
+						<tr class="textCenter">
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+						<tr class="textCenter">
+							<td class="table-secondary ">참조</td>
+							<td id="SD_03" colspan="5"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td class="table-secondary cellWidth">문서유형</td>
+						<td>${DocumentCont.dtName }</td>
+						<input type="hidden" value="${DocumentCont.dtNo }" name="dtNo"/>
+
+						<td class="table-secondary cellWidth">기안일자</td>
+						<td class="textGray">
+							<form:hidden path="docSign"/>기안 시 자동부여
+							<form:errors path="docSign" class="error" />
+						</td>
+					</tr>
+					<tr>
+						<security:authentication property="principal.realUser"
+							var="authEmployee" />
+						<td class="table-secondary cellWidth">기 안 자</td>
+						<td>
+						    <form:input path="empName" class="form-control" 
+						    	value="${authEmployee.empName}" readonly="true"/>
+						    <form:errors path="empName" class="error" />
+						</td>
+						
+
+						<td class="table-secondary cellWidth">기안부서</td>
+						<td>
+							<form:input path="depName" class="form-control" 
+						    	value="${authEmployee.depName}" readonly="true"/>
+						    <form:errors path="depName" class="error" />
+						</td>
+					</tr>
+					<tr>
+						<td class="table-secondary cellWidth">문서제목</td>
+						<td colspan="3"><input type="text" class="form-control" id="title" />
+							<td>
+						        <form:input path="docTitle" class="form-control"/>
+						        <form:errors path="docTitle" class="error" />
+						    </td>
+						</td>
+					</tr>
+				</tbody>
+				<tbody>
+					<tr>
+						<td colspan="4" class="table-secondary textCenter">문서내용</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<!-- 에디터를 삽입할 textarea --> <c:if test="${not empty DocumentCont }">
+								<textarea name="docContent" id="docContent">${DocumentCont.dtCont}</textarea>
+							</c:if>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="table table-bordered">
+				<tr>
+					<td><label for="exampleInputFile">File input</label> <input
+						type="file" class="form-control-file" id="exampleInputFile" /></td>
+				</tr>
+			</table>
+			</form:form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal - Static backdrop, modal-lg, centered -->
+<!-- 결재선 만들기 -->
+<div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static"
+	data-bs-keyboard="false" tabindex="-1"
+	aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="staticBackdropLabel">결재선 선택</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<!-- 모달창 최대 높이, 넘으면 스크롤 적용 -->
+			<div class="modal-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div id="modalEmpFancyTree"
+							style="overflow-y: auto; max-height: 600px;">
+							<!-- 좌측 공간 - ajax 로 가져온 직원목록 팬시트리 삽입 부분 -->
+						</div>
+					</div>
+<!-- 					<div class="col-md-6"> -->
+<!-- 						가로 스크롤 없이, 가로길이 넘으면 줄바꿈처리 -->
+<!-- 						<div id="modalSelectEmp" -->
+<!-- 							style="overflow-y: auto; max-height: 300px; overflow-x: hidden; word-wrap: break-word;"> -->
+<!-- 							우측 공간1 - 선택한 직원 배치할 부분 -->
+<!-- 						</div> -->
+<!-- 						<div id="modalSelectDep" -->
+<!-- 							style="overflow-y: auto; max-height: 200px; overflow-x: hidden; word-wrap: break-word;"> -->
+<!-- 							우측 공간2 - 선택한 수신처 배치할 부분 -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+				<button type="button" id="createFinish" class="btn btn-primary">선택완료</button>
+			</div>
+		</div>
+	</div>
+	
+</div>
+
+<!-- Modal - Static backdrop, modal-lg, centered -->
+<!-- 결재선 불러오기 -->
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static"
+	data-bs-keyboard="false" tabindex="-1"
+	aria-labelledby="staticBackdropLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="staticBackdropLabel">결재선 선택</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<!-- 모달창 최대 높이, 넘으면 스크롤 적용 -->
+			<div class="modal-body">
+				<div id="listSignPath">
+				
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+					data-bs-dismiss="modal">닫기</button>
+				<button type="button" id="selectFinish" class="btn btn-primary">선택완료</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<script>
+	// docContent 영역에 CKEditor 적용
+	CKEDITOR.replace('docContent');
+
+	// 뒤로가기 (작성취소)
+	function goBack() {
+		window.history.back();
+	}
+
+	// Modal 
+	$(document).ready(function() {
+		// ajax 로 empfancytree 내용 가져오기
+		$("#signPath").click(function() 
+			{$.ajax({
+				url : "${pageContext.request.contextPath}/ed/approval/empfancytree.do",
+				method : "GET",
+				success : function(data) {
+					// 가져온 페이지 내용을 모달 내부에 삽입
+					$("#modalEmpFancyTree").html(data);
+					// 모달 열기
+					$("#staticBackdrop").modal("show");
+				},
+				error : function() {
+				console.error("Failed to load");
+				}
+			});
+		});
+	});
+	
+	
+	
+	
+	
+	/* 문영택 
+		- 결재선 -> 신규 -> 선택완료
+	*/
+	$("#createFinish").on("click",function(){
+		if($("#modalEmpFancyTree").find("#signpathNm").val() == null || $("#modalEmpFancyTree").find("#signpathNm").val()==""){
+			alert("결재선명을 입력해주세요")
+			return;
+		}
+		let count =0;
+		let selectEmps = $("#modalEmpFancyTree").find(".selectEmp");
+		let selectMethods = $("#modalEmpFancyTree").find(".selectMethod");
+		let signpathNm = $("#modalEmpFancyTree").find("#signpathNm").val();
+		let formInput="";		
+		
+		let selectEmpCodes = [];
+		let selectMethodsCodes =[];
+		let selectSn=[];
+		
+		for(let i = 0 ; i< selectEmps.length;i++){
+			
+			var selectEmp = selectEmps[i]; 
+			var selectMethod = selectMethods[i];
+			
+			console.log(selectEmp.dataset.empcd)
+			console.log("selectMethod :" + selectMethod.selectedIndex)
+			
+			selectEmpCodes.push(selectEmp.dataset.empcd);
+			selectMethodsCodes.push(selectMethod.value);
+			
+			
+			var selectEmpCd  =  selectEmp.dataset.empcd; // 선택된 결재자의 사번
+			var selectedIndex = selectMethod.selectedIndex; // 선택된 option
+			var selectedCode = selectMethod[selectedIndex].value;
+			var selectedInnerText = selectMethod[selectedIndex].innerText;
+			
+			if(selectMethod.value!='SD_03'){
+				$(`#apprEmp\${count}`).html(selectEmp);
+				$(`#apprMethod\${count}`).html(selectedInnerText);
+				count++;
+			}else{
+				$("#SD_03").append(selectEmp.innerText);
+			}
+			formInput += `<input type="hidden" value="\${selectEmpCd}" name="signPathDetailList[\${i}].empCd">
+               				<input type="hidden" value="\${selectedCode}" name="signPathDetailList[\${i}].code">`		
+		}
+		$("#test").append(formInput)
+		
+		
+		let data={
+			signpathNm : signpathNm,
+			selectEmpCodes:selectEmpCodes,
+			selectMethodsCodes:selectMethodsCodes,
+			selectSn:selectSn
+		}
+		
+		// ajax로 결재선 생성
+		let setting = {
+			url : `${pageContext.request.contextPath}/ed/document/signPathCreate.do`,
+			method : "POST",
+			dataType : "json",
+			data : JSON.stringify(data),
+			contentType:"application/json",
+			success : function(resp) {
+				console.log(resp);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR)
+				console.log(status)
+				console.log(error)
+			}
+		}
+
+		$.ajax(setting);
+		
+		$("#staticBackdrop").modal("hide");
+	
+	})
+	
+	/* 불러오기 시 */
+	$("#saveSignPath").on("click",function(){
+		let setting = {
+			url : `${pageContext.request.contextPath}/ed/document/signPathList.do`,
+			method : "POST",
+			dataType : "json",
+			success : function(resp) {
+				console.log(resp);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR)
+				console.log(status)
+				console.log(error)
+			}
+		}
+
+		$.ajax(setting);
+	})
+	
+	
+	
+	
+	
+	// modalEmpFancyTree 요소 더블클릭 시 modalSelectEmp에 뜨도록 해야함!
+	// FancyTree 라이브러리 - 트리 노드:fancytree-node, 선택된 노드:fancytree-selected
+	// 부모 :fancytree-ico-e? 자식 : fancytree-ico-c.
+	// 조건 : 자식노드만 선택 가능, 동일인물 선택 불가, text로만 가져오는게 아니라 선택도 가능해야함.
+
+// 	$(document).on("dblclick", "#modalEmpFancyTree .fancytree-ico-c",
+// 			function() {
+// 				let selectedNodeText = $(this).find(".fancytree-title").text();
+// 				let selectedNode = $("<div>").text(selectedNodeText);
+// 				$("#modalSelectEmp").append(selectedNode);
+// 			});
+
+	// $(document).on("dblclick", "#modalEmpFancyTree .fancytree-node", function () {
+	//     var node = $(this).data("node"); // 더블클릭된 노드 가져오기
+	//     if (node.isFolder()) {
+	//         return; // 폴더 노드는 더블클릭할 수 없음
+	//     }
+
+	//     let selectedNodeText = node.title; // 선택된 노드의 텍스트
+	//     let selectedNode = $("<div>").text(selectedNodeText);
+	//     $("#modalSelectEmp").append(selectedNode);
+	// });
+</script>
+
+
+
+

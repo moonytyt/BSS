@@ -1,0 +1,199 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+<style>
+.btn-group, .btn-group-vertical {
+    position: relative;
+    display: block;
+    vertical-align: middle;
+
+}
+
+.pagination{
+	justify-content: center
+}
+
+
+.list {
+	padding-top: 20px;
+    padding-bottom: 30px;
+}
+.form-inline{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+button {
+	display: inline-block;
+}
+th, #col {
+	text-align : center;
+}
+
+#table{
+	padding-top: 30px;
+}
+li{
+	margin-left: 30px;
+}
+#button{
+	margin-left: 10px;
+	display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+#category{
+	display:flex; 
+	justify-content: space-evenly;
+}
+.form-inline label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+</style>
+
+<h5>연가조회</h5>
+<hr color="black">
+
+<div class="container-fluid">
+    <div class="list">
+        <div class="col-md-12">
+           
+            <!-- 검색/조회 입력하는 폼 -->
+            <form class="form-inline" name="searchForm" id="searchForm" method="post">
+                <div id="category">
+                    <div class="form-group">
+                        <label for="vocationCode">구분</label>
+                        <input type="text" class="form-control" id="vocationCode" name="vocationCode" value="" />
+                     
+                        <label for="empName">사원명</label>
+                        <input type="text" class="form-control" id="empName" name="empName" value="" />
+                     
+                        <label for="">연가일</label>
+                        <input type="date" class="form-control" id="" name="" value="" />
+
+                <div id="button">
+                    <input type="reset" class="btn btn-secondary" style="float:right; margin-right:10px" />
+                    <button type="submit" class="btn btn-primary" style="float:right; margin-right:10px" id="selectBtn">조회</button>
+                </div>
+         	</div>
+         </div>
+      </form>
+      <!-- 검색/조회 입력하는 폼 끝 -->
+        </div>
+    </div>
+</div>
+
+
+<!-- 연가조회 폼  -->
+<div class="container-fluid">
+	<form id="saveForm">
+		<div class="table">
+			<div class="col-md-12">
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>구분</th>
+							<th>연가자</th>
+							<th>연가일</th>
+							<th>총 연가</th>
+							<th>사용 연가</th>
+							<th>잔여 연가</th>
+							<th>선택</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:if test="${empty vocation }">
+							<tr>
+								<td id="col" colspan="6">해당조건에 일치하는 결과가 없습니다.</td>
+							</tr>
+						</c:if>
+						<c:if test="${not empty vocation }">
+							<c:forEach items="${vocation }" var="vocation">
+								<tr>
+									<td>${vocation.vocationCode }</td>
+									<td>${vocation.empName }</td>
+									<td>0000-00-00 ~ 0000-00-00 (?일간)</td>
+									<td>${vocation.vocationAll }</td>
+									<td>${vocation.vocationUse }</td>
+									<td>${vocation.vocationRest }</td>
+									<td><input type="checkbox" /></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="7">${paging.pagingHTML }
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		<div class="btn-group" role="group">
+			<button type="button" class="btn btn-primary" onClick="location.href='${pageContext.request.contextPath}/pm/servicemanagement/vocation'">연가등록</button>
+			<a id="modal-555531" href="#modal-container-555531" role="button" class="btn btn-secondary" data-toggle="modal"	margin-right: 10px">수정</a>
+			<button type="button" class="btn btn-danger" margin-right: 10px">선택삭제</button>
+		</div>
+	</form>
+	
+	<form:form id="searchForm" modelAttribute="simpleCondition">
+		<input type="hidden" name="page" />
+	</form:form>
+	<!-- 출퇴근조회 폼 끝-->
+</div>
+
+<!-- 수정눌렀을 때 모달  -->
+<div class="modal fade" id="modal-container-555531" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="myModalLabel">연가수정</h5>
+				<button type="button" class="close" data-dismiss="modal">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<div class="modal-body">출장</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary">저장</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">취소
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 모달 끝 -->
+
+
+<script>
+function fn_paging(page){
+	searchForm.page.value = page;
+	$(searchForm).submit();
+}
+
+function to_ajax() {
+	var searchForm = $("form[name=searchForm]").serialize();
+
+	$.ajax({
+		type : 'post',
+		url : '${pageContext.request.contextPath}/pm/servicemanagement/vocation', //조회 or 수정 or 추가 할 컨트롤러 url
+		data : searchForm,
+		dataType : 'text',
+		error : function(xhr, status, error) {
+			alert(error);
+		},
+		success : function(json) {
+			alert(json)
+		}
+	});
+}
+</script>

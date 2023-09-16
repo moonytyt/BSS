@@ -1,0 +1,72 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<h5>수신함</h5>
+<hr color="black"/>
+
+<!-- 임의데이터 -->
+
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr class="table-secondary textCenter">
+			<th>No.</th>
+			<th>문서유형</th>
+			<th>문서번호</th>
+			<th>문서제목</th>
+			<th>기안자</th>
+			<th>기안부서</th>
+			<th>승인완료일</th>
+		</tr>
+	</thead>
+	
+	<tbody>
+
+		<tr class="textCenter">
+			<td>1</td>
+			<td>휴가</td>
+			<td>2308080001</td>
+			<td class="textLeft"><a href="javascript:;">휴가신청서</a></td>
+			<td>심태진</td>
+			<td>정보지원부</td>
+			<td>2023.07.26 13:25</td>
+		</tr>
+		<tr class="textCenter">
+			<td>2</td>
+			<td>휴가</td>
+			<td>2308090005</td>
+			<td class="textLeft"><a href="javascript:;">휴가신청서</a></td>
+			<td>고한결</td>
+			<td>정보지원부</td>
+			<td>2023.07.26 13:25</td>
+		</tr>
+		<tr class="textCenter">
+			<td>3</td>
+			<td>출장</td>
+			<td>2308100021</td>
+			<td class="textLeft"><a href="javascript:;">휴가신청서</a></td>
+			<td>남형우</td>
+			<td>기업영업본부</td>
+			<td>2023.07.26 13:25</td>
+		</tr>
+	</tbody>
+</table>
+<!-- 나중에 적용 -->
+<!-- 
+	<tbody>
+	<c:set var="memberList" value="${paging.dataList }" />
+	<c:if test="${empty memberList }">
+		<tr>
+			<td colspan="7">등록된 회원 없음.</td>
+		</tr>
+	</c:if>
+	<c:if test="${not empty memberList }">
+		<c:forEach items="${memberList }" var="member">
+			<tr>
+				<td>${member.rnum }</td>
+				<td><a href="javascript:;" data-who="${member.memId }" data-bs-toggle="modal" data-bs-target="#exampleModal">${member.memName }</a></td>
+				<td>${member.memId }</td>
+			</tr>
+		</c:forEach>
+	</c:if>
+	</tbody>
+-->

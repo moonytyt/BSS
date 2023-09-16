@@ -1,0 +1,81 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>   
+
+<title>요구사항목록조회</title>
+<h5>요구사항</h5>
+<hr color="black">
+<div>
+<table class="table table-sm">
+	<thead>
+		<tr>
+			<th>No.</th>
+			<th>제목</th>
+			<th>작성자</th>
+			<th>등록날짜</th>
+			<th>답변여부</th>
+		</tr>
+	</thead>
+	<tbody>
+	<c:set var="reqList" value="${paging.dataList }" />
+	<c:forEach items="${reqList}" var="req">
+		<tr>
+<%-- 			<c:url value="/board/reqDetail" var="viewURL"> --%>
+<%-- 				<c:param name="what" value="${req.reqNo }" /> --%>
+<%-- 			</c:url>  모달창 등록 버튼에... --%>
+<%-- 			<th><a href="${viewURL}">${req.reqTtl}</a></th> --%>
+			<th>${req.rnum }</th>
+			<th style="cursor:pointer;" onclick='modal(${req.reqNo })'>${req.reqTtl}</th>
+			<th>${req.empName}</th>
+			<th>${req.reqDt}</th>
+			<th></th>
+		</tr>
+	</c:forEach>
+	</tbody>
+</table>
+<div style="margin-left: 50%">
+	<td colspan="7">
+		${paging.pagingHTML }
+	</td>
+</div>
+
+</div>
+<div style="position:absolute;right:25px;buttom:0px;">
+	<a href="<c:url value='/board/reqInsert'/>"class="btn btn-primary btn-sm">요구사항등록</a>
+</div>
+
+<script>
+function modal(reqNo){
+	let change = document.getElementById('reqpass');
+	change.style.display = 'block'
+};
+</script>
+
+<!-- Modal -->
+<div id="reqpass" style="display: none;">
+<div class="reqpass" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">비밀번호를 입력하세요</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input id="checkPass" type="text" placeholder="숫자4자리">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        
+        	<c:url value="/board/reqDetail" var="viewURL">
+				<c:param name="what" value="${req.reqNo }" />
+			</c:url>
+<%-- 			<th><a href="${viewURL}">${req.reqTtl}</a></th> --%>
+<%--         <button id="passcheck" type="button" onclick="location.href='${viewURL}';" class="btn btn-primary">확인</button> --%>
+        <a href="${viewURL}" id="passcheck"  type="button" class="btn btn-primary">확인</a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

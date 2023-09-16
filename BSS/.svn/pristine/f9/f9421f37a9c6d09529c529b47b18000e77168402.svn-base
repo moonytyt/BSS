@@ -1,0 +1,5 @@
+package kr.or.ddit.businesstrip.controller;
+
+public class BusinessTripViewController {
+
+}

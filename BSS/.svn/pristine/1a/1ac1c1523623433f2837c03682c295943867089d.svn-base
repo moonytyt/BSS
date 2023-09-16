@@ -1,0 +1,19 @@
+package kr.or.ddit.position.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of = "pcCd")
+public class PositionVO {
+	@NotBlank
+//	(groups = {InsertGroup.class, UpdateGroup.class})
+	private String poCd;
+	@NotBlank
+	private String poName;
+	@NotBlank
+	private String poSal;
+	private String poPriority;
+}

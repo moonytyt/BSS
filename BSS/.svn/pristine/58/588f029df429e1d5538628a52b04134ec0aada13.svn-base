@@ -1,0 +1,47 @@
+package kr.or.ddit.finapi.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.finapi.vo.BankOptionVO;
+import kr.or.ddit.finapi.vo.BankVO;
+import kr.or.ddit.finapi.vo.DepositOptionVO;
+import kr.or.ddit.finapi.vo.DepositVO;
+
+
+@Mapper
+public interface ApiDatabaseInsertDAO {
+	
+	
+	/**
+	 * 은행정보 데이터 
+	 * @param bankList
+	 * @return
+	 */
+	public int bankInsert(List<BankVO> bankList);
+
+	
+	/**
+	 * 은행정보 옵션 데이터 
+	 * @param bankOptionList
+	 * @return
+	 */
+	public int bankOptionInsert(List<BankOptionVO> bankOptionList);
+	
+	/**
+	 * 정기예금데이터 인서트
+	 * @param depositList
+	 * @return
+	 */
+	public int depositInsert(List<DepositVO> depositList);
+	
+	
+	/**
+	 * 정기예금 옵션 데이터 인서트
+	 * @param depositOptionList
+	 * @return
+	 */
+	public int depositOptionInsert(List<DepositOptionVO> depositOptionList);
+	
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.vocation.dao.VocationDAO">
+
+	<select id="selectVocationList" resultType="kr.or.ddit.vocation.vo.VocationVO">
+		SELECT VOCATION_CODE
+			, V.EMP_CD
+			, E.EMP_NAME
+			, VOCATION_ALL
+			, VOCATION_USE
+			, (VOCATION_ALL-VOCATION_USE) VOCATION_REST
+		FROM VOCATION V
+		INNER JOIN EMPLOYEE E ON(E.EMP_CD = V.EMP_CD)
+	</select>
+
+</mapper>

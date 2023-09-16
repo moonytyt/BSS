@@ -1,0 +1,177 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<h5>결재선 관리</h5>
+<hr color="black"/>
+signpathSave.jsp 예시 (임의데이터)
+
+<div id="tableContainer">
+
+			<button type="button" class="btn btn-primary">
+				추가
+			</button> 
+			<button type="button" class="btn btn-secondary">
+				삭제
+			</button> 
+			
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>결재선명</th>
+        <th>등록일</th>
+        <th>확인하기</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>결의서 제출</td>
+        <td>2022.12.05</td>
+        <td><a href="javascript:;" class="btnViewDetails" data-details="details-1">확인</a></td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>내부결재</td>
+        <td>2022.12.05</td>
+        <td><a href="javascript:;" class="btnViewDetails" data-details="details-2">확인</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="details-1" class="details" style="display: none;">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>순번</th>
+        <th>결재자부서</th>
+        <th>결재자</th>
+        <th>결재방법</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>인사부</td>
+        <td>유대리 대리</td>
+        <td>결재</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>인사부</td>
+        <td>너과장 과장</td>
+        <td>결재</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>인사부</td>
+        <td>나부장 부장</td>
+        <td>결재</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="details-2" class="details" style="display: none;">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>순번</th>
+        <th>결재자부서</th>
+        <th>결재자</th>
+        <th>결재방법</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>인사부</td>
+        <td>유대리 대리2</td>
+        <td>결재</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>인사부</td>
+        <td>너과장 과장2</td>
+        <td>결재</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>인사부</td>
+        <td>나부장 부장2</td>
+        <td>결재</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+  // 확인하기 버튼을 클릭했을 때 이벤트 핸들러를 등록합니다.
+  $(".btnViewDetails").click(function() {
+    // 데이터가 로드될 대상을 가져옵니다.
+    var targetDetails = $(this).data("details");
+    var targetElement = $("#" + targetDetails);
+    
+    // 이미 데이터가 로드된 경우, 보이기/숨기기 처리를 합니다.
+    if (targetElement.is(":visible")) {
+      targetElement.hide();
+    } else {
+      targetElement.show();
+    }
+  });
+});
+</script>
+
+<!-- 
+ 예시 코드: 웹 페이지에 목록 테이블과 상세 정보 테이블 추가
+ 
+<table class="table table-bordered table-hover">
+	테이블 내용
+</table>
+
+<table class="table table-bordered">
+    테이블 내용
+</table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // 페이지 로딩 시 처음 목록 불러오기
+    $(document).ready(function () {
+        $.ajax({
+            url: "/list", // 서버의 API 주소
+            type: "GET",
+            success: function (data) {
+                // 서버에서 받아온 데이터를 테이블에 추가하는 로직
+            },
+            error: function (error) {
+                console.error("Error occurred:", error);
+            }
+        });
+    });
+
+    // 확인 버튼 클릭 시 상세 정보 불러오기
+    $(document).on("click", "a", function () {
+        var itemId = $(this).closest("tr").find("td:first").text(); // 예시로 첫 번째 칼럼에 순번이 들어있다고 가정
+        $.ajax({
+            url: "/detail/" + itemId, // 서버의 API 주소 (해당 itemId로 상세 정보 조회)
+            type: "GET",
+            success: function (data) {
+                // 서버에서 받아온 상세 정보 데이터를 테이블에 추가하는 로직
+            },
+            error: function (error) {
+                console.error("Error occurred:", error);
+            }
+        });
+    });
+</script>
+
+
+ -->
+
+

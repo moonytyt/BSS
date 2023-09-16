@@ -1,0 +1,44 @@
+package kr.or.ddit.calendar.vo;
+
+import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
+/**
+ * @author PC-08 회사 일정
+ */
+@Data
+public class PersonalVO {
+	@JsonProperty("id")
+	private Integer perScNo;
+	
+//	@NotBlank
+	private String empCd;
+	@JsonProperty("title")
+	private String perTitle;
+	private String perWriter;
+	private String perCont;
+	
+	@NotBlank
+	@JsonProperty("start")
+	private String perStart;
+
+	@JsonProperty("end")
+	private String perEnd;
+	private Integer perAllday;
+	private String perTextcolor;
+	private String perBackgroundcolor;
+	private String perBordercolor;
+	
+	private List<PersonalVO> personalList;
+
+	public List<PersonalVO> getPersonalList() {
+		return personalList;
+	}
+
+
+}

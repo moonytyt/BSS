@@ -1,0 +1,16 @@
+package kr.or.ddit.organization.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.department.vo.DepartmentVO;
+
+@Mapper
+public interface OrganizationDAO {
+
+	public List<DepartmentVO> departmentsList();
+	public List<DepartmentVO> departmentsDetailList(String depCd);
+	
+		
+}

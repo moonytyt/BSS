@@ -1,0 +1,22 @@
+package kr.or.ddit.messenger.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import kr.or.ddit.mail.vo.MailBoxVO;
+import lombok.Data;
+
+@Data
+public class ChatRecordVO {
+	@NotBlank
+	private Integer recodeNo;
+	@NotBlank
+	private String messengerContent;
+	@NotBlank
+	private LocalDate messengerTime;
+	@NotBlank
+	private Integer roomNo;
+	@NotBlank
+	private Integer empCd;
+}

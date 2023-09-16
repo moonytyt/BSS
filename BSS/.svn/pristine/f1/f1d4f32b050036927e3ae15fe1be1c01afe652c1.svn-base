@@ -1,0 +1,45 @@
+package kr.or.ddit.finapi.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/finApi/")
+public class FinapiController {
+
+	@RequestMapping("finMain")
+	public String finMain() {
+		return "fin/prdt/prdtList";
+	}
+	
+	@RequestMapping("regDeposit")
+	public String regDeposit() {
+		return "fin/prdt/regDeposit";
+	}
+	
+	@RequestMapping("personalLoan")
+	public String personalLoan() {
+		return "fin/prdt/personalLoan";
+	}
+	
+	@RequestMapping("pensionPrdt")
+	public String pensionPrdt() {
+		return "fin/prdt/pensionPrdt";
+	}
+	
+	@RequestMapping("rentDepositLoan")
+	public String rentDepositLoan() {
+		return "fin/prdt/rentDepositLoan";
+	}
+
+	@RequestMapping("homeEquityLoan")
+	public String homeEquityLoan() {
+		return "fin/prdt/homeEquityLoan";
+	}
+	
+	@RequestMapping("savingPrdt")
+	public String savingPrdt() {
+		return "fin/prdt/savingPrdt";
+	}
+	
+}

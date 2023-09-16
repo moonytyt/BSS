@@ -1,0 +1,173 @@
+package kr.or.ddit.calendar.vo;
+
+import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * @author PC-08 회사 일정
+ */
+public class PersonalVO {
+	@JsonProperty("id")
+	private Integer perScNo;
+	
+	@NotBlank
+	@JsonProperty("title")
+	private String perTitle;
+	
+	private String perWriter;
+	private String perCont;
+
+	@NotBlank
+	@JsonProperty("start")
+	private String perStart;
+
+	@JsonProperty("end")
+	private String perEnd;
+	private Integer perAllday;
+	private String perTextcolor;
+	private String perBackgroundcolor;
+	private String perBordercolor;
+	
+	private List<PersonalVO> personalList;
+
+	public List<PersonalVO> getPersonalList() {
+		return personalList;
+	}
+
+	public void setPersonalList(List<PersonalVO> personalList) {
+		this.personalList = personalList;
+	}
+
+
+
+	public Integer getPerScNo() {
+		return perScNo;
+	}
+
+
+
+	public String getPerTitle() {
+		return perTitle;
+	}
+
+
+
+	public void setPerTitle(String perTitle) {
+		this.perTitle = perTitle;
+	}
+
+
+
+	public String getPerWriter() {
+		return perWriter;
+	}
+
+
+
+	public void setPerWriter(String perWriter) {
+		this.perWriter = perWriter;
+	}
+
+
+
+	public String getPerCont() {
+		return perCont;
+	}
+
+
+
+	public void setPerCont(String perCont) {
+		this.perCont = perCont;
+	}
+
+
+
+	public String getPerStart() {
+		return perStart;
+	}
+
+
+
+	public void setPerComStart(String perStart) {
+		this.perStart = perStart;
+	}
+
+
+
+	public String getPerEnd() {
+		return perEnd;
+	}
+
+
+
+	public void setPerEnd(String perEnd) {
+		this.perEnd = perEnd;
+	}
+
+
+
+	public Integer getPerAllday() {
+		return perAllday;
+	}
+
+
+
+	public void setPerAllday(Integer perAllday) {
+		this.perAllday = perAllday;
+	}
+
+
+
+	public String getPerTextcolor() {
+		return perTextcolor;
+	}
+
+
+
+	public void setPerTextcolor(String perTextcolor) {
+		this.perTextcolor = perTextcolor;
+	}
+
+
+
+	public String getPerBackgroundcolor() {
+		return perBackgroundcolor;
+	}
+
+
+
+	public void setPerBackgroundcolor(String perBackgroundcolor) {
+		this.perBackgroundcolor = perBackgroundcolor;
+	}
+
+
+
+	public String getPerBordercolor() {
+		return perBordercolor;
+	}
+
+
+
+	public void setPerBordercolor(String perBordercolor) {
+		this.perBordercolor = perBordercolor;
+	}
+
+
+
+	public void setPerScNo(Integer perScNo) {
+		this.perScNo = perScNo;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+}

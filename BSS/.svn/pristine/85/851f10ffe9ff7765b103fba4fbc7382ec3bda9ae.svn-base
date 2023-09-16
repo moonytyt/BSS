@@ -1,0 +1,27 @@
+package kr.or.ddit.resignation.service;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.resignation.dao.ResignationDAO;
+import kr.or.ddit.resignation.vo.ResignationVO;
+
+@Service
+public class ResingationServiceImpl implements ResignationService {
+
+	@Inject
+	private ResignationDAO reDAO;
+	
+	@Override
+	public boolean createResignation(ResignationVO resgination) {
+		int cnt = 0;
+		if(resgination.getCode() == "") {
+			return false;
+		}
+		cnt = reDAO.insertResination(resgination);
+		
+		return cnt > 0;
+	}
+
+}

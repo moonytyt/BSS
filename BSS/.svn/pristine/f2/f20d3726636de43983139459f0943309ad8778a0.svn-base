@@ -1,0 +1,48 @@
+package kr.or.ddit.edDocument.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of = "docNo")
+public class DocumentVO {
+
+	@NotBlank
+	private String docNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private int signpathNo;
+	@NotBlank
+	private int dtNo;
+	@NotBlank
+	private String docTitle;
+	@NotBlank
+	private String docContent;
+	@NotBlank
+	private String docType;
+	@NotBlank
+	private LocalDate docUpdatedate;
+	private long docSign;
+	private String code;
+	
+	// 추가
+    private String empName;			// 기안자 (별칭으로도 사용)
+    private String approvalEmpCd; 	// 결재자사번 (별칭 사용을 위한)
+    private String approvalEmpName; // 결재자 (별칭 사용을 위한)
+    private String depCd;			// 부서코드
+    private String depName; 		// 기안부서
+    private LocalDate hdDate; 		// 참조일시
+    private int sdTurn; 			// 결재순번
+    private LocalDate seDate; 		// 승인완료일
+    private String seCode;			// 결재상태
+    
+    private String seReject;			// 결재상태
+    
+
+
+}

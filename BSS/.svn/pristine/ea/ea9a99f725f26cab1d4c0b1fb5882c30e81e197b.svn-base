@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.edDocument.dao.DocumentDao">
+	
+	<!-- 추후결재번호 DEP_NAME || '-' || TO_CHAR(SYSDATE, 'YYYY') || LPAD(시퀀스.NEXTVAL, 4, '0') AS docSign -->
+	
+	<!-- 문서 양식 생성 -->
+	<insert id="insertForm" parameterType="kr.or.ddit.edDocument.vo.DocumentTypeVO">
+		<selectKey order="BEFORE" keyProperty="dtNo" resultType="int">
+			SELECT DOCUMENT_TYPE_SEQUENCE.NEXTVAL
+			FROM DUAL
+		</selectKey>
+		INSERT INTO DOCUMENT_TYPE (
+			DT_NO
+			, DT_GROUP
+			, DT_CONT
+			, CODE
+		) VALUES (
+			#{dtNo,jdbcType=CHAR}
+			, #{dtGroup,jdbcType=CHAR}
+			, #{dtCont,jdbcType=CLOB}
+			, #{code,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!-- 문서 양식 목록 조회 -->
+	<!-- DT_NO, DT_GROUP, DT_CONT, CODE -->
+	<select id="selectDocumentTypeList" resultType="kr.or.ddit.edDocument.vo.DocumentTypeVO">
+		SELECT 
+			DT_NO
+			, DT_GROUP
+		FROM DOCUMENT_TYPE
+		ORDER BY DT_NO
+	</select>
+
+	<!-- 문서 양식 상세 불러오기 위한 단순 조회 -->
+	<select id="selectDtCont" resultType="kr.or.ddit.edDocument.vo.DocumentTypeVO">
+		SELECT DT_NO
+			, DT_GROUP
+			, DT_CONT
+			, CODE
+		FROM DOCUMENT_TYPE
+		WHERE DT_NO=#{dtNo,jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 기안문 등록 -->
+	<insert id="insertDocument" parameterType="kr.or.ddit.edDocument.vo.DocumentVO">
+	
+	</insert>
+<!-- d20230001, d20230002 로 증가함
+<insert id="insertDocument">
+	INSERT INTO DOCUMENT (
+    DOC_NO 
+    , EMP_CD
+    , SIGNPATH_NO
+    , DT_NO
+    , DOC_TITLE
+    , DOC_CONTENT
+    , DOC_TYPE
+    , DOC_UPDATEDATE
+    , DOC_SIGN
+    , CODE
+    )
+VALUES (
+    'd' || TO_CHAR(SYSDATE, 'YYYY') || LPAD(DOC_NO_SEQUENCE.NEXTVAL, 4, '0')
+	, #{empCd,jdbcType=VARCHAR}
+	, #{signpathNo,jdbcType=NUMERIC}
+	, #{dtNo,jdbcType=NUMERIC}
+	, #{docTitle,jdbcType=VARCHAR}
+	, #{docContent,jdbcType=CLOB}
+	, #{docType,jdbcType=CHAR}
+	, SYSDATE
+	, NULL
+	, 'D_01'
+    );
+</insert>	
+ -->
+
+	<!-- 결재요청함
+		* A: 문서정보 및 기안자정보, B: 문서가 SE_01(미승인)상태인 문서의 결재선 전체, C: A출력+B에서 미승인상태인 첫번째 사람 가져오기, FilterCode: SE_03(반려)
+		* 별칭들- empName:기안자, uplodeEmpCd:기안자사번, approvalEmpName:결재자, approvalEmpCd:결재자사번	-->
+	<select id="selectReqList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS (
+		    SELECT 
+		        DOC_NO,
+		        DOC_TYPE,
+		        DOC_TITLE,
+		        EMP_NAME,
+		        DOC_UPDATEDATE,
+		        DOC.EMP_CD
+		    FROM DOCUMENT DOC
+		    LEFT OUTER JOIN EMPLOYEE EMP ON DOC.EMP_CD = EMP.EMP_CD
+		    WHERE DOC.EMP_CD = EMP.EMP_CD
+		), FilterCode AS (
+		    SELECT SE.DOC_NO
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		    WHERE SE.CODE = 'SE_03'
+		), B AS (
+		    SELECT SE.EMP_CD, SE.DOC_NO, SD_TURN, SE.CODE
+		           ,ROW_NUMBER() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN) AS rn
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		    WHERE SE.CODE = 'SE_01'
+		    AND SE.DOC_NO NOT IN (SELECT DOC_NO FROM FilterCode)
+		), C AS(
+		    SELECT  A.DOC_NO, A.DOC_TYPE, A.DOC_TITLE, A.EMP_CD AS empCd, A.EMP_NAME AS empName, A.DOC_UPDATEDATE,
+		            B.EMP_CD AS approvalEmpCd, SD_TURN
+		    FROM A
+		    INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+		    WHERE B.rn = 1
+		)
+		SELECT C.*, EMP.EMP_NAME AS approvalEmpName
+		FROM C C INNER JOIN EMPLOYEE EMP ON(approvalEmpCd = EMP_CD)
+		WHERE empCd = #{empCd,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 결재대기함 -->
+	<select id="selectWaitList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS (
+		    SELECT 
+		        DOC_NO
+		        , DOC_TYPE
+		        , DOC_TITLE
+		        , EMP_NAME
+		        , DEP.DEP_CD
+		        , DEP_NAME
+		        , DOC_UPDATEDATE
+		        , DOC.EMP_CD
+		    FROM DOCUMENT DOC
+		    LEFT OUTER JOIN EMPLOYEE EMP ON DOC.EMP_CD = EMP.EMP_CD
+		    LEFT OUTER JOIN DEPARTMENT DEP ON DEP.DEP_CD = EMP.DEP_CD
+		    WHERE DOC.EMP_CD = EMP.EMP_CD
+		), FilterCode AS (
+		    SELECT SE.DOC_NO
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		    WHERE SE.CODE = 'SE_03'
+		), B AS (
+		    SELECT SE.EMP_CD, SE.DOC_NO, SD_TURN, SE.CODE
+		           ,ROW_NUMBER() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN) AS rn
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		    WHERE SE.CODE = 'SE_01'
+		    AND SE.DOC_NO NOT IN (SELECT DOC_NO FROM FilterCode)
+		), C AS(
+		    SELECT  A.DOC_NO, A.DOC_TYPE, A.DOC_TITLE, A.EMP_CD AS empCd, A.EMP_NAME AS empName
+		            , A.DEP_CD ,A.DEP_NAME , A.DOC_UPDATEDATE,
+		            B.EMP_CD AS approvalEmpCd, SD_TURN
+		    FROM A
+		    INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+		    WHERE B.rn = 1
+		)
+		SELECT C.*, EMP.EMP_NAME AS approvalEmpName
+		FROM C C INNER JOIN EMPLOYEE EMP ON(approvalEmpCd = EMP_CD)
+		WHERE approvalEmpCd = #{empCd,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 결재진행함 
+	<select id="selectIngList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS (
+			SELECT
+				DOC_NO
+				, DOC_TYPE
+				, DOC_TITLE
+				, EMP_NAME
+				, DEP_NAME
+				, DOC_UPDATEDATE
+				, DOC.EMP_CD
+			FROM DOCUMENT DOC
+				LEFT OUTER JOIN EMPLOYEE EMP ON DOC.EMP_CD = EMP.EMP_CD
+				LEFT OUTER JOIN DEPARTMENT DEP ON EMP.DEP_CD = DEP.DEP_CD
+			WHERE DOC.EMP_CD = EMP.EMP_CD
+		), B AS (
+			SELECT SE.EMP_CD, SE.DOC_NO, SD_TURN,
+				ROW_NUMBER() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN) AS rn
+			FROM SIGNPATH_DETAIL SD
+				INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+			WHERE SE.CODE = 'SE_01'
+		), C AS(
+			SELECT A.DOC_NO, A.DOC_TYPE, A.DOC_TITLE,
+				A.EMP_NAME AS "empName", A.DEP_NAME "depName", A.DOC_UPDATEDATE,
+				B.EMP_CD AS "결재자사번", SD_TURN AS "결재순번"
+			FROM A INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+			WHERE B.rn = 1
+		)
+		SELECT 
+			C.*
+			, EMP.EMP_NAME AS "emp" FROM C C
+		INNER JOIN EMPLOYEE EMP ON(결재자사번 = EMP_CD)
+	</select>
+
+	<select id="selectIngList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+ 		WITH A AS (
+			SELECT
+				DOC_NO
+				, DOC_TYPE
+				, DOC_TITLE
+				, EMP_NAME
+				, DEP_NAME
+				, DOC_UPDATEDATE
+				, DOC.EMP_CD
+                , DOC_SIGN
+			FROM DOCUMENT DOC
+				LEFT OUTER JOIN EMPLOYEE EMP ON DOC.EMP_CD = EMP.EMP_CD
+				LEFT OUTER JOIN DEPARTMENT DEP ON EMP.DEP_CD = DEP.DEP_CD
+			WHERE DOC.EMP_CD = EMP.EMP_CD
+		), B AS (
+			SELECT SE.EMP_CD, SE.DOC_NO, SD_TURN, SD.CODE
+				, ROW_NUMBER() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN) AS rn
+			FROM SIGNPATH_DETAIL SD
+				INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		), C AS(
+			SELECT A.DOC_NO, A.DOC_TYPE, A.DOC_TITLE, A.EMP_CD empCd
+				, A.EMP_NAME AS empName, A.DEP_NAME AS depName, A.DOC_UPDATEDATE
+				, B.EMP_CD AS approvalEmpCd, SD_TURN, B.CODE, A.DOC_SIGN
+			FROM A INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+		)
+		SELECT 
+			C.*
+			, EMP.EMP_NAME AS approvalEmpName 
+        FROM C C INNER JOIN EMPLOYEE EMP ON(approvalEmpCd = EMP_CD)
+        WHERE C.DOC_SIGN IS NULL AND ( 
+        	empCd = #{empCd, jdbcType=VARCHAR} OR approvalEmpCd = #{empCd, jdbcType=VARCHAR} 
+        )
+	</select>
+-->
+	<select id="selectIngList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS (
+		    SELECT 
+		        DOC_NO
+		        , DOC_TYPE
+		        , DOC_TITLE
+		        , EMP_NAME
+		        , DEP.DEP_CD
+		        , DEP_NAME
+		        , DOC_UPDATEDATE
+		        , DOC.EMP_CD
+		        , DOC_SIGN
+		    FROM DOCUMENT DOC
+		    LEFT OUTER JOIN EMPLOYEE EMP ON DOC.EMP_CD = EMP.EMP_CD
+		    LEFT OUTER JOIN DEPARTMENT DEP ON DEP.DEP_CD = EMP.DEP_CD
+		    WHERE DOC.EMP_CD = EMP.EMP_CD
+		), FilterCode AS (
+		    SELECT SE.DOC_NO
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		    WHERE SE.CODE = 'SE_03'
+		), B AS (
+		    SELECT SE.EMP_CD, SE.DOC_NO, SD_TURN, SE.CODE
+		           ,ROW_NUMBER() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN) AS rn
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		 --   WHERE SE.CODE = 'SE_01'
+		    AND SE.DOC_NO NOT IN (SELECT DOC_NO FROM FilterCode)
+		), C AS(
+		    SELECT  A.DOC_NO, A.DOC_TYPE, A.DOC_TITLE, A.EMP_CD AS empCd, A.EMP_NAME AS empName
+		            , A.DEP_CD ,A.DEP_NAME , A.DOC_UPDATEDATE, A.DOC_SIGN
+		            , B.EMP_CD AS approvalEmpCd, SD_TURN
+		    FROM A
+		    INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+		--    WHERE B.rn = 1
+		)
+		SELECT C.*, EMP.EMP_NAME AS approvalEmpName
+		FROM C C INNER JOIN EMPLOYEE EMP ON(approvalEmpCd = EMP_CD)
+		WHERE C.DOC_SIGN IS NULL AND ( 
+        	empCd = #{empCd, jdbcType=VARCHAR} OR approvalEmpCd = #{empCd, jdbcType=VARCHAR} 
+        )
+	</select>
+<!-- 		WHERE empCd = '9901045' 기안자로 볼때가 문제,, 요청함 있으니까 빼도 되나? -->
+	
+	
+	<!-- 참조문서함 -->
+	<select id="selectRefList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS(
+		    SELECT 
+		        DOC_NO
+		        , DOC_TYPE
+		        , DOC_TITLE
+		        , EMP.EMP_CD
+		        , EMP_NAME AS empName
+		        , DEP_NAME
+		    FROM DOCUMENT DOC
+		    LEFT OUTER JOIN EMPLOYEE EMP on (DOC.EMP_CD = EMP.EMP_CD) 
+		    INNER JOIN DEPARTMENT DEP ON (EMP.DEP_CD = DEP.DEP_CD)
+		)
+		SELECT *
+		FROM(
+		    SELECT 
+		        A.*, HEL.EMP_CD AS helEmp
+		    FROM A INNER JOIN HELP_DETAIL HEL ON (A.DOC_NO = HEL.DOC_NO)
+		) sub
+		WHERE sub.helEmp = #{empCd,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 보관함 / 로그인한 사용자 부서정보 필요 -->
+	<!-- test : EMP.DEP_CD='DEP_SALE_004' / #{depCd,jdbcType=VARCHAR} -->
+	<select id="selectRegPublicList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS(
+			SELECT DOC_NO, DOC_TYPE, DOC_SIGN, DOC_TITLE, EMP_NAME, EMP.DEP_CD
+			FROM DOCUMENT DOC LEFT OUTER JOIN EMPLOYEE EMP on DOC.EMP_CD = EMP.EMP_CD
+				LEFT OUTER JOIN DEPARTMENT "DEP" on EMP.DEP_CD = DEP.DEP_CD
+			WHERE EMP.DEP_CD=#{depCd,jdbcType=VARCHAR} AND CODE='D_02'
+		), B AS(
+			SELECT EMP_CD, DOC_NO, SD_TURN, SE_DATE, CODE
+			FROM (
+				SELECT SE.DOC_NO, SE.EMP_CD, SD_TURN, SE_DATE, SE.CODE,
+					RANK() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN DESC) AS rnk,
+					COUNT(DISTINCT SE.CODE) OVER (PARTITION BY SE.DOC_NO) AS code_count
+				FROM SIGNPATH_DETAIL "SD"
+					INNER JOIN SIGNPATH_EMP "SE" ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+			) ranked
+			WHERE rnk = 1 AND code_count = 1 AND CODE = 'SE_02'
+		)
+		SELECT
+			A.DOC_TYPE
+			, A.DOC_SIGN
+			, A.DOC_TITLE
+			, A.EMP_NAME
+			, B.SE_DATE
+			, A.DEP_CD
+		FROM A INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+	</select>
+	
+	<!-- 반려문서함 -->
+	<select id="selectReturnList" resultType="kr.or.ddit.edDocument.vo.DocumentVO">
+		WITH A AS (
+		    SELECT 
+		        DOC_NO
+		        , DOC_TYPE
+		        , DOC_TITLE
+		        , EMP_NAME
+		        , DOC_UPDATEDATE
+		        , DOC.EMP_CD
+		    FROM DOCUMENT DOC
+		    LEFT OUTER JOIN EMPLOYEE EMP ON DOC.EMP_CD = EMP.EMP_CD
+		    WHERE DOC.EMP_CD = EMP.EMP_CD
+		), B AS (
+		    SELECT SE.EMP_CD, SE.DOC_NO, SD_TURN, SE.CODE, SE_REJECT, SE_DATE
+		           , ROW_NUMBER() OVER (PARTITION BY SE.DOC_NO ORDER BY SD_TURN) AS rn
+		    FROM SIGNPATH_DETAIL SD
+		    INNER JOIN SIGNPATH_EMP SE ON (SD.EMP_CD = SE.EMP_CD AND SD.DOC_NO = SE.DOC_NO)
+		    WHERE SE.CODE = 'SE_03'
+		), C AS(
+		    SELECT  A.DOC_NO, A.DOC_TYPE, A.DOC_TITLE, A.EMP_CD AS empCd, A.EMP_NAME AS empName, A.DOC_UPDATEDATE
+		            , B.EMP_CD AS approvalEmpCd, SD_TURN, B.SE_REJECT, B.SE_DATE
+		    FROM A
+		    INNER JOIN B ON (A.DOC_NO = B.DOC_NO)
+		    WHERE B.rn = 1
+		)
+		SELECT C.*, EMP.EMP_NAME AS approvalEmpName
+		FROM C C INNER JOIN EMPLOYEE EMP ON(approvalEmpCd = EMP_CD)
+		WHERE empCd = #{empCd,jdbcType=VARCHAR}
+	</select>
+
+
+
+</mapper>
+
+
+
+

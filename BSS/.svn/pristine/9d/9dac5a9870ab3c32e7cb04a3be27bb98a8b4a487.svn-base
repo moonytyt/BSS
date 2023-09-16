@@ -1,0 +1,14 @@
+package kr.or.ddit.papers.service;
+
+import java.util.List;
+
+import kr.or.ddit.license.vo.LicenseVO;
+import kr.or.ddit.papers.vo.CareerPVO;
+import kr.or.ddit.papers.vo.PapersVO;
+
+public interface PapersService {
+
+	public List<PapersVO> retrieveDocuments();
+	
+	public CareerPVO retrieveCareerPaper(String empCd);
+}

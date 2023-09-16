@@ -1,0 +1,9 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 연금저축 상품
+ */
+public class PensionPrdtVO {
+
+}

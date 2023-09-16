@@ -1,0 +1,42 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+documentReqList.jsp 결재요청함
+
+<table class="table table-bordered table-hover">
+	<thead>
+		<tr>
+			<th>No.</th>
+			<th>문서유형</th>
+			<th>문서제목</th>
+			<th>기안자</th>
+			<th>기안일시</th>
+			<th>결재자</th>
+			<th>결재상태</th>
+		</tr>
+	</thead>
+	<tbody>
+	<c:if test="${empty documentReqList }">
+		<tr>
+			<td colspan="7">현재 기안된 문서가 없습니다.</td>
+		</tr>
+	</c:if>
+	<c:if test="${not empty documentReqList }">
+		<c:forEach items="${documentReqList }" var="req" varStatus="loop">
+		<!-- varStatus 속성 loop 변수를 선언하여 현재 인덱스를 얻기 -->
+			<tr>
+				<td><c:out value="${loop.index + 1}" /></td> <!-- 1번부터 부여하기 위해 +1-->
+				<td>${req.docType }</td>
+				<td><a href="javascript:;">${req.docTitle }</a></td>
+				<td>${req.empName }</td>	<!-- 별칭사용 -->
+				<td>${req.docUpdatedate }</td>
+				<td>${req.emp }</td>		<!-- 별칭사용 -->
+				<td>진행중</td>
+			</tr>
+		</c:forEach>
+	</c:if>
+	</tbody>
+</table>
+
+<!-- 페이징 혹은 쭉 나오게 -->
+

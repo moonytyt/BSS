@@ -1,0 +1,30 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+    <link href="${pageContext.request.contextPath}/resources/js/fancytree/skin-win8/ui.fancytree.min.css" rel="stylesheet">
+
+    <h4> 조직도 </h4>
+    <div class="col-6" id="treeArea" 
+    	data-source="${pageContext.request.contextPath}/ed/approval/empfancytree.do">
+    </div>
+    
+    
+<script src="${pageContext.request.contextPath}/resources/js/fancytree/jquery.fancytree-all-deps.min.js"></script>
+<script>
+$(document).ready(function () {
+    $("#treeArea").fancytree({
+        source: {
+            url: $("#treeArea").data("source"),
+            cache: false
+        },
+        activate: function (event, data) {
+            let nodeData = data.node.data;
+            console.log("nodeData : ",nodeData);
+        }
+        // 추가 설정
+    });
+});
+</script>
+
+
+
+

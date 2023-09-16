@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.BoardReqcmnt.dao.CommentDAO">
+	<select id="selectCommentsByReqNo" parameterType="kr.or.ddit.BoardReqcmnt.vo.CmntVO">
+		SELECT 
+			RCNMT_NO
+		  , REQ_NO
+		  , RCNMT_DT
+		  , RCMNT_CN
+		FROM REQ_CMNT
+		WHERE REQ_NO = #{reqNo}
+		ORDER BY RCNMT_DT DESC;
+	</select>
+	<insert id="insertComment" parameterType="kr.or.ddit.BoardReqcmnt.vo.CmntVO">
+		INSERT INTO REQ_CMNT 
+			(RCNMT_NO
+		   , REQ_NO
+		   , RCNMT_DT
+		   , RCMNT_CN)
+		VALUES 
+			(SEQ_REQ_CMNT.NEXTVAL
+			, #{reqNo}
+			, SYSDATE
+			, #{rcmntCn};
+	</insert>
+
+</mapper>

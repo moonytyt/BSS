@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+/* 로그인 후 메인, 헤더 폰트 */
+#navbarNav {
+	font-family: 'MICEGothic Bold';
+}
+/* documentForm.jsp */
+.cellWidth {
+	width: 150px;
+	text-align: center;
+}
+
+.textCen {
+	text-align: center;
+}
+.errors {
+    color: red;
+    font-size: 12px;
+}
+

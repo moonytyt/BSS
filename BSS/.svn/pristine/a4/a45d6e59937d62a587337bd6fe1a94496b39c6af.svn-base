@@ -1,0 +1,58 @@
+package kr.or.ddit.attendance.service;
+
+import java.util.List;
+
+import kr.or.ddit.attendance.vo.AttendanceVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+public interface AttendanceService {
+	
+	/**
+	 * 출퇴근내역 전체조회
+	 * @param paging
+	 * @return
+	 */
+	public List<AttendanceVO> retrieveAttendList(PaginationInfo paging);
+	
+	/**
+	 * 출근 등록
+	 * @param attendVO
+	 * @return
+	 */
+	public boolean createAttendStime(AttendanceVO attendVO);
+	
+	/**
+	 * 로그인한 사람의 atteStime 값이 있는지 조회 
+	 * @param attendVO
+	 * @return
+	 */
+	public AttendanceVO retrieveHaveAtteStime(AttendanceVO attendVO);
+	
+	/**
+	 * 퇴근 등록(null > sysdate)
+	 * @param attendVO
+	 * @return
+	 */
+	public boolean UpdateAttendEnd(AttendanceVO attendVO);
+	
+	/**
+	 * 출퇴근 삭제
+	 * @param attendVO
+	 * @return
+	 */
+	public boolean removeAttend(AttendanceVO attendVO);
+	
+	/**
+	 * 출퇴근 수정
+	 * @param attendVO
+	 * @return
+	 */
+	public boolean modifyAttend(AttendanceVO attendVO);
+	
+	/**
+	 * 출퇴근 선택 조회 (모달)
+	 * @param atteNo
+	 * @return
+	 */
+	public AttendanceVO retrieveOneAttend(int atteNo);
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.BoardCompl.dao.ComplboardDAO">
+	
+	<select id="selectTotalRecord" parameterType="kr.or.ddit.vo.PaginationInfo">
+		SELECT COUNT(*)
+		FROM COMPL_BOARD
+	</select>
+	
+	<select id="selectComplList" resultType="kr.or.ddit.BoardCompl.vo.ComplboardVO" parameterType="kr.or.ddit.vo.PaginationInfo">
+		WITH ORDEREDNTC AS (
+		    SELECT ROWNUM RNUM, A.*
+		    FROM (
+		        SELECT
+		        	COMPL_NO, COMPL_TTL, EMP_CD, COMPL_DT
+		        FROM COMPL_BOARD
+		       	ORDER BY ROWID DESC
+		    ) A
+		)
+		SELECT *
+		FROM ORDEREDNTC
+		WHERE RNUM BETWEEN #{STARTROW} AND #{ENDROW}
+	</select>
+</mapper>

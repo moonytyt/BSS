@@ -1,0 +1,61 @@
+package kr.or.ddit.attendance.controller;
+
+import java.security.Principal;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.attendance.service.AttendanceService;
+import kr.or.ddit.attendance.vo.AttendanceVO;
+
+/**
+ *  
+ * 출장등록 컨트롤러
+ * 
+ */
+@Controller
+@RequestMapping("/pm/servicemanagement/attendInsert.do")
+public class AttendanceInsertController {
+	@Inject
+	private AttendanceService service;
+	
+	@ModelAttribute("attend")
+	public AttendanceVO attendVO() {
+		return new AttendanceVO();
+	}
+	
+	//[출장등록] 하면 열리는 폼
+	@GetMapping
+	public String getHandler() {
+		return "pm/servicemanagement/attendInsert";
+	}
+	
+	//출장등록 Insert
+	@PostMapping
+	public String attendInsert(
+			@ModelAttribute("attend") AttendanceVO attend,
+			Principal principal,
+			Model model
+	) {
+		
+		String empName = principal.getName();
+		attend.setEmpName(empName);
+		
+		String viewName = null;
+		
+		boolean success = service.createAttend(attend);
+		if(success) {
+			viewName = "redirect:pm/servicemanagement/attend";
+		} else {
+			model.addAttribute("message", "글 작성 중 문제발생");
+			viewName = "pm/servicemanagement/attendInsert";
+		}
+		return viewName;
+	}
+}

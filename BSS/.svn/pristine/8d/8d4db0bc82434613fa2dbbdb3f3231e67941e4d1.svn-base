@@ -1,0 +1,32 @@
+package kr.or.ddit.BoardReq.service;
+
+import java.util.List;
+
+import kr.or.ddit.BoardNtc.vo.NtcboardVO;
+import kr.or.ddit.BoardReq.vo.ReqboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.exception.PKNotFoundException;
+import kr.or.ddit.vo.PaginationInfo;
+
+/**
+ * 요구사항 CRUD, BLL
+ *
+ */
+public interface ReqboardSerivce {
+
+	/**
+	 * @param reqNo
+	 * @return
+	 */
+	public ReqboardVO retrieveReq(int reqNo) throws PKNotFoundException;
+	/**
+	 * @return
+	 */
+	public List<ReqboardVO> retrieveReqList(PaginationInfo<ReqboardVO> paging);
+
+	public boolean createReq(ReqboardVO req);
+	
+	public int modifyReq(ReqboardVO reqVO);
+	
+	public int removeReq(int req);
+}

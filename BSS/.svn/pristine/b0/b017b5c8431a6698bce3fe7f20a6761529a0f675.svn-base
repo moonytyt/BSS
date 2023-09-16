@@ -1,0 +1,33 @@
+package kr.or.ddit.attendance.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.attendance.dao.AttendanceDAO;
+import kr.or.ddit.attendance.vo.AttendanceVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Service
+public class AttendanceServiceImpl implements AttendanceService {
+
+	@Inject
+	private AttendanceDAO dao;
+	
+	@Override
+	public List<AttendanceVO> retrieveAttendList(PaginationInfo paging){
+		long totalRecord = dao.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return dao.selectAttendList(paging);
+	}
+	
+	
+	//출퇴근 등록
+	@Override
+	public boolean createAttend(AttendanceVO attendVO) {
+		return dao.insertAttend(attendVO) > 0;
+	}
+
+}

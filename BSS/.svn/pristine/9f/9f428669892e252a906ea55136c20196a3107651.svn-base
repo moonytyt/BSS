@@ -1,0 +1,75 @@
+package kr.or.ddit.businesstrip.controller;
+
+import java.security.Principal;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.businesstrip.service.BusinessTripService;
+import kr.or.ddit.businesstrip.vo.BusinessTripVO;
+import kr.or.ddit.validate.groups.InsertGroup;
+
+/**
+ * 출장 신청(등록)
+ * 
+ */
+@Controller
+@RequestMapping("/pm/servicemanagement/businessTripInsert.do")
+public class BusinessTripInsertController {
+	
+	@Inject
+	private BusinessTripService service;
+	
+	/**
+	 * [출장등록] 버튼 클릭시 열리는 폼
+	 * @return
+	 */
+	@GetMapping
+	public String businessTripView() {
+		return "pm/servicemanagement/businessTripInsert";
+	}
+	
+	/**
+	 * 출장등록에서 [등록]버튼 클릭하면 insert처리하는 컨트롤러
+	 * @param bTrip
+	 * @param errors
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
+	@PostMapping
+	public String businessTripInsert(
+			@Validated(InsertGroup.class) @ModelAttribute("bTrip") BusinessTripVO bTrip
+			, Errors errors
+			, Model model
+			, Principal principal
+	) {
+		
+		String viewName;
+		
+		if(!errors.hasErrors()) {
+			String empCd = principal.getName();
+			bTrip.setEmpCd(empCd);
+			boolean success = service.createBusinessTrip(bTrip);
+			if(success) {
+				model.addAttribute("registrationSuccess", true);
+				viewName = "redirect:/pm/servicemanagement/businessTrip";
+			}else {
+				model.addAttribute("message", "출장등록 중 문제 발생");
+				viewName = "pm/servicemanagement/businessTripInsert.do";
+			}
+		}else { //에러 발생시...
+			
+			viewName = "pm/servicemanagement/businessTripInsert";
+		}
+		return viewName;
+	}
+}

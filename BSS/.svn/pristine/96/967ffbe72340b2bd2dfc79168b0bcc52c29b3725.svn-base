@@ -1,0 +1,76 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+
+
+<style>
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+</style>
+<h5>직원교육등록</h5>
+<hr color="black">
+
+<form:form method="post" modelAttribute="training" >
+	<input type="hidden" name="trainNo" value="${training.trainNo }" />
+<table class="table table-border">
+		<tr>
+			<th>강사id</th>
+			<td><input class="form-control" type="text" name="lectorId" /><span
+				class="error">${errors["lectorId"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육유형(내/외부)</th>
+			<td><input class="form-control" type="text" name="trainType" /><span
+				class="error">${errors["trainType"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육장소</th>
+			<td><input class="form-control" type="text" name="trainPlace" /><span
+				class="error">${errors["trainPlace"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육일</th>
+			<td><input class="form-control" type="date" name="trainDate" /><span
+				class="error">${errors["trainDate"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육소요시간</th>
+			<td><input class="form-control" type="number" name="trainTime" /><span
+				class="error">${errors["trainTime"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육대상</th>
+			<td><input class="form-control" type="text" name="trainTarget" /><span
+				class="error">${errors["trainTarget"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육명</th>
+			<td><input class="form-control" type="text" name="trainName" /><span
+				class="error">${errors["trainName"]}</span></td>
+		</tr>
+		<tr>
+			<th>교육내용</th>
+			<td><input class="form-control" type="text" name="trainContent" /><span
+				class="error">${errors["trainContent"]}</span></td>
+		</tr>
+		<tr>
+			<th>신청마감일</th>
+			<td><input class="form-control" type="date" name="trainPeriod" /><span
+				class="error">${errors["trainPeriod"]}</span></td>
+		</tr>
+		<tr>
+			<th>신청처</th>
+			<td><input class="form-control" type="text" name="trainSign" /><span
+				class="error">${errors["trainSign"]}</span></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button type="submit" class="btn btn-secondary" value="등록">등록</button>
+			</td>
+		</tr>
+	</table>
+</form:form>

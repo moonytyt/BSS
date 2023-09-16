@@ -1,0 +1,14 @@
+package kr.or.ddit.training.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.training.vo.TrainingApplyVO;
+
+@Mapper
+public interface TrainingApplyDAO {
+	
+	//신청자 전체조회
+	public List<TrainingApplyVO> selectTrainApply();
+}

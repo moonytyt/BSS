@@ -1,0 +1,25 @@
+//package kr.or.ddit.edApproval.fancytree;
+//
+//import kr.or.ddit.vo.ProdVO;
+//
+//public class AProdFancyTreeNode extends FancyTreeNodeAdapter<ProdVO>{
+//
+//	public AProdFancyTreeNode(ProdVO data) {
+//		super(data);
+//	}
+//
+//	@Override
+//	public String getTitle() {
+//		return getData().getProdName();
+//	}
+//
+//	@Override
+//	public String getKey() {
+//		return getData().getProdId();
+//	}
+//
+//	@Override
+//	public boolean isFolder() {
+//		return false;
+//	}
+//}

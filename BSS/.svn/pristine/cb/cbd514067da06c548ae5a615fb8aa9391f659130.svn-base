@@ -1,0 +1,15 @@
+package kr.or.ddit.attendance.service;
+
+import java.util.List;
+
+import kr.or.ddit.attendance.vo.AttendanceVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+public interface AttendanceService {
+	
+	//출퇴근내역 전체조회
+	public List<AttendanceVO> retrieveAttendList(PaginationInfo paging);
+	
+	//출퇴근 등록
+	public boolean createAttend(AttendanceVO attendVO); 
+}

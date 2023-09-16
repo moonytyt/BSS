@@ -1,0 +1,52 @@
+package kr.or.ddit.attendance.vo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.validate.groups.DeleteGroup;
+import kr.or.ddit.validate.groups.InsertGroup;
+import kr.or.ddit.validate.groups.UpdateGroup;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 
+ * 출근부 vo
+ * 
+ */
+@Data
+@EqualsAndHashCode(of = "atteNo")
+public class AttendanceVO {
+	
+	private long rnum;
+	
+	@NotNull(groups = {InsertGroup.class, UpdateGroup.class, DeleteGroup.class})
+	private Integer atteNo; //출근번호
+	
+	@NotBlank(groups = {InsertGroup.class, UpdateGroup.class})
+	private String empCd;  //직원사번
+	
+	
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private LocalDateTime atteStime; //근무시작시간
+	
+	
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private LocalDateTime atteEnd;   //근무종료시간
+	
+	
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate atteDate;  //근무일자
+	
+	private String empName;
+	private String depName;
+	
+}

@@ -1,0 +1,68 @@
+package kr.or.ddit.BoardReq.service;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.BoardNtc.dao.NtcboardDAO;
+import kr.or.ddit.BoardNtc.vo.NtcboardVO;
+import kr.or.ddit.BoardReq.dao.ReqboardDAO;
+import kr.or.ddit.BoardReq.vo.ReqboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.exception.PKNotFoundException;
+import kr.or.ddit.vo.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+public class ReqboardServiceImpl implements ReqboardSerivce {
+
+	@Inject
+	private ReqboardDAO reqDAO;
+
+	@Override
+	public List<ReqboardVO> retrieveReqList(PaginationInfo<ReqboardVO> paging) {
+		long totalRecord = reqDAO.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return reqDAO.selectReqList(paging);
+	}
+	
+	@Override
+	public ReqboardVO retrieveReq(int reqNo) {
+		return reqDAO.selectReq(reqNo);
+	}
+	        
+
+//	@Override
+//	public ReqboardVO retrieveReq(int reqNo) throws PKNotFoundException {
+//		ReqboardVO req = reqDAO.selectReq(reqNo);
+//		if(req==null)
+//			throw new PKNotFoundException(MessageFormat.format("{0} 해당 글 없음", reqNo));
+//		return req;
+//	}
+	
+	@Override
+	public boolean createReq(ReqboardVO req) {
+		return reqDAO.insertReq(req) > 0;
+	}
+
+
+	@Override
+	public int delete(int req) {
+		return reqDAO.deleteReq(req);
+	}
+
+	@Override
+	public int modifyReq(ReqboardVO reqVO) {
+		return reqDAO.updateReq(reqVO);
+	}
+
+	
+
+}

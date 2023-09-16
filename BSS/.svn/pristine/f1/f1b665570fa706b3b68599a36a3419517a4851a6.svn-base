@@ -1,0 +1,24 @@
+package kr.or.ddit.BoardReq.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class ReqboardVO {
+	@NotBlank
+	private Integer reqNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String reqTtl;
+	@NotBlank
+	private String reqCn;
+	@NotBlank
+	private LocalDate reqDt;
+	@NotBlank
+	private Integer reqPw;
+	private Integer atchNo;
+}

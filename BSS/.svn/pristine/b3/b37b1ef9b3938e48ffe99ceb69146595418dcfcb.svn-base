@@ -1,0 +1,20 @@
+package kr.or.ddit.career.vo;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of = "empCd")
+public class CareerVO {
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String carNm;
+	@NotBlank
+	private String carPo;
+	@NotNull
+	private Integer carDate;
+}

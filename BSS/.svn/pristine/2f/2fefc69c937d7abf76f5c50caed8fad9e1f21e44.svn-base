@@ -1,0 +1,5 @@
+package kr.or.ddit.finapi.dao;
+
+public interface PersonalLoanDAO {
+
+}

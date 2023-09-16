@@ -1,0 +1,39 @@
+package kr.or.ddit.resignation.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.position.vo.PositionVO;
+import kr.or.ddit.state.vo.StateVO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of = "empCd")
+public class ResignationVO {
+	private long rnum;
+	@NotBlank
+	private String empCd;
+	private String empName;
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate reDate;
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate reTreatment;
+	@NotBlank
+	private String reGive;
+	private String poName;
+	private String depName;
+	@NotBlank
+	private String reMoney;
+	@NotBlank
+	private String reCont;
+	private String code;
+	
+	private String stateNm;
+}

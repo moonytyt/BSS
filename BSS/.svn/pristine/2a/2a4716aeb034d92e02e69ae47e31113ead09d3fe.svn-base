@@ -1,0 +1,15 @@
+package kr.or.ddit.businesstrip.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.businesstrip.vo.BusinessTripVO;
+
+@Mapper
+public interface BusinessTripDAO {
+	
+	//출장 조회
+	public List<BusinessTripVO> selectBtrip(BusinessTripVO bTripVO);
+	
+}

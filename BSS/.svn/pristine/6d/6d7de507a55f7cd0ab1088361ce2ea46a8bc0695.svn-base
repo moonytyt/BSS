@@ -1,0 +1,31 @@
+package kr.or.ddit.papers.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class PaperstListController {
+	
+	
+	@RequestMapping("/papers/paperList")
+	public String documentListController() {
+		return "papers/paperList";
+	}
+	
+	@RequestMapping("/papers/proPaper")
+	public String proPaper(
+			) {
+		return "papers/proPaper";
+	}
+	@RequestMapping("/papers/empPaper")
+	public String employeePaper(
+			) {
+		return "papers/empPaper";
+	}
+	@RequestMapping("/papers/carPaper")
+	public String careerPaper(
+			) {
+		return "papers/carPaper";
+	}
+
+}

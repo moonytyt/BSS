@@ -1,0 +1,14 @@
+package kr.or.ddit.calendar.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.calendar.vo.CompanyVO;
+
+@Mapper
+public interface CompanyDAO {
+
+	
+	public List<CompanyVO> selectcomList();
+}

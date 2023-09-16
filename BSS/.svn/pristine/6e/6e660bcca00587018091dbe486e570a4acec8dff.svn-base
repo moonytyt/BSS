@@ -1,0 +1,165 @@
+package kr.or.ddit.edDocument.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.edApproval.vo.SignpathDetailVO;
+import kr.or.ddit.edDocument.dao.DocumentDao;
+import kr.or.ddit.edDocument.service.DocumentService;
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import kr.or.ddit.edDocument.vo.DocumentVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.validate.groups.InsertGroup;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("ed/document/")
+@RequiredArgsConstructor
+@Controller
+@Slf4j
+public class DocumentController {
+
+	private final DocumentService service;
+	
+	@Inject
+	private DocumentDao documentDao;
+	
+	@ModelAttribute("document")
+	public DocumentVO document() {
+		return new DocumentVO();
+	}
+	
+	
+	/**
+	 * 결재선 불러오기 클릭시 결재선 조회
+	 * @param authentication
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("signPathList.do")
+	public String signPathDetailList(Authentication authentication, Model model) {
+		String empCd = authentication.getName();
+		SignpathDetailVO signpathDetail = new SignpathDetailVO();
+		signpathDetail.setEmpCd2(empCd);
+		List<SignpathDetailVO>  signpathDetailList = documentDao.selectSignPathDetailList(signpathDetail);
+		model.addAttribute("signpathDetailList", signpathDetailList);
+		return "jsonView";
+	}
+	
+	@PostMapping("signPathCreate.do")
+	public String signPathCreate(@RequestBody Map<String, Object>paramMap,Authentication authentication,Model model) {
+		
+		log.info("data: {}", paramMap);
+		
+//		model.addAttribute(null, model); 
+		
+		return"jsonVeiw";
+	}
+	
+	/**
+	 * 문서 양식 상세(insertForm) 조회
+	 * @param dtNo
+	 * @param model
+	 * @param authentication
+	 * @return
+	 */
+	@GetMapping("documentForm.do")
+	public String documentForm(
+			@RequestParam(value = "dtNo", required = false) Integer dtNo
+			, Model model
+			, Authentication authentication
+	) {
+		log.info("선택된 양식번호 >>>>>>>>>> {}", dtNo);
+		
+		EmployeeVOWrapper empAuth= (EmployeeVOWrapper) authentication.getPrincipal();
+//		log.info("현재 인증된 사용자의 사원이름 : {}",empAuth.getRealUser().getEmpName());
+//		log.info("현재 인증된 사용자의 부서이름 : {}",empAuth.getRealUser().getDepName());
+		model.addAttribute("empAuth", empAuth);
+		
+		String viewName = "";
+		if(dtNo != null) {
+			// 선택한 dtGroup으로 해당 양식 내용을 DB에서 조회
+            DocumentTypeVO DocumentCont = service.retrieveDtCont(dtNo);
+            model.addAttribute("DocumentCont", DocumentCont);
+			viewName= "ed/document/documentForm";
+		}else {
+			viewName= "ed/document/documentTypeList";
+		}
+		return viewName;
+	}
+	
+	/**
+	 * 문서 양식 상세(insertForm) 인서트
+	 */
+	@PostMapping("documentForm.do")
+	public String documentInsert(
+			@Validated(InsertGroup.class) @ModelAttribute("documentVO") DocumentVO documentVO
+			, Errors errors
+			, Model model
+	) {
+
+		log.info("documentVO : {}",documentVO);
+		String viewName = "";
+		if(!errors.hasErrors()) {
+			boolean success = service.createDocument(documentVO);
+			if(success) {
+				viewName = "redirect:ed/document/documentReqList";
+			}else {
+				model.addAttribute("message", "새글 작성중 문제 발생");
+				viewName = "ed/document/documentForm";
+			}
+		}else {
+			viewName = "ed/document/documentForm";
+		}
+		return viewName;
+	}	
+
+	// 기안된 문서 조회
+//	@RequestMapping("documentFormView.do")
+//	public String documentFormView(Model model){
+//		return "ed/document/documentFormView";
+//	}
+	
+	@RequestMapping("documentFormView.do")
+	public String documentFormView(
+			@RequestParam(value = "docNo", required = false) String docNo
+			, Model model
+			
+	) {
+		log.info("선택된 문서번호 >>>>>>>>>> {}", docNo);
+		
+		String viewName = "";
+		if(docNo != null) {
+			// 선택한 docNo으로 문서 조회
+            DocumentVO documentFormView = service.retrieveDocument(docNo);
+            model.addAttribute("documentFormView", documentFormView);
+			viewName= "ed/document/documentFormView";
+		}else {
+			viewName= "ed/document/documentTypeList"; // 이전 페이지로 돌아가야함
+		}
+		return viewName;
+	}
+	
+	
+	
+	
+//	session.setAttribute("message","ㅇㅇ로 이동합니다."); // 이동하고 alert창에 저 메세지 내용 뜸
+}
+
+
+
+

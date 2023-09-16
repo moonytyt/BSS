@@ -1,0 +1,26 @@
+package kr.or.ddit.edApproval.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.edApproval.dao.SignpathDAO;
+import kr.or.ddit.edApproval.vo.SignpathVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Service
+public class SignpathServiceImpl implements SignpathService{
+	
+	@Inject
+	private SignpathDAO signpathDao;
+	
+	@Override
+	public List<SignpathVO> retrieveSignpathList(PaginationInfo<SignpathVO> paging) {
+		long totalRecord = signpathDao.selectTotalSignpath(paging);
+		paging.setTotalRecord(totalRecord);
+		return signpathDao.selectSignpathList(paging);
+	}
+
+}

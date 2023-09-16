@@ -1,0 +1,110 @@
+package kr.or.ddit.edDocument.controller;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.edDocument.service.DocumentService;
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import kr.or.ddit.edDocument.vo.DocumentVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.validate.groups.InsertGroup;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("ed/document/")
+@RequiredArgsConstructor
+@Controller
+@Slf4j
+public class DocumentController {
+
+	private final DocumentService service;
+	
+	@ModelAttribute("document")
+	public DocumentVO document() {
+		return new DocumentVO();
+	}
+	
+	/**
+	 * 문서 양식 상세(insertForm) 조회
+	 * @param dtNo
+	 * @param model
+	 * @param authentication
+	 * @return
+	 */
+	@GetMapping("documentForm.do")
+	public String documentForm(
+			@RequestParam(value = "dtNo", required = false) Integer dtNo
+			, Model model
+			, Authentication authentication
+	) {
+		log.info("선택된 양식번호 >>>>>>>>>> {}", dtNo);
+		
+		EmployeeVOWrapper empAuth= (EmployeeVOWrapper) authentication.getPrincipal();
+//		log.info("현재 인증된 사용자의 사원이름 : {}",empAuth.getRealUser().getEmpName());
+//		log.info("현재 인증된 사용자의 부서이름 : {}",empAuth.getRealUser().getDepName());
+		model.addAttribute("empAuth", empAuth);
+		
+		String viewName = "";
+		if(dtNo != null) {
+			// 선택한 dtGroup으로 해당 양식 내용을 DB에서 조회
+            DocumentTypeVO DocumentCont = service.retrieveDtCont(dtNo);
+            model.addAttribute("DocumentCont", DocumentCont);
+			viewName= "ed/document/documentForm";
+			
+		}else {
+			viewName= "ed/document/documentTypeList";
+		}
+		return viewName;
+	}
+	
+	/**
+	 * 문서 양식 상세(insertForm) 입력
+	 */
+	@PostMapping("documentForm.do")
+	public String documentInsert(
+			@Validated(InsertGroup.class) @ModelAttribute("documentVO") DocumentVO documentVO
+			, Errors errors
+			, Model model
+			
+//			@RequestParam(value = "dtNo", required = false) Integer dtNo
+//			, Authentication authentication
+	) {
+		
+		String viewName = "";
+		
+		if(!errors.hasErrors()) {
+			boolean success = service.createDocument(documentVO);
+			if(success) {
+				viewName = "redirect:ed/document/documentReqList";
+			}else {
+				model.addAttribute("message", "새글 작성중 문제 발생");
+				viewName = "ed/document/documentForm";
+			}
+		}else {
+			viewName = "ed/document/documentForm";
+		}
+		
+		return viewName;
+	}	
+
+	// 작성된 기안문 조회
+	@RequestMapping("documentFormView.do")
+	public String documentKeepList(Model model){
+		return "ed/document/documentFormView";
+	}
+	
+	
+//	session.setAttribute("message","ㅇㅇ로 이동합니다."); // 이동하고 alert창에 저 메세지 내용 뜸
+}
+
+
+
+

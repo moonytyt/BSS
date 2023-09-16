@@ -1,0 +1,23 @@
+package kr.or.ddit.family.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(of = {"famNo", "empCd"})
+public class FamilyVO {
+	@NotBlank
+	private String famNo;
+	@NotBlank
+	private String empCd;
+	private String famName;
+	private String famJob;
+	private String famBir;
+	private String famEdu;
+	private String famLive;
+	private String famNote;
+	private String famClassify;
+	private String code;
+}

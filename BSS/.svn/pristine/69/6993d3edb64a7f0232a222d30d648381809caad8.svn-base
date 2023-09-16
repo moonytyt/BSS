@@ -1,0 +1,38 @@
+package kr.or.ddit.mail.vo;
+
+import java.time.LocalDate;
+
+import javax.mail.Multipart;
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import kr.or.ddit.employee.vo.EmployeeVO;
+import lombok.Data;
+
+@Data
+public class MailBoxVO {
+	@NotBlank
+	private Integer receiveMailNo;
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String receiveMailSender;
+	@NotBlank
+	private String receiveMailReceiver;
+	private String receiveMailContent;
+	private Multipart receive11;
+	@NotBlank
+	private String receiveMailTitle;
+	@NotBlank
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate receiveMailDate;
+	private Integer atchNo;
+	@NotBlank
+	private Integer mailImpo;
+	@NotBlank
+	private Integer mailDelete;
+	@NotBlank
+	private Integer mailTemp;
+}

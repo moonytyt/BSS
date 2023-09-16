@@ -1,0 +1,56 @@
+package kr.or.ddit.BoardReqcmnt.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.BoardReqcmnt.service.CommentService;
+import kr.or.ddit.BoardReqcmnt.vo.CmntVO;
+
+@Controller
+public class CommentController {
+
+    @Autowired
+    private CommentService commentService;
+
+    @PostMapping("/comments/create")
+    @ResponseBody
+    public String createComment(CmntVO comment) {
+        commentService.createComment(comment);
+        return "success"; 
+    }
+
+    @GetMapping("/comments/list")
+    public String getCommentsByReqNo(@RequestParam Integer reqNo, Model model) {
+        List<CmntVO> comments = commentService.getCommentsByReqNo(reqNo);
+        model.addAttribute("comments", comments);
+        return "reqDetail"; // reqDetail.jsp 뷰 이름
+    }
+}
+
+
+//@Controller
+//public class CommentController {
+//
+//    @Autowired
+//    private CommentService commentService;
+//
+//    @PostMapping("/comments/create")
+//    public String createComment(CmntVO comment) {
+//        commentService.createComment(comment);
+//        return "redirect:/board/detail?reqNo=" + comment.getReqNo();
+//    }
+//
+//    @GetMapping("/comments/list")
+//    public String getCommentsByReqNo(@RequestParam Integer reqNo, Model model) {
+//        List<CmntVO> comments = commentService.getCommentsByReqNo(reqNo);
+//        model.addAttribute("comments", comments);
+//        return "reqDetail"; // reqDetail.jsp 뷰 이름
+//    }
+//}

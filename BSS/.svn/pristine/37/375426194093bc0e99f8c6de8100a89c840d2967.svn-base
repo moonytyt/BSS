@@ -1,0 +1,62 @@
+package kr.or.ddit.employee.service;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.employee.dao.EmployeeDAO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+	@Inject
+	private EmployeeDAO dao;
+	
+	@Override
+	public boolean createEmployee(EmployeeVO emp) {
+		int cnt = dao.insertEmployee(emp);
+		return cnt > 0;
+	}
+
+	@Override
+	public List<EmployeeVO> retrieveEmpList(PaginationInfo paging) {
+		long totalRecord = dao.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return dao.selectEmpList(paging);
+	}
+	
+	@Override
+	public EmployeeVO retrieveEmpDetail(String empCd) {
+		return dao.empDetail(empCd);
+	}
+
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		EmployeeVO member = dao.selectEmployeeForAuth(username);
+		if(member==null) {
+			throw new UsernameNotFoundException(MessageFormat.format("{0} 사용자 없음.",username));
+		}
+		
+		return new EmployeeVOWrapper(member);
+	}
+
+	@Override
+	public boolean modifyEmployee(EmployeeVO emp) {
+		int cnt = dao.updateEmployee(emp);
+		return cnt > 0;
+	}
+
+	@Override
+	public List<EmployeeVO> employeeList() {
+		return dao.employeeList();
+	}
+
+}

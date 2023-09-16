@@ -1,0 +1,59 @@
+package kr.or.ddit.edDocument.controller;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.edDocument.service.DocumentService;
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RequiredArgsConstructor
+@Controller
+@Slf4j
+public class DocumentViewController {
+
+	private final DocumentService service;
+
+	/**
+	 * 문서 양식 상세
+	 */
+	@RequestMapping("ed/document/documentForm.do")
+	public String documentForm(
+			//@RequestParam(value = "dtGroup", required = false) String dtGroup
+			@RequestParam(value = "dtNo", required = false) Integer dtNo
+			, Model model//
+			, Authentication authentication//
+	) {
+		log.info("선택된 양식번호 >>>>>>>>>> {}", dtNo);
+		
+		EmployeeVOWrapper empAuth= (EmployeeVOWrapper) authentication.getPrincipal();
+		log.info("현재 인증된 사용자의 사원이름 : {}",empAuth.getRealUser().getEmpName());
+		log.info("현재 인증된 사용자의 부서코드 : {}",empAuth.getRealUser().getDepCd());
+		log.info("현재 인증된 사용자의 부서이름 : {}",empAuth.getRealUser().getDepName()); // null값 나옴
+		model.addAttribute("empAuth", empAuth);
+		
+		String viewName = "";
+		if(dtNo != null) {
+			// 선택한 dtGroup으로 해당 양식 내용을 DB에서 조회
+            DocumentTypeVO DocumentCont = service.retrieveDtCont(dtNo);
+            model.addAttribute("DocumentCont", DocumentCont);
+			viewName= "ed/document/documentForm";
+			
+		}else {
+			viewName= "ed/document/documentTypeList";
+		}
+		return viewName;
+	}
+	
+	// 문서 상세
+	
+}
+
+
+
+

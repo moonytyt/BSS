@@ -1,0 +1,24 @@
+package kr.or.ddit.edApproval.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+
+/**
+ * @author PC-08
+ *
+ */
+@Data
+public class SignpathDetailVO {
+	
+	@NotBlank
+	private String empCd; // 결재자
+	@NotBlank
+	private Integer signpathNo;
+	@NotBlank
+	private String empCd2; // 소유자
+	@NotBlank
+	private Integer sdTurn;
+	private String codeMothod;
+}

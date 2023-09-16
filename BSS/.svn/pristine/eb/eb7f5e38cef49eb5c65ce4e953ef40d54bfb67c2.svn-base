@@ -1,0 +1,120 @@
+package kr.or.ddit.mail.controller;
+
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.mail.service.mailBoxService;
+import kr.or.ddit.mail.vo.MailBoxVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+@RequestMapping("/mailBox/")
+public class MailBoxStorageController {
+	private final mailBoxService service;
+	
+	/**
+	 * 받은메일함
+	 * 
+	 * @return
+	 */
+	@RequestMapping("receiveList.do")
+	public String recieveList(Model model, Principal principal,
+			@RequestParam(name = "page", required = false, defaultValue = "1") long currentPage,
+			@ModelAttribute("simpleCondition") SimpleCondition simpleCondition) {
+		PaginationInfo<MailBoxVO> paging = new PaginationInfo<MailBoxVO>();
+		paging.setCurrentPage(currentPage);
+		paging.setSimpleCondition(simpleCondition);
+
+		String empId = principal.getName();
+
+		List<MailBoxVO> recieveMailList = service.retriveGetMailList(empId, paging);
+		paging.setDataList(recieveMailList);
+
+		model.addAttribute("recieveMailList", recieveMailList);
+
+		return "mail/receive/receiveList";
+	}
+	
+	/**
+	 * 보낸 메일함 상세조회
+	 * 
+	 * @return
+	 */
+	@RequestMapping("sendView.do")
+	public String sendView(@RequestParam(name = "mailNo", required = true) String mailNo, Model model) {
+		MailBoxVO mail = service.retriveMailDetail(mailNo);
+
+		model.addAttribute("mail", mail);
+
+		return "mail/allMail/mailDetail";
+	}
+
+	/**
+	 * 받은 메일함 상세조회
+	 * @param mailNo
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("receiveView.do")
+	public String reciveView(@RequestParam(name = "mailNo", required = true) String mailNo, Model model) {
+		MailBoxVO mail = service.retriveMailDetail(mailNo);
+
+		model.addAttribute("mail", mail);
+
+		return "mail/allMail/mailDetail";
+	}
+	
+	/**
+	 * 내게쓴 메일함
+	 * 
+	 * @return
+	 */
+	@RequestMapping("tomeList.do")
+	public String tomeList() {
+		return "mail/tome/tomeList";
+	}
+
+	/**
+	 * 보낸 메일함
+	 * 
+	 * @return
+	 */
+	@RequestMapping("sendList.do")
+	public String sendList(Model model, Principal principal) {
+		String empId = principal.getName();
+		List<MailBoxVO> sendMailList = service.retriveSendMailList(empId);
+		model.addAttribute("sendMailList", sendMailList);
+
+		return "mail/send/sendList";
+	}
+
+	/**
+	 * 중요메일함
+	 * 
+	 * @return
+	 */
+	@RequestMapping("impoList.do")
+	public String impoList() {
+		return "mail/impo/impoList";
+	}
+
+	/**
+	 * 휴지통
+	 * 
+	 * @return
+	 */
+	@RequestMapping("wasteList.do")
+	public String wasteList() {
+		return "mail/waste/wasteList";
+	}
+}

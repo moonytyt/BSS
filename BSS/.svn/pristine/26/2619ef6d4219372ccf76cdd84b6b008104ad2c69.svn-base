@@ -1,0 +1,10 @@
+package kr.or.ddit.attendance.service;
+
+import java.util.List;
+
+import kr.or.ddit.attendance.vo.OverTimeVO;
+
+public interface OverTimeService {
+	//초과근무 전체조회
+	public List<OverTimeVO> retrieveOverList();
+}

@@ -1,0 +1,48 @@
+package kr.or.ddit.BoardCompl.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import kr.or.ddit.BoardCompl.vo.ComplboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.vo.PaginationInfo;
+
+/**
+ * 칭찬합니다 PL
+ * 
+ */
+@Mapper
+public interface ComplboardDAO {
+	/**
+	 * 공지사항등록
+	 * @param compl
+	 * @return
+	 */
+	public int insertCompl(ComplboardVO compl);
+	/**
+	 * 공지사항상세조회
+	 * @param complNo
+	 * @return 존재하지 않는 경우, null 반환
+	 */
+	public ComplboardVO selectCompl(String complNo);
+	/**
+	 * 공지수 조회
+	 * @return 검색 조건에 맞는 공지수 조회
+	 */
+	public long selectTotalRecord(PaginationInfo<ComplboardVO> paging);
+	/**
+	 * 공지사항목록조회
+	 *
+	 */
+	public List<ComplboardVO> selectComplList(PaginationInfo<ComplboardVO> paging);
+	/**
+	 * 공지사항 수정
+	 * @param compl
+	 * @return 수정된 레코드 수, >0 성공
+	 */
+	public int updateCompl(ComplboardVO compl);
+
+	public int deleteCompl(int complNo);
+}

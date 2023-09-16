@@ -1,0 +1,324 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<script src='${pageContext.request.contextPath }/resources/js/calendar.min.js'></script>
+<script>   
+    var calendar; // FullCalendar 인스턴스를 저장하는데 사용될 이름이 지정된 변수를 선언.
+    document.addEventListener('DOMContentLoaded', function() { //이 이벤트 리스너는 HTML 문서의 콘텐츠가 완전히 로드될 때 트리거됨. DOM이 준비되었을 때만 후속 코드가 실행되도록 함
+    	let setting = {  // ajax 요청 설정
+    		url : "${pageContext.request.contextPath }/calendar/personalcalendar",
+    		method : "post",
+    		data : "json",   // json형태로 받아와야함.
+    		success : function(data) {
+    			
+    	console.log('data : ', data)
+    	var calendarEl = document.getElementById('personalcalendar');
+    	calendar = new FullCalendar.Calendar(calendarEl, {
+    	
+    		
+   		
+       	headerToolbar: {   // 헤더 기능
+       	left: 'prevYear,prev,next,nextYear today',   // 헤더 좌측 기능
+       	center: 'title',							 // 헤더 센터 제목 
+       	right: 'multiMonthYear,dayGridMonth'		 // 헤더 우측 기능
+       	},
+       	 editable: true, 		// 캘린더 편집 기능
+            droppable: true,  	// Fullcalendar옵션 : 드래그 요소.
+            displayEventTime : false,   // 이벤트 시간 표기 없앰.
+            selectable: true,   // 달력 일자 드래그 설정가능
+            nowIndicator: true, // 현재 시간 마크
+            drop: function (arg) {
+         if (document.getElementById('drop-remove').checked) {
+             arg.draggedEl.parentNode.removeChild(arg.draggedEl);
+            }
+	         },	
+    		
+    	// 클릭시 등록모달 창이 뜸
+    	dateClick: function(info) {
+    	const myModal = new bootstrap.Modal(document.getElementById('insertModal'), {
+			backdrop: 'static',  // 모달 외부 클릭 시 닫히지 않도록 설정
+			keyboard: false 	 // Esc 키를 눌러 모달이 닫히지 않도록 설정
+		})
+    	var eventstartdt = info.dateStr.split('T')[0];  // 시작 시간초기값
+		var eventenddt = info.dateStr.split('T')[0];	// 끝나는 시간초기값
+		
+		document.getElementById('instartDate').value = eventstartdt; 
+		document.getElementById('inendDate').value = eventenddt;
+		
+    	myModal.show('modal')
+    	},
+    	
+		        
+    	// 클릭시 수정모달 창이 뜸
+    	eventClick: function(info) {
+		const myModal = new bootstrap.Modal(document.getElementById('updateModal'), {
+			backdrop: 'static',  // 모달 외부 클릭 시 닫히지 않도록 설정
+			keyboard: false 	 // Esc 키를 눌러 모달이 닫히지 않도록 설정
+		});
+			console.log('info.event', info.event);
+			var eventid = info.event.id;
+			var eventtitle = info.event.title;
+			var eventstartdt = info.event.startStr;
+			var eventenddt = info.event.endStr;
+			
+			console.log('종료일자 : ',  eventenddt);
+			
+			document.getElementById('perScNo').value = eventid;
+			document.getElementById('upperTitle').value = eventtitle;
+    		document.getElementById('upstartDate').value = eventstartdt.split('T')[0];
+    		document.getElementById('upendDate').value = eventenddt.split('T')[0];
+    		
+		myModal.show('modal');
+        },
+    		            	  
+        // 날짜 초기값
+    	initialDate: new Date(),
+        businessHours: true,
+       	events: data,
+    	})
+    	calendar.render();
+    	},
+    	
+    	// 에러발생시 찍히는 현상.		
+    	error : function(jqXHR, status, error) {
+    	console.log(jqXHR)
+    	console.log(status)
+    	console.log(error)
+    	}}
+    	$.ajax(setting);
+    	
+    	// 등록모달 값
+		$(insertModal).on('show.bs.modal',function(event){ 
+		let $checkDdcCd = $("input:checked").parent('td').siblings('.perscno');
+		if($checkDdcCd.length==1){
+ 			let $modalBody = $(this).find(".modal-body");
+ 			let perSCNO = $checkDdcCd.text();
+			console.log(perscno);
+ 			
+			$.ajax(setting);
+ 		}
+     	});
+    	
+    	
+		// 수정모달 값
+		$(updateModal).on('show.bs.modal',function(event){
+		let $checkDdcCd= $("input:checked").parent('td').siblings('.perscno');
+		if($checkDdcCd.length==1){
+ 			let $modalBody = $(this).find(".modal-body");
+ 			let perSCNO = $checkDdcCd.text();
+			console.log(perscno);
+			
+			$.ajax(setting);
+ 		}
+		});  
+    	
+    	
+    	// 등록모달 버튼 만들기
+		$('#insertBtn').on('click', function(event) {
+		//event.preventDefault();		// 이벤트의 기본동작을 중단시키는 역할
+			// 이벤트 클릭시의 동작
+			const eventstartdt = $(instartDate).val();  // 등록시작 이벤트
+			const eventenddt = $(inendDate).val(); 		// 등록 끝나는 이벤트
+			const eventpertt = $(inperTitle).val();		// 등록 제목 이벤트
+			var formData = {
+					perStart : eventstartdt, // 시작 이벤트
+					perEnd : eventenddt,     // 끝나는 이벤트
+					perTitle : eventpertt	 // 제목 이벤트
+			};
+			// controller에서 일정등록하는 부분.
+			let setting = {
+					url : `${pageContext.request.contextPath}/calendar/personalInsert.do`, 
+					dataType : 'json',
+					method : 'post',
+					data : formData, 
+					success : function(response) {  
+						console.log(response) // 출력시 확인하는 부분 (newevent, success, message)
+						$(insertModal).modal('hide');
+		                   // 해당 일정만 다시 렌더링
+	                   	if(response.success){  // response 안에 newevent, success, message 담겨있음.
+		                	   if (response.newevent) {
+		                		   var newevent = response.newevent
+		                            var updatedEvent = calendar.getEventById(newevent.id);
+		                            if (updatedEvent) {
+		                                updatedEvent.setProp('title', newevent.title);
+		                                updatedEvent.setStart(newevent.start);
+		                                updatedEvent.setEnd(newevent.end);
+		                            }else{
+		                            	calendar.addEvent(newevent)
+		                            }// if (updatedEvent) end
+		                            alert("등록완료");
+		                        } else {
+		                            // 새로운 일정 추가 시
+		                            calendar.refetchEvents();  // 캘린더에 정보가 추가되거나 변경되었을 때 해당 정보를 업데이트 하는 기능
+		                        }// if (response.eventId) end
+		                   }else{
+		                	   alert(response.message)
+		                   }// if(response.success) end
+					}// success end
+			}//setting end
+			$.ajax(setting);
+	 	});
+		
+		
+		// 수정모달 버튼 만들기
+		$('#updateBtn').on('click', function(event) {
+	 	    event.preventDefault();		// 이벤트의 기본동작을 중단시키는 역할
+			//이벤트 클릭시의 동작
+			const eventstartdt = $(upstartDate).val();	// 수정 시작 이벤트
+			const eventenddt = $(upendDate).val();		// 수정 끝나는 이벤트
+			const eventpertt = $(upperTitles).val();	// 수정 제목 이벤트	
+			const eventperscno = $(perScNo).val();		// 개인일정 코드번호 이벤트
+			var formData = {
+					perStart : eventstartdt, // 시작 이벤트
+					perEnd : eventenddt,     // 끝나는 이벤트
+					perTitle : eventpertt,	 // 제목 이벤트	
+					perScNo : eventperscno	 // 개인일정 코드번호 이벤트
+			}
+			// controller에서 일정수정하는 부분.
+			let setting = {
+					url : `${pageContext.request.contextPath}/calendar/personalUpdate.do`,
+					dataType : 'json',
+					method : 'post',
+					data : formData,
+					success : function(response) {
+						console.log(response) // 출력시 확인하는 부분 (newevent, success, message)
+						$(updateModal).modal('hide');
+		                   // 해당 일정만 다시 렌더링
+	                   	if(response.success){  // response 안에 newevent, success, message 담겨있음.
+		                		   var personal = response.personal
+		                            var updatedEvent = calendar.getEventById(personal.id);
+		                            if (updatedEvent) {
+		                                updatedEvent.setProp('title', personal.title);
+		                                updatedEvent.setStart(personal.start);
+		                                updatedEvent.setEnd(personal.end);
+		                            } // if (updatedEvent) end
+		                            alert("수정완료");
+		                   }else{
+		                	   alert(response.message)
+		                   } //else end
+					}// success end
+			}//setting end
+			$.ajax(setting);
+	 	});
+		
+		
+		// 삭제 버튼
+		$('#deleteBtn').on('click',function(event){
+			
+			console.log('event => ', event);
+			const eventperscno = $(perScNo).val();	// 개인 코드번호 이벤트  
+			var formData = {
+					perScNo : eventperscno	 // 개인일정 코드번호 이벤트 
+			}
+			let $checkPerScNo= $("input:checked").parent('td').siblings('.PerScNo');
+			let allowCd=[];
+			for(let i = 0;i<$checkPerScNo.length;i++){
+				PerScNo.push($checkPerScNo[i].innerText);
+			}
+			let setting = {
+				url : `${pageContext.request.contextPath}/calendar/personalDelete.do`,
+				method : 'post',
+				dataType : 'json',
+				traditional: true,
+				data : formData,
+				success : function(resp) {
+					if(resp.success){
+						$("input:checked").parents('tr').remove();
+						alert("삭제완료");
+						var deleteEvent = calendar.getEventById(eventperscno);
+                        if (deleteEvent) {
+                            
+                        	deleteEvent.remove();
+                        	$(updateModal).modal('hide');
+                        	
+                        } // if (updatedEvent) end
+					}else{
+						alert("실행중 실패");
+					}
+				},
+			}
+
+			$.ajax(setting);
+		})
+		
+		
+		
+		
+     	})
+    </script>
+</head>
+<body>
+	
+<!-- 등록 모달 -->
+<div class="modal fade" id="insertModal" tabindex="-1" role="dialog"  aria-labelledby="insertModal" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header"><h3 class="modal-title" id="insertModalTitle">일정등록</h3></div>
+         <div class="modal-body">
+            <form id="insertForm">
+<!--                <input type="hidden" id="inperScNo" name="perScNo"> -->
+               <div class="form-group">
+                  <label for="startDate">시작일</label> <input type="date" class="form-control" id="instartDate" name="startDate">
+               </div>
+               <div class="form-group">
+                  <label for="endDate">종료일</label> <input type="date" class="form-control" id="inendDate" name="endDate">
+               </div>
+               <div class="form-group">
+                  <label for="perTitle">일정명</label> <input type="text" class="form-control" id="inperTitle" name="perTitle">
+               </div>
+               <div class="form-group">
+                  <label for="perTarget">공통일정</label> <input type="checkbox" id="perTarget" name="perTarget" value="">
+               </div>
+               <div class="modal-footer"></div>
+               <button id="insertBtn" type="button" class="btn btn-primary">저장</button>
+               <button type="button" class="btn btn-danger" data-bs-toggle="modal" >삭제</button>
+               <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">닫기</button>	
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+	
+<!-- 수정 모달 -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header"><h3 class="modal-title" id="updateModalTitle">일정수정</h3></div>
+			<div class="modal-body">
+			<form id="updateForm">
+               <input type="hidden" id="perScNo" name="perScNo">
+               <div class="form-group">
+                  <label for="startDate">시작일</label> <input type="date" class="form-control" id="upstartDate" name="startDate">
+               </div>
+               <div class="form-group">
+                  <label for="endDate">종료일</label> <input type="date" class="form-control" id="upendDate" name="endDate">
+               </div>
+               <div class="form-group">
+                  <label for="comTitle">일정명</label> <input type="text" class="form-control" id="upperTitle" name="perTitle">
+               </div>
+               <div class="form-group">
+                  <label for="comTitle">일정수정명</label> <input type="text" class="form-control" id="upperTitles" name="perTitles">
+               </div>
+               <div class="form-group">
+                  <label for="comTarget">공통일정</label> <input type="checkbox" id="perTarget" name="perTarget" value="">
+               </div>
+				<div class="modal-footer"></div>
+				<button id="updateBtn" type="submit" class="btn btn-primary">수정</button>
+				<button id="deleteBtn" type="button" class="btn btn-danger" >삭제</button>
+	            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">닫기</button>
+	            </form>
+	        </div>
+		</div>
+	</div>
+</div>
+	<div id='personalcalendar'></div>
+</body>
+</html>
+
+
+
+
+

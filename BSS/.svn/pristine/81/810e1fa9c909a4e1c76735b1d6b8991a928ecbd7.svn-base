@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.salary.dao.SalaryDAO">
+	
+	<insert id="insertSalary">
+		INSERT INTO salary (sal_no, emp_cd, sal_give_yn, SAL_CALC_YMD, SAL_CALC_START, SAL_CALC_END)
+		SELECT TO_CHAR(SYSDATE,'YYYYMM'), emp_cd, 'N', SYSDATE
+		, TO_CHAR(ADD_MONTHS(SYSDATE,-1),'YYYY/MM')||'/'||25
+		, TO_CHAR(SYSDATE,'YYYY/MM')||'/'||24
+		FROM employee
+	</insert>
+	
+	<select id="salaryList" resultType="kr.or.ddit.salary.vo.SalaryVO">
+		SELECT DISTINCT(SAL_NO), SAL_GIVE_YN,SAL_CALC_YMD,SAL_CALC_START,SAL_CALC_END
+		FROM SALARY ORDER BY SAL_NO DESC
+	</select>
+	
+	<select id="checkBeforeInsert" resultType="kr.or.ddit.salary.vo.SalaryVO">
+		SELECT SAL_NO
+		FROM SALARY
+		WHERE SAL_NO = TO_CHAR(SYSDATE,'YYYYMM')
+		AND SAL_GIVE_YN='N'
+	</select>
+	
+	<delete id="deleteSalary" parameterType="kr.or.ddit.salary.vo.SalaryVO">
+		DELETE SALARY
+		WHERE SAL_NO=#{salNo}
+	</delete>
+	
+	
+</mapper>

@@ -1,0 +1,26 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core"  prefix="c"%>
+
+
+<h1>
+	${infoList }
+</h1>
+<!-- <table> -->
+
+<!-- <tr> -->
+<!-- 	<td>금융회사</td> -->
+<!-- 	<td>구분</td> -->
+<%-- 	<c:forEach items="${baseMonthList }" var="baseMonth">  --%>
+<%-- 		<td>${baseMonth}</td> --%>
+<%-- 	</c:forEach> --%>
+<!-- </tr> -->
+<%-- <c:forEach items="${bankList }" var="bank"> --%>
+<!-- 	<tr> -->
+<%-- 		<td rowspan="${accountCdList.size() }">${bank}</td> --%>
+<%-- 		<c:forEach items="${accountCdList }" var ="accountCd"> --%>
+			
+<%-- 		</c:forEach>		 --%>
+<!-- 	</tr>	 -->
+<%-- </c:forEach> --%>
+<!-- </table> -->

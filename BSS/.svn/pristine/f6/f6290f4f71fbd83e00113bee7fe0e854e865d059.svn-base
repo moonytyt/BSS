@@ -1,0 +1,72 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+
+<h5>직원교육등록</h5>
+<hr color="black">
+
+<form:form method="post" modelAttribute="training" >
+	<input type="hidden" name="trainNo" value="${training.trainNo }" />
+<table class="table table-border">
+		<tr>
+			<th>강사명</th>
+			<td>
+			<form:select path="lectorId" class="form-control">
+					<form:option value="" label="강사선택" />
+					<form:options items="${lectorList }" itemLabel="lectorName" itemValue="lectorId" />
+			</form:select> 
+			</td>
+		</tr>
+		<tr>
+			<th>교육유형(내/외부)</th>
+			<td><input class="form-control" type="text" name="trainType" />
+			<form:errors path="trainType" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>교육장소</th>
+			<td><input class="form-control" type="text" name="trainPlace" />
+			<form:errors path="trainPlace" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>교육일</th>
+			<td><input class="form-control" type="datetime-local" name="trainDate" />
+			<form:errors path="trainDate" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>교육소요시간</th>
+			<td><input class="form-control" type="number" name="trainTime" />
+			<form:errors path="trainTime" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>교육대상</th>
+			<td><input class="form-control" type="text" name="trainTarget" />
+			<form:errors path="trainTarget" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>교육명</th>
+			<td><input class="form-control" type="text" name="trainName" />
+			<form:errors path="trainName" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>교육내용</th>
+			<td><textarea class="form-control" name="trainContent"></textarea>
+			<form:errors path="trainContent" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>신청마감일</th>
+			<td><input class="form-control" type="date" name="trainPeriod" />
+			<form:errors path="trainPeriod" class="errors"  /></td>
+		</tr>
+		<tr>
+			<th>신청처</th>
+			<td><input class="form-control" type="text" name="trainSign" />
+			<form:errors path="trainSign" class="errors"  /></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button type="submit" class="btn btn-secondary" value="등록">등록</button>
+			</td>
+		</tr>
+	</table>
+</form:form>

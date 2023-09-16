@@ -1,0 +1,32 @@
+package kr.or.ddit.papers.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.license.dao.LicenseDAO;
+import kr.or.ddit.license.vo.LicenseVO;
+import kr.or.ddit.papers.dao.PapersDAO;
+import kr.or.ddit.papers.vo.CareerPVO;
+import kr.or.ddit.papers.vo.PapersVO;
+
+@Service
+public class PapersServiceImpl implements PapersService{
+
+	@Inject
+	PapersDAO documentDAO;
+	
+	@Override
+	public List<PapersVO> retrieveDocuments() {
+		return documentDAO.documentsList();
+	}
+
+	@Override
+	public CareerPVO retrieveCareerPaper(String empCd) {
+		return null;
+	}
+
+
+}

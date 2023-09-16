@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+
+<c:set value="${salaryDetailList[0] }" var="salaryDetail" />
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<h3 class="text-center">${salaryDetail.employeeVO.empName} <span class="fs-4">(${salaryDetail.salaryVO.salCalcStart }~${salaryDetail.salaryVO.salCalcEnd })</span></h3>
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th class="table-primary">지급내역</th>
+						<th class="table-primary">지급액</th>
+						<th class="table-danger">공제내역</th>
+						<th class="table-danger">공제액</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${salaryDetail.allowHistoryList.size() > salaryDetail.ddcHistoryList.size()}">
+						<c:set value="${salaryDetail.allowHistoryList.size()}" var="rowCount" />
+					</c:if>
+					<c:if test="${salaryDetail.allowHistoryList.size() < salaryDetail.ddcHistoryList.size()}">
+						<c:set value="${salaryDetail.ddcHistoryList.size()}" var="rowCount" />
+					</c:if>
+					<c:set value="0" var="allowAmt" />
+					<c:set value="0" var="ddcAmt" />
+					<c:forEach begin="0" end="${rowCount-1}" var="i">
+					<tr>
+						<td>
+							${salaryDetail.allowHistoryList[i].allowVO.allowNm}
+						</td>	
+						<td>
+							<fmt:formatNumber value="${salaryDetail.allowHistoryList[i].allowAmt}" type="currency"/>
+							<c:set value="${allowAmt + salaryDetail.allowHistoryList[i].allowAmt }" var="allowAmt" />
+						</td>	
+						<td>
+							${salaryDetail.ddcHistoryList[i].ddcVO.ddcNm}
+						</td>	
+						<td>
+							<fmt:formatNumber value="${salaryDetail.ddcHistoryList[i].ddcAmt}" type="currency"/>
+							<c:set value="${ddcAmt + salaryDetail.ddcHistoryList[i].ddcAmt }" var="ddcAmt" />
+						</td>	
+					</tr>
+					</c:forEach>
+					<tr>
+						<td></td>
+						<td></td>
+						<td class="table-danger">공제액계</td>
+						<td class="table-danger"><fmt:formatNumber value="${ddcAmt }" type="currency"/></td>
+					</tr>
+					<tr>
+						<td class="table-primary">지급액계</td>
+						<td class="table-primary"><fmt:formatNumber value="${allowAmt }" type="currency"/></td>
+						<td class="table-warning">차인지급액</td>
+						<td class="table-warning"><fmt:formatNumber value="${allowAmt - ddcAmt}" type="currency"/></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+

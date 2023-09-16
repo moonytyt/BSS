@@ -1,0 +1,72 @@
+package kr.or.ddit.BoardCompl.service;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.BoardCompl.dao.ComplboardDAO;
+import kr.or.ddit.BoardCompl.vo.ComplboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.exception.PKNotFoundException;
+import kr.or.ddit.vo.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+public class ComplboardServiceImpl implements ComplboardSerivce {
+
+	@Inject
+	private ComplboardDAO complDAO;
+
+	@Autowired
+	private ComplboardSerivce complService;
+
+	//	private static complboardSerivce getInstance() {
+//		if (complService == null)
+//			complService = new complboardServiceImpl();
+//		return complService;
+//	}
+
+	
+	@Override
+	public boolean createCompl(ComplboardVO compl) {
+		return complDAO.insertCompl(compl) > 0;
+	}
+
+
+	@Override
+	public List<ComplboardVO> retrieveComplList(PaginationInfo<ComplboardVO> paging) {
+		long totalRecord = complDAO.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return complDAO.selectComplList(paging);
+	}
+
+	@Override
+	public ComplboardVO retrieveCompl(int complNo) throws PKNotFoundException {
+		ComplboardVO compl = complDAO.selectCompl(complNo);
+		if(compl==null)
+			throw new PKNotFoundException(MessageFormat.format("{0} 해당 글 없음", complNo));
+		return compl;
+	}
+
+
+	@Override
+	public void deleteCompl(int complNo) {
+		complDAO.deleteCompl(complNo);
+	}
+
+	
+
+//	@Override
+//	public int complDelete(int complNo) {
+//		return complService.complDelete(complNo);
+//		
+//	}	
+}

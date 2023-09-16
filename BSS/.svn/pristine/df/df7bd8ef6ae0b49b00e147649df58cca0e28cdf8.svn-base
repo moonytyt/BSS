@@ -1,0 +1,9 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 정기예금 상품 
+ */
+public class RegDepositVO {
+
+}

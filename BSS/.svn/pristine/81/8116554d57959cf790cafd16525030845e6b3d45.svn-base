@@ -1,0 +1,122 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/organization.css" />
+<style>
+table {
+   F width: 100%;
+   border: 1px solid #444444;
+   border-collapse: collapse;
+   background-color: white;
+}
+
+.title {
+   width:150px;
+}
+
+.errors{
+	color:red;
+}
+
+th {
+   text-align: center;
+}
+
+.form-control {
+   padding: 0;
+}
+
+th, td {
+   color: black;
+   border: 1px solid #444444;
+}
+</style>
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<h3>조직도</h3>
+<div class="tree">
+	<ul>
+		<li><a href="#" data-code="DEP_001">지점장</a>
+			<ul>
+				<li><a href="#" data-code="DEP_002">부지점장</a>
+					<ul>
+						<li><a href="#" data-code="DEP_MANAGE_001">경영관리본부</a>
+							<ul>
+								<li><a href="#" data-code="DEP_MANAGE_002">시스템관리부</a></li>
+								<li><a href="#" data-code="DEP_MANAGE_003">재무회계부</a></li>
+								<li><a href="#" data-code="DEP_MANAGE_004">인사총부무</a></li>
+							</ul>	
+						<li><a href="#" data-code="DEP_IT_001">IT본부</a>
+							<ul>
+								<li><a href="#" data-code="DEP_IT_002">정보지원부</a></li>
+								<li><a href="#" data-code="DEP_IT_003">정보관리부</a></li>
+							</ul>	
+						<li><a href="#" data-code="DEP_SALE_001">기업영업본부</a>
+							<ul>
+								<li><a href="#" data-code="DEP_SALE_002">기업금융부</a></li>
+								<li><a href="#" data-code="DEP_SALE_003">시너지영업부</a></li>
+								<li><a href="#" data-code="DEP_SALE_004">종합금융부</a></li>
+							</ul>	
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div id="depEmpList"></div>
+
+<script>
+const data = {
+	    "DEP_001": {
+	        depName: "부서1",
+	        empName: "직원1",
+	        poName: "직급1"
+	    },
+	    "DEP_002": {
+	        depName: "부서2",
+	        empName: "직원2",
+	        poName: "직급2"
+	    }
+	    // 다른 data-code에 대한 데이터도 추가
+	};
+$('a[data-code]').on('click', function() {
+    const dataCode = $(this).attr('data-code');
+    const selectedData = data[dataCode];
+
+//     let depelsehtml = 
+// 		`<table style="width: 90%; background-color: white;">
+//             <tr>
+//                 <th>부서명</th>
+//                 <th>직원명</th>
+//                 <th>직급</th>
+//             </tr>
+//             <tr>
+//                 <td colspan="3">등록된 직원이 없습니다</td>
+//             </tr>
+//         </table>`;
+     
+    
+    if (selectedData) {
+        let depHtml = 
+        `<table style="width: 90%; background-color: white;">
+            <tr>
+                <th>부서명</th>
+                <th>직원명</th>
+                <th>직급</th>
+            </tr>
+            <tr>
+                <td>${selectedData.depName}</td>
+                <td>${selectedData.empName}</td>
+                <td>${selectedData.poName}</td>
+            </tr>
+        </table>`;
+
+        $('#depEmpList').html(depHtml);
+    } else {
+//         $('#depEmpList').html(depelsehtml)
+        
+    }
+});
+</script>

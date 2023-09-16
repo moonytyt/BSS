@@ -1,0 +1,51 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>    
+
+<body>
+<table class="table table-border">
+	<tr>
+		<th rowspan="5">사진</th>
+	</tr>
+	<tr>
+		<th>이름</th>
+		<td>${empDetail.empName }</td>
+	</tr>
+	<tr>
+		<th>이메일</th>
+		<td>${empDetail.empMail }</td>
+	</tr>
+	<tr>
+		<th>담당업무</th>
+		<td>${empDetail.busName }</td>
+	</tr>
+	<tr>
+		<th>내선번호</th>
+		<td>${empDetail.depNum }</td>
+	</tr>
+	<tr>
+		<th>가</th>
+		<td>${empDetail.empMail }</td>
+	</tr>
+	<tr>
+		<th>나</th>
+		<td>${empDetail.empMail }</td>
+	</tr>
+	<tr>
+		<th>다</th>
+		<td>${empDetail.empMail }</td>
+	</tr>
+	<tr>
+		<th>라</th>
+		<td>${empDetail.empMail }</td>
+	</tr>
+	
+</table>
+</body>
+</html>
+
+	<td>
+		<a class="btn btn-primary">수정</a>
+	</td>
+	

@@ -1,0 +1,15 @@
+package kr.or.ddit.employee.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.family.vo.FamilyVO;
+import kr.or.ddit.license.vo.LicenseVO;
+
+@Mapper
+public interface DetailDAO {
+	
+	public List<LicenseVO> licenseList(LicenseVO license);
+	public List<FamilyVO> familyList(FamilyVO family);
+}

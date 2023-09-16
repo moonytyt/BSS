@@ -1,0 +1,168 @@
+package kr.or.ddit.mail.service;
+
+import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
+
+import javax.inject.Inject;
+import javax.mail.Authenticator;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Store;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMessage.RecipientType;
+
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import kr.or.ddit.mail.dao.MailBoxDAO;
+import kr.or.ddit.mail.vo.MailBoxVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Service
+public class mailBoxServiceImpl implements mailBoxService {
+	@Inject
+	private MailBoxDAO mailBoxDAO;
+	
+	@Override
+	public String recieveMailList(String empId, PaginationInfo<MailBoxVO> paging) {
+		String empMail = mailBoxDAO.selectMail(empId);
+		String mailToken = mailBoxDAO.getMailToken(empId);
+		
+		String username = empMail;
+		String password = mailToken;
+		String host = "imap.gmail.com";
+		int port = 993;
+
+		Properties props = new Properties();
+
+		props.put("mail.imaps.host", host);
+		props.put("mail.imaps.port", port);
+		props.put("mail.imaps.starttls.enable", true);
+
+		Session session = Session.getDefaultInstance(props);
+
+		try {
+			Store store = session.getStore("imaps");
+			store.connect(host, username, password);
+
+			Folder folder = store.getFolder("INBOX");
+			folder.open(Folder.READ_ONLY);
+
+			Message[] messages = folder.getMessages();
+			
+			for (Message msg : messages) {
+				MailBoxVO mailBox = new MailBoxVO();
+				Date sentDate = msg.getSentDate();
+				String subject = msg.getSubject();
+				Object content = msg.getContent();
+				String from = ((InternetAddress) msg.getFrom()[0]).toUnicodeString();
+				
+				mailBox.setReceiveMailReceiver(username);
+				mailBox.setEmpCd(empId);
+				mailBox.setReceiveMailSender(from);
+				mailBox.setReceiveMailTitle(subject);
+				mailBox.setReceiveMailContent((String)content);
+				LocalDate localDate = sentDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				mailBox.setReceiveMailDate(localDate);
+				
+				mailBoxDAO.insertMail(mailBox);
+			}
+			folder.close(false);
+			store.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return "mail/allMail/allMailList";
+	}
+
+	@Override
+	public boolean sendMail(MailBoxVO mail, String empCd) {
+		String empMail = mailBoxDAO.selectMail(empCd);
+		String mailToken = mailBoxDAO.getMailToken(empCd);
+		
+		String to = mail.getReceiveMailReceiver();
+		String from = empMail;
+
+		final String username = empMail;
+		final String passwoard = mailToken;
+		final String host = "smtp.gmail.com";
+
+		Properties props = new Properties();
+
+		props.put("mail.smtp.auth", true);
+		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.port", 587);
+		props.put("mail.smtp.starttls.enable", true);
+		props.put("mail.smtp.ssl.trust", host);
+
+		Session session = Session.getInstance(props, new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(username, passwoard);
+			}
+		});
+
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.setRecipients(RecipientType.TO, InternetAddress.parse(to));
+			message.setSubject(mail.getReceiveMailTitle());
+			message.setText(mail.getReceiveMailContent());
+
+			Transport.send(message);
+			
+			mail.setEmpCd(empCd);
+			mailBoxDAO.sendMail(mail);
+		} catch (MessagingException e) {
+			MessageFormat.format("{0} 해당 이메일 없음", to);
+			return false;
+		}
+
+		return true;
+	}
+	
+	@Override
+	public List<MailBoxVO> allMail(String empCd) {
+		return mailBoxDAO.selectAllMail(empCd);
+	}
+
+	@Override
+	public List<MailBoxVO> retriveSendMailList(String empId) {
+		String empMail = mailBoxDAO.selectMail(empId);
+		return mailBoxDAO.selectSendMailList(empMail);
+	}
+
+	@Override
+	public List<MailBoxVO> retriveGetMailList(String empId, PaginationInfo<MailBoxVO> paging) {
+		String empMail = mailBoxDAO.selectMail(empId);
+		return mailBoxDAO.selectReciveMailList(empMail);
+	}
+
+	@Override
+	public MailBoxVO retriveMailDetail(String mailNo) {
+		MailBoxVO mail = mailBoxDAO.selectMailDetail(mailNo);
+		return mail;
+	}
+
+	@Override
+	public List<MailBoxVO> tempMailList(String empCd) {
+		return mailBoxDAO.selectTempMailList(empCd);
+	}
+	
+	@Override
+	public boolean temporaryMail(MailBoxVO mail, String empCd) {
+		mail.setEmpCd(empCd);
+		int cnt = mailBoxDAO.mailStorageInfo(mail);
+		return cnt > 0;
+	}
+}

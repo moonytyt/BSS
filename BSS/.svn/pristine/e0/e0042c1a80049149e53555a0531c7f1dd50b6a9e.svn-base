@@ -1,0 +1,157 @@
+package kr.or.ddit.messenger.controller;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.inject.Inject;
+
+import org.apache.commons.collections4.map.HashedMap;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.messenger.dao.ChatRecordDAO;
+import kr.or.ddit.messenger.service.ChatRoomService;
+import kr.or.ddit.messenger.vo.ChatRecordVO;
+import kr.or.ddit.messenger.vo.ChatRoomVO;
+import kr.or.ddit.messenger.vo.ChatUserVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class CustomSocketHandler extends TextWebSocketHandler{
+	@Inject
+	private ChatRoomService chatRoomService;
+	
+	@Inject
+	private ChatRecordDAO chatRecordDao;
+	
+	Map<String, WebSocketSession> users = new ConcurrentHashMap<String, WebSocketSession>();
+	
+	// 클라이언트가 서버로 연결시
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+		Map<String, String> userInfo = getEmpCd(session);
+		String senderCd = userInfo.get("empCd"); 
+		
+		if (senderCd != null && !users.containsKey(senderCd)) {
+			log.info(senderCd + " 연결됨");
+			users.put(senderCd, session);
+		}
+	}
+	
+	// 클라이언트가 데이터 전송 시
+	@Override
+	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+		Map<String, String> userInfo = getEmpCd(session);
+		String senderId  = userInfo.get("empCd");
+		String empNm  = userInfo.get("empName");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		// 송신자가 보낸 내용
+		Map<String, String> mapReceive = objectMapper.readValue(message.getPayload(), Map.class);
+		
+		String type = mapReceive.get("type");
+		String msg = mapReceive.get("msg");
+		
+		if(msg == null) return;
+		
+		// 수신자에게 보낼 내용
+		Map<String, String> mapToSend = new HashedMap<String, String>();
+		
+		String jsonStr = null;
+		
+		switch(type) {
+		case "CHAT_REQ":
+			mapToSend.put("type", "chat");
+			//같은 채팅방에 메시지 전송
+			LocalDateTime now = LocalDateTime.now();
+			// 소수점 삭제
+			LocalDateTime sendTime = now.truncatedTo(ChronoUnit.SECONDS);
+			
+			// 채팅방 아이디로 정보 가져오기
+			String chrId = mapReceive.get("roomNo");
+			ChatRoomVO chatRoomInfo = chatRoomService.retrieveChatRoomDetail(chrId);
+			if(chatRoomInfo == null) return;
+			
+			for(ChatUserVO chatUser : chatRoomInfo.getChatUserList()) {
+				String accId  = (chatUser.getEmpCd());
+				if(users.containsKey(accId)) {
+					WebSocketSession targetSession = users.get(accId);
+					mapToSend.put("roomNo", chrId);
+					mapToSend.put("sender", senderId);
+					mapToSend.put("sendTime", sendTime.toString());
+					mapToSend.put("msg", empNm + " : " + mapReceive.get("msg") + " [" + sendTime + "]");
+					jsonStr = objectMapper.writeValueAsString(mapToSend);
+					targetSession.sendMessage(new TextMessage(jsonStr));
+				}
+			}
+			
+			// chatRoomMsgVO 생성해서 저장하기
+			// 필요정보 내용, 누가 보냈는지
+			ChatRecordVO chatRecord = new ChatRecordVO();
+			chatRecord.setRecodeNo(UUID.randomUUID().toString().substring(0, 30));
+			chatRecord.setMessengerContent(msg);
+			chatRecord.setMessengerTime(sendTime);
+			chatRecord.setRoomNo(Integer.parseInt(mapReceive.get("roomNo")));
+			chatRecord.setEmpCd(senderId);
+			chatRecordDao.insertMsg(chatRecord);
+			
+			break;
+		}
+	}
+	
+	// 연결 해제될 때
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		Map<String, String> userInfo = getEmpCd(session);
+		String senderId = userInfo.get("memId");
+		if(senderId != null) {	// 로그인 값이 있는 경우만
+			log(senderId + " 연결 종료됨");
+			users.remove(senderId);
+		}
+	}
+	
+	private void log(String logmsg) {
+		System.out.println(new Date() + ":" + logmsg);
+	}
+	
+	// 에러 발생시
+@Override
+public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+	log(session.getId() + " 익셉션 발생: " + exception.getMessage());
+}
+	
+	private Map<String, String> getEmpCd(WebSocketSession session){
+		Map<String, String> userInfo = new HashedMap<>();
+		String empCd = null;
+		String empName = null;
+		
+		SecurityContext securityContext = SecurityContextHolder.getContext();
+		Authentication authentication = (Authentication) session.getPrincipal();
+		EmployeeVOWrapper wrapper = (EmployeeVOWrapper) authentication.getPrincipal();
+		
+		EmployeeVO employee = wrapper.getRealUser();
+		empCd = employee.getEmpCd();
+		empName = employee.getEmpName();
+		
+		userInfo.put("empCd", empCd);
+		userInfo.put("empName", empName);
+		
+		return userInfo;
+	}
+}

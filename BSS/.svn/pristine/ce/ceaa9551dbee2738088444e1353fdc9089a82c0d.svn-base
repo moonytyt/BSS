@@ -1,0 +1,23 @@
+package kr.or.ddit.calendar.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.calendar.dao.PersonalDAO;
+import kr.or.ddit.calendar.vo.PersonalVO;
+
+
+@Service
+public class PersonalServiceImpl implements PersonalService{
+	@Inject
+	private PersonalDAO PersonalDAO;
+	@Override
+	public List<PersonalVO> retrieveperList() {
+		return PersonalDAO.selectperList();
+	}
+
+}
+ 

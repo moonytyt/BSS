@@ -1,0 +1,56 @@
+package kr.or.ddit.attendance.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.attendance.service.AttendanceService;
+import kr.or.ddit.attendance.vo.AttendanceVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import lombok.RequiredArgsConstructor;
+
+@Controller
+@RequiredArgsConstructor
+public class AttendanceController {
+	
+	private final AttendanceService service;
+	
+	@ModelAttribute("attendance")
+	public AttendanceVO attendance() {
+		return new AttendanceVO();
+	}
+	
+	@ModelAttribute("simpleCondition")
+	public SimpleCondition simpleCondition() {
+	      return new SimpleCondition();
+	}
+	
+	
+	@RequestMapping("/pm/servicemanagement/attendList")
+	public String attenView(
+			@RequestParam(name = "page", required = false, defaultValue = "1")
+			long currentPage
+			, @ModelAttribute("simpleCondition") SimpleCondition simpleCondition
+			, Model model
+			) {
+		PaginationInfo<AttendanceVO> paging = new PaginationInfo<>(10, 5);
+		paging.setCurrentPage(currentPage);
+		paging.setSimpleCondition(simpleCondition);
+		
+		List<AttendanceVO> attendList = service.retrieveAttendList(paging);
+		paging.setDataList(attendList);
+		model.addAttribute("paging", paging);
+		return "pm/servicemanagement/ajax/attendList";
+	}
+
+	@RequestMapping("/pm/servicemanagement/attend")
+	public String attendList() {
+		return "pm/servicemanagement/attend";
+	}
+
+}

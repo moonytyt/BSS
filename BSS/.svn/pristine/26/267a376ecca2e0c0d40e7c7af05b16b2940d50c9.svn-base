@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.BoardNtc.dao.NtcboardDAO">
+
+	<select id="selectTotalRecord" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT COUNT(*)
+		FROM NTC_BOARD
+	</select>
+	
+	<select id="selectNtcList" resultType="kr.or.ddit.BoardNtc.vo.NtcboardVO" parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		WITH ORDEREDNTC AS (
+		    SELECT ROWNUM RNUM, A.*
+		    FROM (
+		     select NTC_NO, NTC_TTL
+             , (C.DEP_NAME || ' ' || B.EMP_NAME) AS EMP_NAME
+             , NTC_DT
+       		 FROM NTC_BOARD A
+       		 INNER JOIN EMPLOYEE B ON( A.EMP_CD = B.EMP_CD) 
+        	 INNER JOIN DEPARTMENT C ON(B.DEP_CD = C.DEP_CD)
+        	 ORDER BY A.NTC_NO DESC
+		    ) A
+		)
+		SELECT *
+		FROM ORDEREDNTC
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectNtc" parameterType="kr.or.ddit.BoardNtc.vo.NtcboardVO">
+		SELECT
+			A.NTC_NO, A.NTC_DT, A.NTC_TTL, A.NTC_CN, EMP_NAME, DEP_NAME
+		FROM NTC_BOARD A
+       		 INNER JOIN EMPLOYEE B ON( A.EMP_CD = B.EMP_CD) 
+        	 INNER JOIN DEPARTMENT C ON(B.DEP_CD = C.DEP_CD)
+        WHERE NTC_NO = #{ntcNo}
+	</select>
+	<insert id="insertNtc" parameterType="kr.or.ddit.BoardNtc.vo.NtcboardVO">
+		<selectKey order="BEFORE" keyProperty="ntcNo" resultType="int">
+			SELECT NTC_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO NTC_BOARD(
+			  NTC_NO 
+			, EMP_CD
+			, NTC_TTL
+			, NTC_CN
+			, NTC_DT
+		)VALUES(
+			#{ntcNo}
+			, #{empCd,jdbcType=VARCHAR}
+			, #{ntcTtl,jdbcType=VARCHAR}
+			, #{ntcCn,jdbcType=CLOB}
+			, SYSDATE
+			)
+	</insert>
+	<update id="updateNtc" parameterType="NtcboardVO">
+		update ntc_board 
+		set
+		 NTC_TTL = #{ntcTtl,jdbcType=VARCHAR}
+		, NTC_CN = #{ntcCn,jdbcType=VARCHAR}
+		, NTC_DT = SYSDATE
+		where NTC_NO = #{ntcNo}
+	</update>
+	
+
+</mapper>

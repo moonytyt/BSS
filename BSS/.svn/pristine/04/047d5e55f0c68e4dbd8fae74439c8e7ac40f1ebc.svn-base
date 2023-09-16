@@ -1,0 +1,110 @@
+package kr.or.ddit.finapi.controller;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.inject.Inject;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.finapi.vo.FinMarketAccountVO;
+import kr.or.ddit.finapi.vo.FinMarketItemVO;
+import kr.or.ddit.finapi.vo.ParamDataVO;
+import kr.or.ddit.finapi.vo.StatisticsInfoVO;
+
+@Controller
+@RequestMapping("/finMarket/")
+public class FinMarketController {
+	
+	@Inject
+	private FinMarketProc proc;
+	
+	@RequestMapping("exchangeRate")
+	public String exchageRate(Model model) {
+		
+		List<FinMarketAccountVO> accountList= new ArrayList<FinMarketAccountVO>();
+//		List<FinMarketItemVO> itemList= new ArrayList<FinMarketItemVO>();
+		
+		proc.accountList("731Y001",accountList);
+//		proc.finMarketItemList(itemList, "731Y001", "D", "20230822", "20230822", null);
+		model.addAttribute("accountList", accountList);
+//		model.addAttribute("itemList", itemList);
+		return "fin/market/exchangeRate";
+		
+	}
+
+	@RequestMapping("firstexchangeRateList")
+	public String firstexchangeRateList(Model model
+			) {
+		List<FinMarketItemVO> itemList= new ArrayList<FinMarketItemVO>();
+		String startBaseMm = LocalDate.now().minusDays(1).toString().replace("-", "");
+		String endBaseMm = LocalDate.now().minusDays(1).toString().replace("-", "");
+		proc.finMarketItemList(itemList, "731Y001", "D", startBaseMm, endBaseMm, null);
+		Set<String> time = new HashSet<String>();
+		for(FinMarketItemVO item:itemList) {
+			time.add(item.getTime());
+		}
+		ArrayList<String> timeList = new ArrayList<String>(time);
+		Collections.sort(timeList);
+		
+		Set<String> dataName = new HashSet<String>();
+		for(FinMarketItemVO item:itemList) {
+			dataName.add(item.getItemName1());
+		}
+		ArrayList<String> dataListNm = new ArrayList<String>(dataName);
+		Collections.sort(dataListNm);
+//		Map<String, Object> response = new HashMap<>();
+		model.addAttribute("itemList", itemList);
+		model.addAttribute("timeList", timeList);
+		model.addAttribute("dataListNm", dataListNm);
+		return "jsonView";
+	}
+	
+	@PostMapping("exchangeRateList")
+	public String exchageRateList(Model model
+			,@RequestBody ParamDataVO param
+			) {
+		
+		List<FinMarketItemVO> itemList= new ArrayList<FinMarketItemVO>();
+		String startBaseMm = param.getStartBaseMm();
+		String endBaseMm = param.getEndBaseMm();
+		List<String> accountCdList = param.getAccountCd();
+		for(String accountCd: accountCdList) {
+			proc.finMarketItemList(itemList, "731Y001", "D", startBaseMm, endBaseMm, accountCd);
+		}
+		Set<String> time = new HashSet<String>();
+		for(FinMarketItemVO item:itemList) {
+			time.add(item.getTime());
+		}
+		ArrayList<String> timeList = new ArrayList<String>(time);
+		Collections.sort(timeList);
+		Map<String, Object> response = new HashMap<>();
+		Set<String> dataName = new HashSet<String>();
+		for(FinMarketItemVO item:itemList) {
+			dataName.add(item.getItemName1());
+		}
+		ArrayList<String> dataListNm = new ArrayList<String>(dataName);
+		Collections.sort(dataListNm);
+//		response.put("timeList", timeList);
+//		response.put("itemList", itemList);
+//		model.addAttribute("response", response);
+		model.addAttribute("itemList", itemList);
+		model.addAttribute("timeList", timeList);
+		model.addAttribute("dataListNm", dataListNm);
+//		return "jsonView";
+		return "jsonView";
+	}
+	
+}

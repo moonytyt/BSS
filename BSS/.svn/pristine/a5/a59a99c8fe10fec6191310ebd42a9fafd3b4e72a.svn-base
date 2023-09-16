@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.position.dao.PositionDAO">
+	<select id="poList" resultType="PositionVO">
+		select po_cd, po_name
+		from
+		position
+	</select>
+
+	<insert id="insertPosition" parameterType="PositionVO">
+		insert into position
+		(po_cd, po_name, po_sal, po_priority)
+		values
+		(
+		#{poCd,jdbcType=VARCHAR}
+		, #{poName,jdbcType=VARCHAR}
+		, #{poSal,jdbcType=VARCHAR}
+		, #{poPriority,jdbcType=VARCHAR}
+		)
+	</insert>
+</mapper>

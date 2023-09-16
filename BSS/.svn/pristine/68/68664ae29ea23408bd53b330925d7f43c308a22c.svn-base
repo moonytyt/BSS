@@ -1,0 +1,17 @@
+package kr.or.ddit.edApproval.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class SignpathController { 
+// 결재선, 결재선 상세 (즐겨찾기 포함)
+// Signpath, SignpathDetail
+	
+	// 결재선 관리
+	@RequestMapping("ed/approval/signpathSave.do")
+	public String signpathSave(){
+		return "ed/approval/signpathSave";
+	}
+	
+}

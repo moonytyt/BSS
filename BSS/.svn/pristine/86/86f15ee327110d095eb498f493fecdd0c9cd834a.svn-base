@@ -1,0 +1,14 @@
+package kr.or.ddit.organization.cotroller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class OrganizationListController {
+
+	@RequestMapping("/organization/Organization")
+	public String organization() {
+	
+		return "organization/Organization";
+	}
+}

@@ -1,0 +1,34 @@
+package kr.or.ddit.training.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import kr.or.ddit.training.service.TrainingService;
+import kr.or.ddit.training.vo.TrainingVO;
+
+
+
+@Controller
+public class TrainingUpdateController {
+	
+	@Inject
+	private TrainingService service;
+	
+	
+	/**
+	 * 체크박스 선택해서 모달에 나오는 데이터 처리
+	 * @param atteNo
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("trainingUpdate.do")
+	public String selectOneTraining(int trainNo, Model model) {
+		TrainingVO training = service.retrieveOneTrain(trainNo);
+		model.addAttribute("training", training);
+		return "pm/training/ajax/trainingUpdateForm";
+	}
+	
+}

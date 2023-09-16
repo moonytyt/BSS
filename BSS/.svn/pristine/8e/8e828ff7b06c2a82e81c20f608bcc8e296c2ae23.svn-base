@@ -1,0 +1,39 @@
+package kr.or.ddit.attendance.vo;
+
+import java.time.LocalDateTime;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import lombok.Data;
+
+/**
+ * 
+ * 초과근무 vo
+ * 
+ * 
+ */
+@Data
+public class OverTimeVO {
+
+	private long rnum;
+
+	@NotBlank
+	private String atteNo; //출근번호
+	
+	@DateTimeFormat(iso=ISO.DATE_TIME)
+	private LocalDateTime overStart; //초과근무시작시간
+	
+	@DateTimeFormat(iso=ISO.DATE_TIME)
+	private LocalDateTime overEnd; //초과근무종료시간
+	private String overCont; //초과근무내용
+
+	private int time; //총근무시간(시간)
+	private int minute;  //총근무시간(분)
+	
+	private String empName;
+	private String empCd;
+	
+}

@@ -1,0 +1,39 @@
+package kr.or.ddit.organization.cotroller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.organization.dao.OrganizationDAO;
+
+@Controller
+public class OrganizationListController {
+	
+	@Inject
+	private OrganizationDAO orDAO;
+	
+	@ModelAttribute("department")
+	public DepartmentVO department() {
+		return new DepartmentVO();
+	}
+	
+	@ModelAttribute("depList")
+	public List<DepartmentVO> depList(){
+		return orDAO.departmentsList();
+	}
+//	@ModelAttribute("depDeatilList")
+//	public List<DepartmentVO> depDeatilList(String depCd){
+//		return orDAO.departmentsDetailList(depCd);
+//	}
+	
+	@RequestMapping("/organization/Organization")
+	public String organization() {
+
+		return "organization/Organization";
+	}
+}

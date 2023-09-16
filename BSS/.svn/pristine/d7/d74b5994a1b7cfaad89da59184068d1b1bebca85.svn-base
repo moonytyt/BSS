@@ -1,0 +1,58 @@
+package kr.or.ddit.edApproval.fancytree.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.edApproval.fancytree.FancyTreeNode;
+import kr.or.ddit.employee.service.EmployeeService;
+import kr.or.ddit.employee.vo.EmployeeVO;
+
+@Controller
+@RequestMapping("/ed/approval/fancyTree")
+public class FancyTreeController {
+
+    @Inject
+    private EmployeeService employeeService; // EmployeeService를 주입?approval에서 주입? -- 나중에 수정
+
+    @RequestMapping
+    public List<FancyTreeNode<EmployeeVO>> getFancyTree() {
+        List<EmployeeVO> employees = employeeService.retrieveEmpList(null); //  데이터 조회
+
+        List<FancyTreeNode<EmployeeVO>> nodes = new ArrayList<>();
+        for (EmployeeVO employee : employees) {
+//            // FancyTreeNode 생성 로직을 작성하여 nodes에 추가
+//            FancyTreeNode<EmployeeVO> node = new FancyTreeNode<>();
+//            node.setData(employee); // EmployeeVO 객체 설정
+//            node.setTitle(employee.getEmpName()); // 노드의 제목 설정
+//            node.setKey(employee.getEmpCd()); // 노드의 키(식별자) 설정
+//            
+//            // setData(), setTitle(), setKey() 등으로 노드의 데이터와 속성을 설정, isFolder(), isLazy()도 필요에 따라 설정
+//            
+//            nodes.add(node);
+        }
+        
+        return nodes;
+    }
+}
+
+//	@Inject
+//	private BuyerDAO buyerDAO;
+//
+//	@RequestMapping
+//	public String view() {
+//		return "uiplugin/fancyTreeView";
+//	}
+//	
+//	@RequestMapping(produces=MediaType.APPLICATION_JSON_VALUE)
+//	@ResponseBody
+//	public List<FancyTreeNode<BuyerVO>> json() {
+//		List<BuyerVO> buyerList = buyerDAO.selectBuyerList(null);
+//		return buyerList.stream()
+//						.map(ABuyerFancyTreeNode::new)
+//						.collect(Collectors.toList());
+//	}

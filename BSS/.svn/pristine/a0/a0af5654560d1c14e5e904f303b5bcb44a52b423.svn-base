@@ -1,0 +1,65 @@
+package kr.or.ddit.edDocument.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.edDocument.dao.DocumentDao;
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import kr.or.ddit.edDocument.vo.DocumentVO;
+
+@Service
+public class DocumentServiceImpl implements DocumentService {
+
+	@Inject
+	private DocumentDao documentDao;
+	
+	/**
+	 * 문서 양식 목록 조회
+	 */
+	@Override
+	public List<DocumentTypeVO> retrieveDocumentTypeList() {
+		return documentDao.selectDocumentTypeList();
+	}
+	
+	/**
+	 * 문서 양식 상세
+	 */
+	@Override
+	public DocumentTypeVO retrieveDtCont(Integer dtNo) {
+		return documentDao.selectDtCont(dtNo);
+	}
+
+	/**
+	 * 결재요청함
+	 */
+	@Override
+	public List<DocumentVO> retrieveRequestList() {
+		return documentDao.selectReqList();
+	}
+	
+	/**
+	 * 참조문서함
+	 */
+	@Override
+	public List<DocumentVO> retrieveRefList() {
+		return documentDao.selectRefList();
+	}
+
+	
+	/**
+	 * 양식 생성
+	 */
+	@Override
+	public boolean createForm(DocumentTypeVO docTypeVO) {
+		return documentDao.insertForm(docTypeVO) > 0;
+	}
+
+
+
+
+	
+	
+}

@@ -1,0 +1,52 @@
+package kr.or.ddit.edDocument.service;
+
+import java.util.List;
+
+import kr.or.ddit.edDocument.vo.DocumentTypeVO;
+import kr.or.ddit.edDocument.vo.DocumentVO;
+
+
+public interface DocumentService {
+	
+	/**
+	 * 문서 양식 목록 조회
+	 */
+	public List<DocumentTypeVO> retrieveDocumentTypeList();
+	
+	/**
+	 * 문서 양식 상세
+	 */
+	public DocumentTypeVO retrieveDtCont(Integer dtNo);
+	
+	/**
+	 * 문서 insert
+	 */
+	public boolean createDocument(DocumentVO documentVO);
+	
+	/**
+	 * 결재요청함
+	 */
+	public List<DocumentVO> retrieveRequestList(); 
+	
+	/**
+	 * 결재요청함
+	 */
+	public List<DocumentVO> retrieveIngList(); 
+	
+	/**
+	 * 참조문서함
+	 */
+	public List<DocumentVO> retrieveRefList();
+	
+	/**
+	 * 보관함
+	 */
+	public List<DocumentVO> retrieveRegPublicList(String depCd);
+	
+	/**
+	 * 양식 생성
+	 */
+	public boolean createForm(DocumentTypeVO docTypeVO);	
+	
+	
+}

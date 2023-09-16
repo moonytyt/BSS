@@ -1,0 +1,54 @@
+package kr.or.ddit.BoardNtc.service;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.BoardNtc.dao.NtcboardDAO;
+import kr.or.ddit.BoardNtc.vo.NtcboardVO;
+import kr.or.ddit.exception.PKNotFoundException;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Service
+public class NtcboardServiceImpl implements NtcboardSerivce {
+
+	@Inject
+	private NtcboardDAO ntcDAO;
+
+
+	@Override
+	public NtcboardVO retrieveNtc(int ntcNo) throws PKNotFoundException {
+		NtcboardVO ntc = ntcDAO.selectNtc(ntcNo);
+		if(ntc==null)
+			throw new PKNotFoundException(MessageFormat.format("{0} 해당 글 없음", ntcNo));
+		return ntc;
+	}
+
+	@Override
+	public List<NtcboardVO> retrieveNtcList(PaginationInfo<NtcboardVO> paging) {
+		long totalRecord = ntcDAO.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return ntcDAO.selectNtcList(paging);
+	}
+
+	@Override
+	public boolean modifyNtc(NtcboardVO ntc) {		
+		return ntcDAO.updateNtc(ntc) > 0;
+	}
+
+	@Override
+	public boolean removeNtc(NtcboardVO ntc) {
+		return true;
+	}
+
+	@Override
+	public boolean createNtc(NtcboardVO ntc) {
+		return ntcDAO.insertNtc(ntc);
+	}
+
+
+
+}

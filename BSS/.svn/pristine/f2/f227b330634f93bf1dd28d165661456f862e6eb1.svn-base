@@ -1,0 +1,48 @@
+package kr.or.ddit.businesstrip.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.businesstrip.vo.BusinessTripVO;
+
+@Mapper
+public interface BusinessTripDAO {
+	
+	/**
+	 * 출장 조회
+	 * @param bTripVO
+	 * @return
+	 */
+	public List<BusinessTripVO> selectBtrip(BusinessTripVO bTripVO);
+	
+	/**
+	 * 출장 신청(등록)
+	 * @param bTripVO
+	 * @return
+	 */
+	public int insertBusinessTrip(BusinessTripVO bTripVO);
+	
+	/**
+	 * 출장 선택 조회 (모달)
+	 * @param tripNo
+	 * @return
+	 */
+	public BusinessTripVO selectOneBtrip(int tripNo);
+	
+
+	/**
+	 * 출장 수정
+	 * @param bTripVO
+	 * @return
+	 */
+	public int updateBusinessTrip(BusinessTripVO bTripVO);
+	
+	/**
+	 * 출장 삭제 
+	 * @param bTripVO
+	 * @return
+	 */
+	public int deleteBusinessTrip(BusinessTripVO bTripVO);
+
+}

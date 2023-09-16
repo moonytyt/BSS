@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.calendar.dao.CompanyDAO">
+
+<!-- <select id="selectcomList" resultType="kr.or.ddit.calendar.vo.CompanyVO"> -->
+
+<!-- select * from company -->
+
+<!-- </select> -->
+
+
+	<select id="selectcomList" resultType="kr.or.ddit.calendar.vo.CompanyVO">
+		SELECT COM_SC_NO, COM_TITLE,
+		COM_WRITER, COM_CONT, COM_START,
+		COM_END, COM_ALLDAY, COM_TEXTCOLOR,
+		COM_BACKGROUNDCOLOR, COM_BORDERCOLOR
+		FROM COMPANY
+		ORDER BY COM_SC_NO
+	</select>
+
+
+<!-- 	<select id="selectcomList" -->
+<!-- 		resultType="kr.or.ddit.calendar.vo.CompanyVO"> -->
+<!-- 		SELECT COM_SC_NO, COM_TITLE, -->
+<!-- 		COM_WRITER, COM_CONT, COM_START, -->
+<!-- 		COM_END, COM_ALLDAY, COM_TEXTCOLOR, -->
+<!-- 		COM_BACKGROUNDCOLOR, COM_BORDERCOLOR -->
+<!-- 		FROM COMPANY -->
+<!-- 		WHERE COM_SC_NO= #{companySCNO,jdbcType=NUMERIC} -->
+<!-- 	</select> -->
+
+	<insert id="insertCompany"
+		parameterType="kr.or.ddit.calendar.vo.CompanyVO">
+		<selectKey order="BEFORE" keyProperty="comScNo"
+			resultType="int">
+			 SELECT LPAD(NVL(MAX(COM_SC_NO),0)+1,3,'0') 
+			FROM COMPANY
+		</selectKey>
+		INSERT INTO COMPANY (COM_SC_NO, COM_TITLE,
+			COM_WRITER, COM_CONT, COM_START,
+			COM_END, COM_ALLDAY, COM_TEXTCOLOR,
+			COM_BACKGROUNDCOLOR, COM_BORDERCOLOR)
+		VALUES(
+			#{comScNo,jdbcType=NUMERIC}
+			, #{comTitle,jdbcType=VARCHAR}
+			, #{comWriter,jdbcType=VARCHAR}
+			, #{comCont,jdbcType=CLOB}
+			, #{comStart,jdbcType=DATE}
+			, #{comEnd,jdbcType=DATE}
+			, #{comAllday,jdbcType=NUMERIC}
+			, #{comTextcolor,jdbcType=VARCHAR}
+			, #{comBackgroundcolor,jdbcType=VARCHAR}
+			, #{comBordercolor,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<delete id="deleteCompany" parameterType="string">
+		DELETE
+		FROM COMPANY
+		WHERE COM_SC_NO=#{comSCNO}
+	</delete>
+
+	<update id="updateCompany" parameterType="kr.or.ddit.calendar.vo.CompanyVO">
+		UPDATE COMPANY
+		SET 
+		#{comTitle,jdbcType=VARCHAR}
+			 COM_TITLE = #{comTitlejdbcType=VARCHAR}
+			, COM_WRITER = #{comWriterjdbcType=VARCHAR}
+			, COM_CONT = #{comContjdbcType=CLOB}
+			, COM_START = #{comStartjdbcType=DATE}
+			, COM_END = #{comEndjdbcType=DATE}
+			, COM_ALLDAY = #{comAlldayjdbcType=NUMERIC}
+			, COM_TEXTCOLOR = #{comTextcolorjdbcType=VARCHAR}
+			, COM_BACKGROUNDCOLOR = #{comBackgroundcolorjdbcType=VARCHAR}
+			, COM_BORDERCOLOR = #{comBordercolorjdbcType=VARCHAR}
+	</update>
+	
+	
+	
+</mapper>

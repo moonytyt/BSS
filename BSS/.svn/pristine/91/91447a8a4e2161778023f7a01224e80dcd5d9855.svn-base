@@ -1,0 +1,49 @@
+package kr.or.ddit.training.vo;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import lombok.Data;
+
+/**
+ * 
+ * 직원교육 vo
+ * 
+ */
+@Data
+public class TrainingVO {
+	
+	private String code; //교육신청여부 코드
+	@NotBlank
+	private Integer trainNo; //교육번호
+	@NotBlank
+	private String lectorId; //강사ID
+	private String trainType; //교육유형(내/외부)
+	@NotBlank
+	private String trainPlace; //교육장소
+	
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private LocalDateTime trainDate; //교육일시
+	
+	@NotBlank
+	private Integer trainTime; //교육소요시간
+	@NotBlank
+	private String trainTarget; //교육대상
+	@NotBlank
+	private String trainName; //교육이름
+	@NotBlank
+	private String trainContent; //교육내용
+	@NotBlank
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate trainPeriod; //신청마감일
+	@NotBlank
+	private String trainSign; //신청방법
+	
+	private String lectorName; //강사명
+	
+}

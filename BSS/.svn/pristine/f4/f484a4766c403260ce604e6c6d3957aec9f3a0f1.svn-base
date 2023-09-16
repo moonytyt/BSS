@@ -1,0 +1,48 @@
+package kr.or.ddit.BoardReq.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import kr.or.ddit.BoardReq.dao.ReqboardDAO;
+import kr.or.ddit.BoardReq.vo.ReqboardVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Service
+public class ReqboardServiceImpl implements ReqboardSerivce {
+
+	@Inject
+	private ReqboardDAO reqDAO;
+
+	@Override
+	public List<ReqboardVO> retrieveReqList(PaginationInfo<ReqboardVO> paging) {
+		long totalRecord = reqDAO.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return reqDAO.selectReqList(paging);
+	}
+	
+	@Override
+	public ReqboardVO retrieveReq(int reqNo) {
+		return reqDAO.selectReq(reqNo);
+	}
+
+	@Override
+	public boolean createReq(ReqboardVO req) {
+		return reqDAO.insertReq(req) > 0;
+	}
+
+
+	@Override
+	public int delete(int req) {
+		return reqDAO.deleteReq(req);
+	}
+
+	@Override
+	public int modifyReq(ReqboardVO reqVO) {
+		return reqDAO.updateReq(reqVO);
+	}
+
+	
+
+}

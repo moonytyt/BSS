@@ -1,0 +1,14 @@
+package kr.or.ddit.calendar.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.calendar.vo.PersonalVO;
+
+@Mapper
+public interface PersonalDAO {
+
+	
+	public List<PersonalVO> selectperList();
+}

@@ -1,0 +1,21 @@
+package kr.or.ddit.attendance.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.attendance.vo.OverTimeVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+
+@Mapper
+public interface OverTimeDAO {
+	
+//	public long selectTotalRecord(PaginationInfo paging);
+	
+	//초과근무 전체조회
+	public List<OverTimeVO> selectOverList();
+	
+	
+	
+}

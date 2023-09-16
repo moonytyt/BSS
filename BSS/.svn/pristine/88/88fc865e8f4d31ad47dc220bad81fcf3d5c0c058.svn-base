@@ -1,0 +1,107 @@
+package kr.or.ddit.papers.controller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.career.dao.CareerDAO;
+import kr.or.ddit.career.service.CareerService;
+import kr.or.ddit.career.vo.CareerVO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.family.dao.FamilyDAO;
+import kr.or.ddit.family.service.FamilyService;
+import kr.or.ddit.family.vo.FamilyVO;
+import kr.or.ddit.license.dao.LicenseDAO;
+import kr.or.ddit.license.service.LicenseService;
+import kr.or.ddit.license.vo.LicenseVO;
+import kr.or.ddit.papers.vo.PapersVO;
+
+@Controller
+public class PaperstListController {
+	@Inject
+	private LicenseService liService;
+	@Inject
+	private FamilyService famService;
+	@Inject
+	private CareerService carService;
+	@Inject
+	private FamilyDAO famDAO;
+	@Inject
+	private LicenseDAO liDAO;
+	@Inject
+	private CareerDAO carDAO;
+
+	@ModelAttribute("employee")
+	public EmployeeVO employee() {
+		return new EmployeeVO();
+	}
+
+	@ModelAttribute("liList")
+	public List<LicenseVO> liList(Authentication authentication, Model model) {
+
+		EmployeeVOWrapper user = (EmployeeVOWrapper) authentication.getPrincipal();
+		String empCd = user.getRealUser().getEmpCd();
+		PapersVO license = new PapersVO();
+		List<LicenseVO> liList = liService.retrieveLiList(empCd);
+		license.setLicenseList(liList);
+		model.addAttribute("liList", liList);
+		return liDAO.licenseList(empCd);
+	}
+
+	@ModelAttribute("famList")
+	public List<FamilyVO> famList(Authentication authentication, Model model) {
+
+		EmployeeVOWrapper user = (EmployeeVOWrapper) authentication.getPrincipal();
+		String empCd = user.getRealUser().getEmpCd();
+		PapersVO family = new PapersVO();
+		List<FamilyVO> famList = famService.famList(empCd);
+		family.setFamilyList(famList);
+		model.addAttribute("famList", famList);
+		return famDAO.selectFamily(empCd);
+	}
+
+	@ModelAttribute("carList")
+	public List<CareerVO> carList(Authentication authentication, Model model) {
+
+		EmployeeVOWrapper user = (EmployeeVOWrapper) authentication.getPrincipal();
+		String empCd = user.getRealUser().getEmpCd();
+		PapersVO career = new PapersVO();
+		List<CareerVO> carList = carService.retrieveCarList(empCd);
+		career.setCareerList(carList);
+		model.addAttribute("carList", carList);
+		return carDAO.selectCareer(empCd);
+	}
+
+	@RequestMapping("/papers/paperList")
+	public String documentListController() {
+		return "papers/paperList";
+	}
+
+	@RequestMapping("/papers/proPaper")
+	public String proPaper() {
+		return "papers/proPaper";
+	}
+
+	@RequestMapping("/papers/empPaper")
+	public String employeePaper() {
+		return "papers/empPaper";
+	}
+
+	@RequestMapping("/papers/carPaper")
+	public String careerPaper() {
+		return "papers/carPaper";
+	}
+	@RequestMapping("/papers/trainingPaper")
+	public String trainingPaper() {
+		return "papers/trainingPaper";
+	}
+
+}

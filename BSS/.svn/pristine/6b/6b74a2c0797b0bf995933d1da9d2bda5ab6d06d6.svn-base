@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.employee.dao.EmployeeDAO">
+	
+	<resultMap type="kr.or.ddit.employee.vo.EmployeeVO" id="employee" autoMapping="true">
+		<id property="empCd" column="EMP_CD"/>
+		<association property="department" autoMapping="true"/>
+		<association property="position" autoMapping="true" />
+		<association property="business" autoMapping="true"/>
+		<association property="uniersity" autoMapping="true"/>
+		<collection property="careerList" ofType="kr.or.ddit.career.vo.CareerVO" autoMapping="true"/>
+		<collection property="licenseList" ofType="kr.or.ddit.license.vo.LicenseVO" autoMapping="true"/>
+	</resultMap>
+	
+	<select id="selectEmployeeForAuth" parameterType="String"
+		resultType="kr.or.ddit.employee.vo.EmployeeVO">
+		SELECT EMP_CD, DEP_CD, PO_CD
+		, BUS_CD, EMP_PW, EMP_MAIL
+		,ENP_START, EMP_NAME
+		FROM EMPLOYEE
+		WHERE EMP_CD = #{empCd}
+	</select>
+
+	<!-- 직원사번 또는 직원명으로 검색 -->
+	<sql id="searchFrag">
+		<where>
+			<if
+				test="simpleCondition neq null and simpleCondition.searchWord neq null and not simpleCondition.searchWord.isEmpty()">
+				<choose>
+					<when test="simpleCondition.searchType eq 'empName'">
+						INSTR(EMP_NAME, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'empCd'">
+						INSTR(EMP_CD, #{simpleCondition.searchWord} ) > 0
+					</when>
+					<otherwise>
+						INSTR(EMP_NAME, #{simpleCondition.searchWord} ) > 0
+						OR
+						INSTR(EMP_CD, #{simpleCondition.searchWord} ) > 0
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectTotalRecord" resultType="long"
+		parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT COUNT(*)
+		FROM EMPLOYEE
+		<include refid="searchFrag" />
+	</select>
+
+<!-- 		resultType="kr.or.ddit.employee.vo.EmployeeVO" -->
+	<select id="selectEmpList"
+		resultMap="employee"
+		parameterType="kr.or.ddit.pagingVO.PaginationInfo">
+		SELECT B.*
+		FROM(
+		SELECT ROWNUM RNUM, A.*
+		FROM
+		(
+		with emp as (
+		SELECT
+		EMP_CD,
+		EMP_NAME, E.DEP_CD, PO_CD
+		, EMP_MAIL, DEP_NUM, DEP_NAME
+		FROM EMPLOYEE E
+		LEFT OUTER JOIN DEPARTMENT D ON (E.DEP_CD = D.DEP_CD)
+		<include refid="searchFrag" />)
+		select emp.*, PO_NAME
+		from emp left outer join position p on (emp.PO_CD
+		=
+		P.PO_CD)
+		order by EMP_CD asc
+		)A
+		)B
+		<![CDATA[
+		where rnum >= #{startRow} and rnum <= #{endRow}
+		]]>
+	</select>
+
+<!-- 	<select id="empDetail" resultType="EmployeeVO" -->
+	<select id="empDetail" resultMap="employee"
+		parameterType="string">
+		WITH EMP AS (
+		SELECT
+		E.EMP_CD, DEP_CD, PO_CD, BUS_CD, EMP_PW
+		, EMP_ID1, EMP_ID2, EMP_HP, EMP_MAIL
+		, EMP_ADD1, EMP_ADD2, EMP_MARRY, EMP_MILITARY
+		, EMP_RESIGNATION, ENP_START, EMP_BANK,
+		EMP_NAME, RE_DATE, RE.CODE as RCODE, RE_TREATMENT
+		FROM EMPLOYEE E LEFT
+		JOIN RESIGNATION RE ON (E.EMP_CD = RE.EMP_CD)
+		), UNI AS (
+		SELECT
+		EMP.*, UNI_NAME, UNI_MAJOR , UNI_DEGREE, UNI_START, UNI_END, U.CODE "uni.code"
+		FROM EMP LEFT OUTER JOIN UNIVERSITY U ON(EMP.EMP_CD = U.EMP_CD)
+		), DEP AS(
+		SELECT UNI.*, DEP_NAME, DEP_NUM
+		FROM UNI LEFT OUTER JOIN DEPARTMENT
+		DEP ON(UNI.DEP_CD = DEP.DEP_CD)
+		), PO AS(
+		SELECT DEP.*, PO_NAME
+		FROM DEP
+		LEFT OUTER JOIN POSITION PO ON(DEP.PO_CD = PO.PO_CD)
+		), LI AS(
+		SELECT PO.*, LICENSE_CD, LICENSE_NM, LICENSE_DATE, LICENSE_AGENCY
+		FROM PO LEFT
+		OUTER JOIN LICENSE LI ON(PO.EMP_CD = LI.EMP_CD)
+		),CAR AS(
+		SELECT LI.*, CAR_NM, CAR_PO, CAR_DATE
+		FROM LI LEFT OUTER JOIN CAREER CA ON(LI.EMP_CD = CA.EMP_CD)
+		), bus as(
+		SELECT CAR.*, BUS_NAME
+		FROM CAR LEFT OUTER JOIN
+		BUSINESS BU ON(CAR.BUS_CD = BU.BUS_CD)
+		)
+		SELECT BUS.*, STATE_NM
+		FROM BUS
+		LEFT OUTER JOIN STATE ON(BUS."uni.code" = STATE.CODE)
+		WHERE BUS.EMP_CD
+		= #{empCd}
+	</select>
+
+	<insert id="insertEmployee" parameterType="EmployeeVO">
+		insert into
+		EMPLOYEE
+		(EMP_CD, DEP_CD, PO_CD, BUS_CD, EMP_PW, EMP_ID1, EMP_ID2
+		, EMP_HP, EMP_MAIL, EMP_ADD1, EMP_ADD2, EMP_MARRY, EMP_MILITARY
+		, EMP_RESIGNATION, ENP_START, EMP_BANK, EMP_NAME)
+		values(
+			#{empCd,jdbcType=VARCHAR}
+			, #{depCd,jdbcType=CHAR}
+			, #{poCd,jdbcType=CHAR}
+			, #{busCd,jdbcType=CHAR}
+			, #{empPw,jdbcType=VARCHAR}
+			, #{empId1,jdbcType=NUMERIC}
+			, #{empId2,jdbcType=NUMERIC}
+			, #{empHp,jdbcType=VARCHAR}
+			, #{empMail,jdbcType=VARCHAR}
+			, #{empAdd1,jdbcType=VARCHAR}
+			, #{empAdd2,jdbcType=VARCHAR}
+			, #{empMarry,jdbcType=CHAR}
+		)
+	</insert>
+	<update id="updateEmployee" parameterType="EmployeeVO">
+		update employee e, license s
+		set e.emp_hp = #{empHp}
+		, e.emp_mail = #{empMail}
+		, e.emp_add1 = #{empAdd1}
+		, e.emp_add2 = #{empAdd2}
+		, s.license_cd = #{licenseCd}
+		, s.license_nm = #{licenseNm}
+		, s.license_date = #{licenseDate}
+		, s.license_agency = #{licenseAgency}
+		where e.emp_cd = #{empCd}
+
+	</update>
+
+</mapper>

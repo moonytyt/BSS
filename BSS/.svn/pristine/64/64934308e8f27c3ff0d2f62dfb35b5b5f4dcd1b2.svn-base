@@ -1,0 +1,53 @@
+package kr.or.ddit.calendar.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.calendar.service.PersonalService;
+import kr.or.ddit.calendar.vo.PersonalVO;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * @author PC-13
+ * 개인일정
+ */
+@RequiredArgsConstructor
+@Controller
+public class PersonalCalendarController {
+	private final PersonalService service;
+	
+	@GetMapping("/calendar/personalcalendar")
+	public String view(Model model){
+		
+		return "calendar/personalcalendar";
+	}
+	
+	
+	@PostMapping(value ="/calendar/personalcalendar" , produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public List<PersonalVO> list(Model model){
+		
+		List<PersonalVO> personalList = service.retrieveperList();
+		
+		
+		List<Map<String, String>> mapList = new ArrayList<Map<String,String>>();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("title", "회의");
+		map.put("start", "2023-08-03");
+		map.put("end", "2023-08-04");
+		
+		mapList.add(map);
+		
+		return personalList;
+	}
+	
+}

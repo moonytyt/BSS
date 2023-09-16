@@ -1,0 +1,75 @@
+package kr.or.ddit.finapi.controller;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import kr.or.ddit.finapi.vo.AccountVO;
+import kr.or.ddit.finapi.vo.ManageBankVO;
+import kr.or.ddit.finapi.vo.ParamDataVO;
+import kr.or.ddit.finapi.vo.StatisticsInfoVO;
+import kr.or.ddit.finapi.vo.StatisticsVO;
+
+@Controller
+@RequestMapping("/general/")
+public class GeneralController {
+
+	@RequestMapping("general")
+	public String general(Model model) {
+//		List<StatisticsVO> statisticsList = new ArrayList<StatisticsVO>();
+//		statisticsList(statisticsList, "A");
+//
+//		List<ManageBankVO> bankList = new ArrayList<ManageBankVO>();
+//
+//		bankList(bankList);
+//
+//		model.addAttribute("bankList", bankList);
+//		model.addAttribute("statisticsList", statisticsList);
+		return "fin/manageInfo/general";
+	}
+
+	@GetMapping("accountList.do")
+	public String accountList(Model model, String listNo) {
+//		List<AccountVO> accountList = new ArrayList<AccountVO>();
+//		accountList(listNo, accountList);
+//		model.addAttribute("accountList", accountList);
+		return "fin/manageInfo/ajax/accountList";
+	}
+
+	@PostMapping("statisticsInfo.do")
+	public String statisticsInfo(Model model, @RequestBody ParamDataVO param) {
+//		List<StatisticsInfoVO> infoList = new ArrayList<StatisticsInfoVO>();
+//		String listNo = param.getListNo();
+//		String startBaseMm = param.getStartBaseMm();
+//		String endBaseMm = param.getEndBaseMm();
+//		String term = param.getTerm();
+//		
+//		param.getBankCd().remove("");
+//		param.getAccountCd().remove("");
+//		
+//		List<String> financeCdList = param.getBankCd();
+//		List<String> accountCdList = param.getAccountCd();
+//		
+//		for(String financeCd : financeCdList) {
+//			for(String accountCd: accountCdList) {
+//				statisticsInfo(infoList, financeCd, listNo, accountCd, term, startBaseMm, endBaseMm);
+//			}
+//		}
+//		model.addAttribute("infoList", infoList);
+		return "fin/manageInfo/ajax/statisticsInfo";
+	}
+
+}

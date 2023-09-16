@@ -1,0 +1,55 @@
+package kr.or.ddit.training.service;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.training.dao.TrainingApplyDAO;
+import kr.or.ddit.training.vo.TrainingApplyVO;
+
+@Service
+public class TrainingApplyServiceImpl implements TrainingApplyService {
+	
+	@Inject
+	public TrainingApplyDAO dao;
+	
+	/**
+	 * 교육 신청자 전체조회
+	 */
+	@Override
+	public List<TrainingApplyVO> retrievTrainApplyList(PaginationInfo<TrainingApplyVO> paging) {
+		long totalRecord = dao.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return dao.selectTrainApply(paging);
+	}
+	
+	/**
+	 * 교육 신청하기
+	 */
+	@Override
+	public boolean createTrainApply(TrainingApplyVO trainApplyVO) {
+		return dao.insertTrainApply(trainApplyVO) > 0;
+	}
+	
+	/**
+	 * 교육 취소하기
+	 */
+	@Override
+	public boolean modifyTrainApply(TrainingApplyVO trainApplyVO) {
+		return dao.updateTrainApply(trainApplyVO) > 0;
+	}
+	
+	/**
+	 * 직원교육 신청자 1명 조회
+	 */
+	@Override
+	public List<TrainingApplyVO> retrievTrainApplyOne(PaginationInfo<TrainingApplyVO> paging) {
+		long totalRecord = dao.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return dao.selectOneTrainApply(paging);
+	}
+
+}

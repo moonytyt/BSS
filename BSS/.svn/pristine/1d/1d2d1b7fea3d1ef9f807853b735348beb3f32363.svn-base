@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.BoardReqcmnt.dao.CommentDAO">
+
+	<insert id="insertComment" parameterType="CmntVO">
+   <selectKey order="BEFORE" keyProperty="reqNo" resultType="CmntVO">
+	    SELECT RB.REQ_NO
+	    FROM REQ_BOARD RB
+	    WHERE RB.REQ_NO = #{reqNo,jdbcType=NUMERIC}
+	</selectKey>
+    INSERT INTO REQ_CMNT
+    (
+        RCNMT_NO
+        , REQ_NO
+        , RCNMT_DT
+        , RCMNT_CN
+    )
+    VALUES(
+        REQ_CMNT_SEQ.NEXTVAL
+        , #{reqNo,jdbcType=NUMERIC}
+        , SYSDATE
+        , #{rcmntCn,jdbcType=VARCHAR}
+    )
+	</insert>
+
+	<select id="selectCommentsByReqNo" resultType="CmntVO" parameterType="int">
+    SELECT B.*
+    FROM (
+        SELECT
+            RC.RCNMT_NO
+            , RD.REQ_NO
+            , RC.RCNMT_DT
+            , RC.RCMNT_CN
+        FROM REQ_BOARD RD
+        LEFT OUTER JOIN REQ_CMNT RC ON (RD.REQ_NO = RC.REQ_NO)
+        WHERE RD.REQ_NO = #{reqNo,jdbcType=NUMERIC}
+    ) B
+</select>
+	
+</mapper>

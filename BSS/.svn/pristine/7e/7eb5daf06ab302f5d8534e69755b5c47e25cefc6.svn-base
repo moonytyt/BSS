@@ -1,0 +1,26 @@
+package kr.or.ddit.attendance.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.attendance.vo.AttendanceVO;
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+@Mapper
+public interface AttendanceDAO {
+	
+	public long selectTotalRecord(PaginationInfo paging);
+	
+	//출퇴근내역 전체조회
+	public List<AttendanceVO> selectAttendList(PaginationInfo paging);
+	
+	//출퇴근내역 (직원조회)
+	public List<EmployeeVO> selectEmpList();
+
+	//출퇴근 등록
+	public int insertAttend(AttendanceVO attendVO);
+	
+}

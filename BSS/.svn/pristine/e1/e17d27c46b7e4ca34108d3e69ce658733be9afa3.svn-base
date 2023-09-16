@@ -1,0 +1,36 @@
+package kr.or.ddit.BoardReq.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import kr.or.ddit.BoardNtc.vo.NtcboardVO;
+import kr.or.ddit.BoardReq.vo.ReqboardVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.vo.PaginationInfo;
+
+/**
+ * 공지사항 PL
+ * 
+ */
+@Mapper
+public interface ReqboardDAO {
+
+	/**
+	 * 요구사항상세조회
+	 * @param reqNo
+	 * @return 존재하지 않는 경우, null 반환
+	 */
+	public ReqboardVO selectReq(int reqNo);
+	/**
+	 * 요구글수 조회
+	 * @return 검색 조건에 맞는 공지수 조회
+	 */
+	public long selectTotalRecord(PaginationInfo<ReqboardVO> paging);
+	/**
+	 * 요구사항목록조회
+	 *
+	 */
+	public List<ReqboardVO> selectReqList(PaginationInfo<ReqboardVO> paging);
+}

@@ -1,0 +1,11 @@
+package kr.or.ddit.finapi.vo;
+
+/**
+ * @author PC-08
+ * 금융회사
+ * - 금융회사 코드
+ * - 금융회사명
+ */
+public class FinCoVO {
+
+}

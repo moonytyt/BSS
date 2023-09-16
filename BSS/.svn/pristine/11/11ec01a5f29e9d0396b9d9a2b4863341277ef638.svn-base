@@ -1,0 +1,41 @@
+package kr.or.ddit.businesstrip.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import kr.or.ddit.employee.vo.EmployeeVO;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 
+ * 출장 vo
+ * 
+ */
+@Data
+@EqualsAndHashCode(of = "tripNo")
+public class BusinessTripVO {
+
+	@NotBlank
+	private Integer tripNo;       //출장번호
+	@NotBlank                     
+	private String empCd;     	  //직원번호
+	private String tripType;      //출장유형
+	
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate tripDate;   //출장일
+	private String tripPurpose;   //출장목적
+	private String tripPlace;     //출장장소
+
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate tripSdate;  //출장시작일
+	
+	@DateTimeFormat(iso = ISO.DATE)
+	private LocalDate tripEdate;  //출장종료일
+	
+	private String empName;
+}

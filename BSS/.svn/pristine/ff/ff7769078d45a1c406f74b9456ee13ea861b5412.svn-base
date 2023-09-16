@@ -1,0 +1,21 @@
+package kr.or.ddit.businesstrip.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 출장 조회?
+ * 
+ */
+@Controller
+public class BusinessTripInsertController {
+	@RequestMapping("/pm/servicemanagement/businessTripInsert")
+	public String businessInsert(
+			String empName
+		
+			) {
+		System.out.println(empName);
+		
+		return "pm/servicemanagement/businessTripInsert";
+	}
+}

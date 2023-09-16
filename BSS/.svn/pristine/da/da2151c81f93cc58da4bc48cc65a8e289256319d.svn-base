@@ -1,0 +1,48 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    
+<h5>직원교육(전체조회)</h5>
+<hr color="black">
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>교육번호</th>
+						<th>교육명</th>
+						<th>신청기간</th>
+						<th>선택</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:if test="${empty trainList }">
+						<tr>
+							<td id="col" colspan="6">조회된 직원교육이 없습니다.</td>
+						</tr>
+					</c:if>
+					<c:if test="${not empty trainList }">
+						<c:forEach items="${trainList }" var="trainVO">
+							<tr>
+								<c:url value="/pm/training/trainingDetail" var="viewURL">
+									<c:param name="what" value="${trainVO.trainNo }" />
+								</c:url>
+								<td>${trainVO.trainNo}</td>
+								<td><a href="${viewURL }">${trainVO.trainName}</a></td>
+								<td>${trainVO.trainPeriod}</td>
+								<td><input type="checkbox" id="checkAll"></td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</tbody>
+			</table>
+			<div>                 
+				<button class="btn btn-danger" type="button" style="float:right; margin-right:10px">삭제</button> 
+				<button class="btn btn-primary" type="button" style="float:right; margin-right:10px"
+					onClick="location.href='${pageContext.request.contextPath}/pm/training/trainingInsert.do'">교육등록</button> 
+			</div>
+		</div>
+	</div>
+</div>

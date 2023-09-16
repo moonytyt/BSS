@@ -1,0 +1,167 @@
+package kr.or.ddit.calendar.vo;
+
+import java.time.LocalDate;
+
+import javax.validation.constraints.NotBlank;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * @author PC-08 회사 일정
+ */
+public class CompanyVO {
+	@NotBlank
+	@JsonProperty("id")
+	private Integer comScNo;
+	@NotBlank
+	@JsonProperty("title")
+	private String comTitle;
+	@NotBlank
+	private String comWriter;
+	@NotBlank
+	private String comCont;
+
+	@NotBlank
+	@JsonProperty("start")
+	private String comStart;
+
+	@NotBlank
+	@JsonProperty("end")
+	private String comEnd;
+	@NotBlank
+	private Integer comAllday;
+	@NotBlank
+	private String comTextcolor;
+	@NotBlank
+	private String comBackgroundcolor;
+	@NotBlank
+	private String comBordercolor;
+
+	public Integer getComScNo() {
+		return comScNo;
+	}
+
+
+
+	public String getComTitle() {
+		return comTitle;
+	}
+
+
+
+	public void setComTitle(String comTitle) {
+		this.comTitle = comTitle;
+	}
+
+
+
+	public String getComWriter() {
+		return comWriter;
+	}
+
+
+
+	public void setComWriter(String comWriter) {
+		this.comWriter = comWriter;
+	}
+
+
+
+	public String getComCont() {
+		return comCont;
+	}
+
+
+
+	public void setComCont(String comCont) {
+		this.comCont = comCont;
+	}
+
+
+
+	public String getComStart() {
+		return comStart;
+	}
+
+
+
+	public void setComStart(String comStart) {
+		this.comStart = comStart;
+	}
+
+
+
+	public String getComEnd() {
+		return comEnd;
+	}
+
+
+
+	public void setComEnd(String comEnd) {
+		this.comEnd = comEnd;
+	}
+
+
+
+	public Integer getComAllday() {
+		return comAllday;
+	}
+
+
+
+	public void setComAllday(Integer comAllday) {
+		this.comAllday = comAllday;
+	}
+
+
+
+	public String getComTextcolor() {
+		return comTextcolor;
+	}
+
+
+
+	public void setComTextcolor(String comTextcolor) {
+		this.comTextcolor = comTextcolor;
+	}
+
+
+
+	public String getComBackgroundcolor() {
+		return comBackgroundcolor;
+	}
+
+
+
+	public void setComBackgroundcolor(String comBackgroundcolor) {
+		this.comBackgroundcolor = comBackgroundcolor;
+	}
+
+
+
+	public String getComBordercolor() {
+		return comBordercolor;
+	}
+
+
+
+	public void setComBordercolor(String comBordercolor) {
+		this.comBordercolor = comBordercolor;
+	}
+
+
+
+	public void setComScNo(Integer comScNo) {
+		this.comScNo = comScNo;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+}

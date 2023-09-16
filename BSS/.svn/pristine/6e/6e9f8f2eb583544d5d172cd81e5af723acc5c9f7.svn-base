@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.career.dao.CareerDAO">
+	<insert id="insertCareer" parameterType="CareerVO">
+		insert into career
+		(emp_cd, car_nm, car_po, car_date)
+		values(
+		#{empCd,jdbcType=VARCHAR}
+		, #{carNm,jdbcType=VARCHAR}
+		, #{carPo,jdbcType=VARCHAR}
+		, #{carDate,jdbcType=NUMERIC}
+		)
+
+	</insert>
+</mapper>

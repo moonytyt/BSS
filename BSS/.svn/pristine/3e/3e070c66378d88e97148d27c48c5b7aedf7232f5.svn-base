@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mail.dao.MailBoxDAO">
+	<insert id="sendMail" parameterType="kr.or.ddit.mail.vo.MailBoxVO">
+		<selectKey keyProperty="receiveMailNo" resultType="int" order="BEFORE">
+            SELECT RECEIVE_MAIL_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO MAIL_BOX(
+			RECEIVE_MAIL_NO
+			, EMP_CD
+			, RECEIVE_MAIL_SENDER
+			, RECEIVE_MAIL_RECEIVER
+			, RECEIVE_MAIL_TITLE
+			, RECEIVE_MAIL_CONTENT
+			, RECEIVE_MAIL_DATE
+			, ATCH_NO
+		)VALUES(
+			#{receiveMailNo,jdbcType=NUMERIC}
+			, #{empCd}
+			, #{receiveMailSender,jdbcType=VARCHAR}
+			, #{receiveMailReceiver,jdbcType=VARCHAR}
+			, #{receiveMailTitle,jdbcType=VARCHAR}
+			, #{receiveMailContent,jdbcType=VARCHAR}
+			, SYSDATE
+			, #{atchNo,jdbcType=NUMERIC}
+		)
+	</insert>
+		
+	<insert id= "insertMail" parameterType="kr.or.ddit.mail.vo.MailBoxVO">
+		<selectKey keyProperty="receiveMailNo" resultType="int" order="BEFORE">
+            SELECT RECEIVE_MAIL_NO.NEXTVAL FROM DUAL
+        </selectKey>
+		INSERT INTO MAIL_BOX(
+			RECEIVE_MAIL_NO
+			, EMP_CD
+			, RECEIVE_MAIL_SENDER
+			, RECEIVE_MAIL_RECEIVER
+			, RECEIVE_MAIL_TITLE
+			, RECEIVE_MAIL_CONTENT
+			, RECEIVE_MAIL_DATE
+			, ATCH_NO
+		)VALUES(
+			#{receiveMailNo,jdbcType=NUMERIC}
+			, #{empCd}
+			, #{receiveMailSender,jdbcType=VARCHAR}
+			, #{receiveMailReceiver,jdbcType=VARCHAR}
+			, #{receiveMailTitle,jdbcType=VARCHAR}
+			, #{receiveMailContent,jdbcType=VARCHAR}
+			, SYSDATE
+			, #{atchNo,jdbcType=NUMERIC}
+		)
+	</insert>
+	
+	<insert id="mailStorageInfo" parameterType="kr.or.ddit.mail.vo.MailBoxVO">
+		<selectKey keyProperty="receiveMailNo" resultType="int" order="BEFORE">
+            SELECT RECEIVE_MAIL_NO.NEXTVAL FROM DUAL
+        </selectKey>
+       		INSERT INTO MAIL_BOX(
+			RECEIVE_MAIL_NO
+			, EMP_CD
+			, RECEIVE_MAIL_SENDER
+			, RECEIVE_MAIL_RECEIVER
+			, RECEIVE_MAIL_TITLE
+			, RECEIVE_MAIL_CONTENT
+			, RECEIVE_MAIL_DATE
+			, ATCH_NO
+			, MAIL_TEMP
+		)VALUES(
+			#{receiveMailNo,jdbcType=NUMERIC}
+			, #{empCd}
+			, #{receiveMailSender,jdbcType=VARCHAR}
+			, #{receiveMailReceiver,jdbcType=VARCHAR}
+			, #{receiveMailTitle,jdbcType=VARCHAR}
+			, #{receiveMailContent,jdbcType=VARCHAR}
+			, SYSDATE
+			, #{atchNo,jdbcType=NUMERIC}
+			, 1
+		)
+	</insert>
+	
+	<select id="selectMail" resultType="string">
+		SELECT EMP_MAIL
+		FROM EMPLOYEE
+		WHERE EMP_CD=#{empId}
+	</select>
+	
+	<select id="getMailToken" resultType="string">
+		SELECT MAIL_TOKEN
+		FROM MAIL_DETAIL
+		WHERE EMP_CD=#{empId}
+	</select>
+	
+	<select id="selectMailDetail" parameterType="string" resultType="kr.or.ddit.mail.vo.MailBoxVO">
+		SELECT 
+		RECEIVE_MAIL_NO
+		, RECEIVE_MAIL_SENDER, RECEIVE_MAIL_RECEIVER
+		, RECEIVE_MAIL_TITLE, RECEIVE_MAIL_CONTENT
+		, RECEIVE_MAIL_DATE, ATCH_NO
+		FROM MAIL_BOX
+		WHERE RECEIVE_MAIL_NO = #{mailNo}
+	</select>
+	
+	<select id="selectAllMail" resultType="kr.or.ddit.mail.vo.MailBoxVO">
+		SELECT
+		RECEIVE_MAIL_NO, RECEIVE_MAIL_SENDER
+		, RECEIVE_MAIL_RECEIVER, RECEIVE_MAIL_TITLE
+		, RECEIVE_MAIL_DATE
+		FROM MAIL_BOX
+		WHERE EMP_CD =#{empCd} AND MAIL_TEMP = '0'
+	</select>
+	<select id="selectSendMailList" resultType="kr.or.ddit.mail.vo.MailBoxVO">
+		SELECT
+		RECEIVE_MAIL_NO, RECEIVE_MAIL_SENDER
+		, RECEIVE_MAIL_RECEIVER, RECEIVE_MAIL_TITLE
+		, RECEIVE_MAIL_DATE
+		FROM MAIL_BOX
+		WHERE RECEIVE_MAIL_SENDER =#{empMail} AND MAIL_TEMP = '0'
+	</select>
+	<select id="selectReciveMailList" resultType="kr.or.ddit.mail.vo.MailBoxVO">
+		SELECT
+		RECEIVE_MAIL_NO, RECEIVE_MAIL_SENDER
+		, RECEIVE_MAIL_RECEIVER, RECEIVE_MAIL_TITLE
+		, RECEIVE_MAIL_DATE
+		FROM MAIL_BOX
+		WHERE RECEIVE_MAIL_RECEIVER =#{empMail} AND MAIL_TEMP = '0'
+	</select>
+	<select id="selectTempMailList" resultType="kr.or.ddit.mail.vo.MailBoxVO">
+		SELECT 
+		RECEIVE_MAIL_NO, RECEIVE_MAIL_SENDER
+		, RECEIVE_MAIL_RECEIVER, RECEIVE_MAIL_TITLE
+		, RECEIVE_MAIL_DATE
+		FROM MAIL_BOX
+		WHERE EMP_CD =#{empCD} AND MAIL_TEMP = '1'
+	</select>
+</mapper>

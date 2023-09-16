@@ -1,0 +1,48 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/organization.css">
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<h3>조직도</h3>
+<div class="tree">
+	<ul>
+		<li><a href="#">지점장</a>
+			<ul>
+				<li><a href="#">부지점장</a>
+					<ul>
+						<li><a href="#">Grand Child</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Child</a>
+					<ul>
+						<li><a href="#">Grand Child</a></li>
+						<li><a href="#">Grand Child</a>
+							<ul>
+								<li><a href="#">Great Grand Child</a></li>
+								<li><a href="#">Great Grand Child</a></li>
+								<li><a href="#">Great Grand Child</a></li>
+							</ul>
+						</li>
+						<li><a href="#">Grand Child</a></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</div>
+
+<div>
+<table>
+	<tr>
+		<th>부서명</th>
+		<th>직원사번</th>
+		<th>직원사번</th>
+	</tr>
+	<tr>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+</div>

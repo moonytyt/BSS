@@ -1,0 +1,36 @@
+package kr.or.ddit.training.controller;
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.training.service.TrainingApplyService;
+import kr.or.ddit.training.vo.TrainingApplyVO;
+import lombok.RequiredArgsConstructor;
+
+
+/**
+ * 
+ * 직원교육 신청자 전체조회
+ * 
+ */
+@Controller
+@RequiredArgsConstructor
+public class TrainingApplySelectController {
+	private final TrainingApplyService service;
+		
+	@RequestMapping("/pm/training/trainingApplyList")
+	public ModelAndView trainingApplyList(
+		TrainingApplyVO trainAppVO
+	) {
+		List<TrainingApplyVO> trainAppList = service.retrievTrainApplyList();
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("trainAppList", trainAppList);
+		mav.setViewName("pm/training/trainingApplyList");
+		
+		return mav;
+	}
+}

@@ -1,0 +1,11 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://www.springframework.org/security/tags"  prefix="security"%>
+<h1>MAIN</h1>
+
+<security:authorize  access="isAuthenticated()">            -> 로그인이 되어있으면 if문이라고 생각하면될듯
+<div style="border:1px solid black;">
+ <security:authentication property="principal.realUser" var="authEmployee"/>        ->로그인된 객체를 authEmployee에 담음
+ ${authEmployee.department.depName }                                                                   -> 이러면 직원 이름 나옴
+</div>
+</security:authorize>				-> if문 단는거라고 생각하몀ㄴ 될듯

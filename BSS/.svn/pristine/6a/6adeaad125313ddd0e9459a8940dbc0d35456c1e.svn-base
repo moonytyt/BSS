@@ -1,0 +1,26 @@
+package kr.or.ddit.training.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.training.vo.LectorVO;
+import kr.or.ddit.training.vo.TrainingVO;
+
+@Mapper
+public interface TrainingDAO {
+	//직원교육 전체조회
+	public List<TrainingVO> selectTrainList(TrainingVO trainVO);
+	
+	//직원교육 선택조회
+	public TrainingVO selectTrain(int trainNo);
+	
+	//직원교육 추가
+	public int insertTraining(TrainingVO trainVO);
+	
+	//강사조회
+	public List<LectorVO> selectLector();
+	
+	//강사상세조회
+	public List<LectorVO> selectLectorDetail(String lectorId);
+}

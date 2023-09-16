@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="kr.or.ddit.organization.dao.OrganizationDAO">
+	
+	<select id="departmentsList" resultType="kr.or.ddit.organization.vo.OrganizationVO">
+		select dep_cd, dep_name
+		from department
+	</select>
+	
+	<select id="departmentsDetailList" resultType="kr.or.ddit.organization.vo.OrganizationVO" parameterType="string">
+		select dep_cd, dep_name
+		from department
+		where dep_up = #{depUp}
+	</select>
+</mapper>

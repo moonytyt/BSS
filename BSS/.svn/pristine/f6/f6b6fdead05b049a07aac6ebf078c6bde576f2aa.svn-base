@@ -1,0 +1,17 @@
+package kr.or.ddit.employee.service;
+
+import java.util.List;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.enumpkg.ServiceResult;
+import kr.or.ddit.pagingVO.PaginationInfo;
+
+public interface EmployeeService extends UserDetailsService{
+	public List<EmployeeVO> retrieveEmpList(PaginationInfo paging);
+	public List<EmployeeVO> employeeList();
+	public boolean createEmployee(EmployeeVO emp);
+	public EmployeeVO retrieveEmpDetail(String empCd);
+	public boolean modifyEmployee(EmployeeVO emp);
+}

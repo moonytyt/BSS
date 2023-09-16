@@ -1,0 +1,8 @@
+profileimagePath=/resources/empProfile
+imagePath=/resources/mailFile
+reqImage=/resources/reqImage
+paperImage=/resouces/papers
+atchPath=file:D:/Profile
+atchMailPath=file:D:/Mail
+documentFilePath=/resources/docFile
+ntcBoard=/resouces/ntc

@@ -1,0 +1,72 @@
+package kr.or.ddit.messenger.controller;
+
+import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.employee.service.EmployeeService;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.messenger.service.ChatRoomService;
+import kr.or.ddit.messenger.service.ChatRoomUserService;
+import kr.or.ddit.messenger.vo.ChatUserVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+@RequestMapping("/chatUser/")
+public class ChatRoomUserController {
+	private final EmployeeService employeeService;
+	private final ChatRoomUserService chatRoomUserService;
+	private final ChatRoomService chatRoomService;
+	private final ChatRoomUserService userService;
+	
+	@RequestMapping("inviteEmpList.do")
+	public String inviteEmpList(
+			Model model
+			, @RequestParam("empCds") String empCds
+			, @RequestParam("roomNo") int roomNo
+			, @RequestParam(name = "page", required = false, defaultValue = "1") long currentPage
+			, @ModelAttribute("simpleCondition") SimpleCondition simpleCondition
+			, Authentication authentication
+			) {
+		EmployeeVOWrapper wrapper = (EmployeeVOWrapper) authentication.getPrincipal();
+		EmployeeVO employee= wrapper.getRealUser();
+		String empCd = employee.getEmpCd();
+		
+		PaginationInfo<EmployeeVO> paging = new PaginationInfo<>();
+		paging.setCurrentPage(currentPage);
+		paging.setSimpleCondition(simpleCondition);
+		
+		String roomName = chatRoomService.getRoomName(roomNo);
+		
+		String[] empCdArray = empCds.split(",");
+		ChatUserVO chatUser = new ChatUserVO();
+		chatUser.setRoomNo(roomNo);
+
+		for(String getEmpCd : empCdArray) {
+			chatUser.setEmpCd(getEmpCd);
+			chatRoomUserService.insertEmpCds(chatUser);
+		}
+		
+		List<EmployeeVO> empList = employeeService.empListNotPaging(paging);
+		List<ChatUserVO> chatUserList = userService.getEmpcds(roomNo);
+		
+		paging.setDataList(empList);
+		
+		model.addAttribute("roomName", roomName);
+		model.addAttribute("empCd", empCd);
+		model.addAttribute("empList", empList);
+		model.addAttribute("chatUserList", chatUserList);
+		
+		
+		return "chat/record/selectChatRoomDetail";
+	}
+}

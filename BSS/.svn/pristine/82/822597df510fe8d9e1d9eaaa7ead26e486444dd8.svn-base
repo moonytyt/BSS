@@ -1,0 +1,18 @@
+package kr.or.ddit.BoardCompl.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+/**
+ * @author PC-26
+ * 칭찬합니다 등록
+ */
+@Controller
+public class ComplboardInsertController {
+
+	@RequestMapping("/board/complInsert")
+	public String sdfsafs() {
+		return "board/complForm";
+	}
+}

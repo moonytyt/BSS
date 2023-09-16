@@ -1,0 +1,18 @@
+package kr.or.ddit.employee.controller;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.calendar.service.CompanyService;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Controller
+public class MypageController {
+	@RequestMapping("/mypage")
+	public String mypage() {
+		return "/mypage";
+
+	}
+}

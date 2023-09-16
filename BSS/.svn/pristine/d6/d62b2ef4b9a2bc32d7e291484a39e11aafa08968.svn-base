@@ -1,0 +1,49 @@
+package kr.or.ddit.businesstrip.controller;
+
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.businesstrip.service.BusinessTripService;
+import kr.or.ddit.businesstrip.vo.BusinessTripVO;
+import lombok.RequiredArgsConstructor;
+
+/**
+ * 출장전체조회
+ * 
+ */
+@Controller
+@RequiredArgsConstructor
+public class BusinessTripListController {
+	private final BusinessTripService service;
+	
+	//전체조회
+	@GetMapping("/pm/servicemanagement/businessTrip")
+	public ModelAndView bTripList(
+			BusinessTripVO bTripVO
+	) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("pm/servicemanagement/businessTrip");
+		return mav;
+	}
+	
+	//입력한 값 선택 조회
+	@PostMapping("/pm/servicemanagement/businessTrip")
+	public ModelAndView bTripView(
+			BusinessTripVO bTripVO
+	) {
+		
+		List<BusinessTripVO> bTripList = service.retrieveBtrip(bTripVO);
+		
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("bTripList", bTripList);
+		mav.setViewName("pm/servicemanagement/businessTrip");
+		return mav;
+	}
+}

@@ -1,0 +1,43 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>    
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>    
+
+
+<title>요구사항상세조회</title>
+<h5>요구사항상세</h5>
+<hr color="black">
+<div>
+<table class="table table-border">
+	<tr>
+		<th>${req.reqTtl }</th>
+		<th>등록일</th>
+		<td>${req.reqDt}</td>
+		<th>작성자</th>
+		<td>${req.empName }</td>
+	</tr>
+</table>
+<table class="table table-borderless">
+	<tr>
+		<td>${req.reqCn }</td>
+	</tr>
+</table>
+</div>
+
+<!-- 관리자한테만 보이게 -->
+<div id ="comment" style="border: 1px solid white">
+	<input type="text"/>
+	<input type="button" value="답글등록"/> 
+</div>
+
+<div style="position:absolute;right:25px;buttom:0px;">
+	<c:set var="reqList" value="${paging.dataList }" />
+			<c:url value="/board/reqEdit" var="viewURL">
+				<c:param name="what" value="${req.reqNo }" />
+			</c:url>
+			<a href="<c:url value='${viewURL }'/>" class="btn btn-primary btn-sm">수정</a>
+<%-- 			<a href="<c:url value='/board/reqUpdate'/>" class="btn btn-primary btn-sm">수정</a> --%>
+			<a href="<c:url value='/board/reqList'/>" class="btn btn-danger btn-sm">삭제</a>
+			<a href="<c:url value='/board/reqList'/>" class="btn btn-secondary btn-sm">목록으로</a>
+</div>
+

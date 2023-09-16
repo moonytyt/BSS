@@ -1,0 +1,103 @@
+package kr.or.ddit.vocation.controller;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.pagingVO.SimpleCondition;
+import kr.or.ddit.vocation.service.VocationService;
+import kr.or.ddit.vocation.vo.VocationVO;
+
+@Controller
+@RequestMapping("/pm/servicemanagement/")
+public class VocationController {
+	@Inject
+	private VocationService service;
+
+	/**
+	 * 연가 전체조회 페이징
+	 * @param currentPage
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("vocation")
+	public String vocationPage(
+			@RequestParam(name = "page", required = false, defaultValue = "1") long currentPage
+			, Model model
+	) {
+		PaginationInfo<VocationVO> paging = new PaginationInfo<>(10, 5);
+		paging.setCurrentPage(currentPage);
+		
+		List<VocationVO> vocation = service.retrieveVocationPageList(paging);
+		paging.setDataList(vocation);
+		
+		model.addAttribute("paging", paging);
+		
+		return "pm/servicemanagement/vocation";
+	}
+	
+	/**
+	 * 연가 선택조회(모달)
+	 * @param vocationOne
+	 * @param authentication
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("vocationOne.do")
+	public String vocationOne(
+			@RequestParam(name="empCd", required = true) String empCd
+			, Model model
+			
+	) {
+		List<VocationVO> vocationOne = service.retrieveOneVocation(empCd);
+		
+		model.addAttribute("vocationOne", vocationOne);
+		return "pm/servicemanagement/ajax/vocationOne";
+	}
+	
+	
+	
+	
+	/**
+	 * 연가 전체조회 화면
+	 * @param model
+	 * @return
+	 */
+//	@RequestMapping("vocation")
+//	public String vocation(
+//			Model model
+//	) {
+//		
+//		List<VocationVO> vocation = service.retrieveVocationList();
+//		model.addAttribute("vocation", vocation);
+//		return "pm/servicemanagement/vocation";
+//	}
+	
+	/**
+	 * 연가 추가된 후 추가된 데이터 가지고 간 전체조회화면
+	 * header : json타입 , ajax-dataType : json
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/pm/servicemanagement/vocation", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<VocationVO> vocationJson(
+			@RequestParam(name = "page", required = false, defaultValue = "1") long currentPage
+	) {
+		PaginationInfo<VocationVO> paging = new PaginationInfo<>(10, 5);
+		paging.setCurrentPage(currentPage);
+	
+		return service.retrieveVocationPageList(paging);
+	}
+
+}

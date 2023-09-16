@@ -1,0 +1,60 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+
+    <link href="${pageContext.request.contextPath}/resources/js/fancytree/skin-win8/ui.fancytree.min.css" rel="stylesheet">
+
+    <h4> 조직도 </h4>
+    <div class="col-6" id="treeArea" 
+    	data-source="${pageContext.request.contextPath}/ed/approval/empfancytree.do"></div>
+    
+    <script src="${pageContext.request.contextPath}/resources/js/fancytree/jquery.fancytree-all-deps.min.js"></script>
+    <script>
+    function logEvent(event, data, msg) {
+        $.ui.fancytree.info(`Event('${event.type}', node=${data.node})${msg}`);
+    }
+
+    let fancyTreeConfig = {
+        source: function (event, data) {
+            logEvent(event, data, `, this : ${this.toString()}`);
+            let url = this.data.source;
+            return {
+                url: url,
+                cache: false
+            };
+        },
+        activate: function (event, data) {
+            logEvent(event, data, `, activation node type is ${data.node.type}, this : ${this.toString()}`);
+            // 해당 노드에 대한 처리 로직 추가
+            let nodeData = data.node.data;
+            console.log(nodeData);
+        }
+    };
+
+    let $treeArea = $("#treeArea").fancytree(fancyTreeConfig);
+    console.log($treeArea);
+//         function logEvent(event, data, msg) {
+//             $.ui.fancytree.info(`Event('${event.type}', node=${data.node})${msg}`);
+//         }
+//         let fancyTreeConfig = {
+//             source: function (event, data) {
+//                 logEvent(event, data, `, this : ${this.toString()}`);
+//                 let url = this.data.source;
+//                 return {
+//                     url: url,
+//                     cache: false
+//                 };
+//             },
+//             activate: function (event, data) {
+//                 logEvent(event, data, `, activation node type is ${data.node.type}, this : ${this.toString()}`);
+//                 // 해당 노드에 대한 처리 로직 추가
+                
+//                 let selectedNode = data.node;
+// 			    if (selectedNode) {
+// 			        console.log("Selected Node Key:", selectedNode.key);
+// 			        console.log("Selected Node Title:", selectedNode.title);
+// 			        console.log("Selected Node Type:", selectedNode.type);
+//             }
+//         };
+//         let $treeArea = $("#treeArea").fancytree(fancyTreeConfig);
+//         console.log($treeArea);
+    </script>

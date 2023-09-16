@@ -1,0 +1,146 @@
+package kr.or.ddit.employee.service;
+
+import java.text.MessageFormat;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.apache.logging.log4j.core.pattern.AbstractStyleNameConverter.Red;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.appointments.dao.AppointmentsDAO;
+import kr.or.ddit.appointments.vo.AppointmentsVO;
+import kr.or.ddit.business.dao.BusinessDAO;
+import kr.or.ddit.business.vo.BusinessVO;
+import kr.or.ddit.career.dao.CareerDAO;
+import kr.or.ddit.career.vo.CareerVO;
+import kr.or.ddit.department.dao.DepartmentDAO;
+import kr.or.ddit.department.vo.DepartmentVO;
+import kr.or.ddit.employee.dao.EmployeeDAO;
+import kr.or.ddit.employee.vo.EmployeeVO;
+import kr.or.ddit.employee.vo.EmployeeVOWrapper;
+import kr.or.ddit.family.dao.FamilyDAO;
+import kr.or.ddit.family.vo.FamilyVO;
+import kr.or.ddit.license.dao.LicenseDAO;
+import kr.or.ddit.license.vo.LicenseVO;
+import kr.or.ddit.pagingVO.PaginationInfo;
+import kr.or.ddit.position.dao.PositionDAO;
+import kr.or.ddit.position.vo.PositionVO;
+import kr.or.ddit.resignation.dao.ResignationDAO;
+import kr.or.ddit.resignation.vo.ResignationVO;
+import kr.or.ddit.university.dao.UniversityDAO;
+import kr.or.ddit.university.vo.UniversityVO;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+	@Inject
+	private EmployeeDAO empDAO;
+	@Inject
+	private FamilyDAO famDAO;
+	@Inject
+	private LicenseDAO liDAO;
+	@Inject
+	private CareerDAO carDAO;
+	@Inject
+	private UniversityDAO uniDAO;
+	
+	@Override
+	public boolean createEmployee(EmployeeVO employee) {
+		  boolean success = empDAO.insertEmployee(employee) > 0;
+	        
+	        if (success) {
+	        	if (employee.getLicenseList() != null && !employee.getLicenseList().isEmpty()) {
+					for(LicenseVO license : employee.getLicenseList()) {
+							if (license.getLicenseNm() != null && !license.getLicenseNm().isEmpty()){
+							success &= liDAO.upInsertLicense(license) > 0;
+						}
+					}
+				}
+				if(employee.getCareerList() != null && !employee.getCareerList().isEmpty()) {
+					for(CareerVO career : employee.getCareerList()) {
+						if(career.getCarNm() != null && !career.getCarNm().isEmpty()) {
+							success &= carDAO.upInsertCareer(career) > 0;
+						}
+					}
+				}
+				if (employee.getFamilyList() != null && !employee.getFamilyList().isEmpty()) {
+					for (FamilyVO family : employee.getFamilyList()) {
+						if (family.getFamName() != null && !family.getFamName().isEmpty()) {
+							success &= famDAO.upInsertFamily(family) > 0;
+						}
+					}
+				}
+	            
+	            if (employee.getUniersity() != null) {
+	            	UniversityVO university = employee.getUniersity();
+	            	if(university.getUniName() != null && university.getUniName().isEmpty()) {
+	            		success &= uniDAO.insertUniversity(university) > 0;
+	            	}
+	            }
+	            
+	        }
+	        
+	        return success;
+	    }
+	
+
+	@Override
+	public List<EmployeeVO> retrieveEmpList(PaginationInfo paging) {
+		long totalRecord = empDAO.selectTotalRecord(paging);
+		paging.setTotalRecord(totalRecord);
+		return empDAO.selectEmpList(paging);
+	}
+
+	@Override
+	public EmployeeVO retrieveEmpDetail(String empCd) {
+		return empDAO.empDetail(empCd);
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		EmployeeVO member = empDAO.selectEmployeeForAuth(username);
+		if (member == null) {
+			throw new UsernameNotFoundException(MessageFormat.format("{0} 사용자 없음.", username));
+		}
+
+		return new EmployeeVOWrapper(member);
+	}
+
+	@Override
+	public boolean modifyEmployee(EmployeeVO employee) {
+		boolean success =true;
+		success = empDAO.updateEmployee(employee) > 0 ? true : false;
+		if (success == true || success == false) {
+			if (employee.getLicenseList() != null && !employee.getLicenseList().isEmpty()) {
+				for(LicenseVO license : employee.getLicenseList()) {
+						if (license.getLicenseNm() != null && !license.getLicenseNm().isEmpty()){
+						success &= liDAO.upInsertLicense(license) > 0;
+					}
+				}
+			}
+			if(employee.getCareerList() != null && !employee.getCareerList().isEmpty()) {
+				for(CareerVO career : employee.getCareerList()) {
+					if(career.getCarNm() != null && !career.getCarNm().isEmpty()) {
+						success &= carDAO.upInsertCareer(career) > 0;
+					}
+				}
+			}
+			if (employee.getFamilyList() != null && !employee.getFamilyList().isEmpty()) {
+				for (FamilyVO family : employee.getFamilyList()) {
+					if (family.getFamName() != null && !family.getFamName().isEmpty()) {
+						success &= famDAO.upInsertFamily(family) > 0;
+					}
+				}
+			}
+		}
+		return success;
+	}
+
+	@Override
+	public List<EmployeeVO> employeeList() {
+		return empDAO.employeeList();
+	}
+
+}

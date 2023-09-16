@@ -1,0 +1,17 @@
+package kr.or.ddit.edApproval.vo;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class SignpathDetailVO {
+	
+	@NotBlank
+	private String empCd;
+	@NotBlank
+	private String docNo;
+	@NotBlank
+	private int sdTurn;
+
+}

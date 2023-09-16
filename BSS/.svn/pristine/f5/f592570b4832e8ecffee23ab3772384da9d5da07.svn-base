@@ -1,0 +1,180 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"  prefix="security"%>
+documentForm.jsp 결재문서 상세 (사이드바x 문서양식 생성 후 활용)
+test
+<script
+	src="${pageContext.request.contextPath }/resources/js/ckeditor/ckeditor.js"></script>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+		  <form:form modelAttribute="document" method="post">
+<%-- 		  <form:form modelAttribute="freeboard" method="post" enctype="multipart/form-data"> --%>
+		  
+			<button type="button" class="btn btn-secondary" id="signPath" 
+				data-bs-toggle="modal" data-bs-target="#staticBackdrop">결재선</button>
+			<button type="button" class="btn btn-primary">결재요청</button>
+			<button type="button" class="btn btn-outline-secondary">임시저장</button>
+			<button type="button" class="btn btn-outline-secondary">작성취소</button>
+
+			<div class="row textCen">
+				<div class="col-md-3">
+					<table class="table table-bordered mb-4">
+						<!-- mb-4: 아래쪽 간격 추가 -->
+						<tr>
+							<td class="table-active">결재번호</td>
+						</tr>
+						<tr>
+						  <td>
+							<form:input path="docSign" class="form-control"/>승인 시 자동채번
+				        	<form:errors path="docSign" class="error" />
+				          </td>
+<!-- 							<td>승인 시 자동채번</td> -->
+						</tr>
+					</table>
+				</div>
+				<div class="col-md-9">
+					<table class="table table-bordered">
+						<!-- mb-4: 아래쪽 간격 추가 -->
+						<tr>
+							<td rowspan="3" class="table-active">결</br>재
+							</td>
+							<td>결재방법</td>
+							<td>결재방법</td>
+							<td>결재방법</td>
+							<td>결재방법</td>
+							<td>결재방법</td>
+						</tr>
+						<tr>
+							<td>결재자</td>
+							<td>결재자</td>
+							<td>결재자</td>
+							<td>결재자</td>
+							<td>결재자</td>
+						</tr>
+						<tr>
+							<td>승인일자</td>
+							<td>승인일자</td>
+							<td>승인일자</td>
+							<td>승인일자</td>
+							<td>승인일자</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td class="table-active cellWidth">문서유형</td>
+						<td>
+							<form:input path="dtGroup" class="form-control"/>
+				        	${DocumentCont.dtGroup }
+				        	<form:errors path="dtGroup" class="error" />
+				        </td>
+<%-- 						<td>${DocumentCont.dtGroup }</td> --%>
+						<td class="table-active cellWidth">기안일자</td>
+						<td>기안 시 자동부여</td>
+					</tr>
+					<tr>
+					<security:authentication property="principal.realUser" var="authEmployee"/>
+						<td class="table-active cellWidth">기 안 자</td>
+						<td>
+							<form:input path="dtGroup" class="form-control"/>
+				        	${authEmployee.empName }
+				        	<form:errors path="dtGroup" class="error" />
+						</td>
+						
+						<td class="table-active cellWidth">기안부서</td>
+						<td>
+							<form:input path="dtGroup" class="form-control"/>
+				        	${authEmployee.depName }
+				        	<form:errors path="dtGroup" class="error" 
+						</td>
+					</tr>
+					<tr>
+						<td class="table-active cellWidth">문서제목</td>
+						<td>
+							<form:input path="docTitle" class="form-control"/>
+					        <form:errors path="docTitle" class="error"/>
+				        </td>
+<!-- 						<td colspan="3"><input type="text" class="form-control" id="title" /></td> -->
+					</tr>
+				</tbody>
+
+
+				<tbody>
+					<tr>
+						<td colspan="4" class="table-active textCen">문서내용</td>
+					</tr>
+					<tr>
+						<td colspan="4">
+							<!-- 에디터를 삽입할 textarea --> 
+							<c:if test="${not empty DocumentCont }">
+								<form:textarea path="docContent" class="form-control" id="docContent" />
+				       			<form:errors path="docContent" class="error" />
+<%-- 								<textarea name="docContent" id="docContent" class="form-control" >${DocumentCont.dtCont}</textarea> --%>
+							</c:if>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table class="table table-bordered">
+				<tr>
+					<td>
+						<label for="exampleInputFile">File input</label> 
+						<input type="file" class="form-control-file" id="exampleInputFile" />
+					</td>
+				</tr>
+			</table>
+		  </form:form>
+		</div>
+	</div>
+</div>
+
+<!-- Modal - Static backdrop,  modal-lg, centered-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">결재선 선택</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-6">
+              <input type="text" class="form-control" placeholder="검색어를 입력하세요" id="searchInput">
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-6">
+              <ul class="list-group" id="searchResults">
+                <!-- 검색 결과를 여기에 추가 -->
+              </ul>
+            </div>
+            <div class="col-6">
+              <div class="selected-content" id="selectedContent">
+                <!-- 선택한 내용 표시 -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">선택완료</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	//"docContent" 텍스트 영역에 CKEditor를 적용
+	CKEDITOR.replace('docContent');
+</script>
+

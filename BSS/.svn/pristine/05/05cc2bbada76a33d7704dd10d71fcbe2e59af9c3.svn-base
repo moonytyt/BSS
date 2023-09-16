@@ -1,0 +1,19 @@
+package kr.or.ddit.finapi.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import kr.or.ddit.finapi.vo.DepositVO;
+
+@Mapper
+public interface DepositDAO {
+	
+	/**
+	 * 전체조회
+	 * 단, 조건은 저축예정기간 12개월
+	 * @return
+	 */
+	public List<DepositVO> selectDepositList();
+	
+}

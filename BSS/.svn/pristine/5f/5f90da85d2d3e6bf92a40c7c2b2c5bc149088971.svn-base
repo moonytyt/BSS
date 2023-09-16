@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.calendar.dao.PersonalDAO">
+
+<!-- <select id="selectcomList" resultType="kr.or.ddit.calendar.vo.CompanyVO"> -->
+
+<!-- select * from company -->
+
+<!-- </select> -->
+
+
+	<select id="selectperList" resultType="kr.or.ddit.calendar.vo.PersonalVO">
+		SELECT PER_SC_NO, PER_TITLE,
+		PER_WRITER, PER_CONT, PER_START,
+		PER_END, PER_ALLDAY, PER_TEXTCOLOR,
+		PER_BACKGROUNDCOLOR, PER_BORDERCOLOR
+		FROM PERSONAL
+		ORDER BY PER_SC_NO
+	</select>
+
+
+<!-- 	<select id="selectcomList" -->
+<!-- 		resultType="kr.or.ddit.calendar.vo.CompanyVO"> -->
+<!-- 		SELECT COM_SC_NO, COM_TITLE, -->
+<!-- 		COM_WRITER, COM_CONT, COM_START, -->
+<!-- 		COM_END, COM_ALLDAY, COM_TEXTCOLOR, -->
+<!-- 		COM_BACKGROUNDCOLOR, COM_BORDERCOLOR -->
+<!-- 		FROM COMPANY -->
+<!-- 		WHERE COM_SC_NO= #{companySCNO,jdbcType=NUMERIC} -->
+<!-- 	</select> -->
+
+	<insert id="insertPersonal"
+		parameterType="kr.or.ddit.calendar.vo.PersonalVO">
+		<selectKey order="BEFORE" keyProperty="perScNo"
+			resultType="int">
+			 SELECT LPAD(NVL(MAX(PER_SC_NO),0)+1,3,'0') 
+			FROM PERSONAL
+		</selectKey>
+		INSERT INTO PERSONAL (PER_SC_NO, PER_TITLE,
+			PER_WRITER, PER_CONT, PER_START,
+			PER_END, PER_ALLDAY, PER_TEXTCOLOR,
+			PER_BACKGROUNDCOLOR, PER_BORDERCOLOR)
+		VALUES(
+			#{perScNo,jdbcType=NUMERIC}
+			, #{perTitle,jdbcType=VARCHAR}
+			, #{perWriter,jdbcType=VARCHAR}
+			, #{perCont,jdbcType=CLOB}
+			, #{perStart,jdbcType=DATE}
+			, #{perEnd,jdbcType=DATE}
+			, #{perAllday,jdbcType=NUMERIC}
+			, #{perTextcolor,jdbcType=VARCHAR}
+			, #{perBackgroundcolor,jdbcType=VARCHAR}
+			, #{perBordercolor,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<delete id="deletePersonal" parameterType="string">
+		DELETE
+		FROM PERSONAL
+		WHERE PER_SC_NO=#{perSCNO}
+	</delete>
+
+	<update id="updatePersonal" parameterType="kr.or.ddit.calendar.vo.PersonalVO">
+		UPDATE PERSONAL
+		SET 
+		#{perTitle,jdbcType=VARCHAR}
+			 PER_TITLE = #{perTitlejdbcType=VARCHAR}
+			, PER_WRITER = #{perWriterjdbcType=VARCHAR}
+			, PER_CONT = #{perContjdbcType=CLOB}
+			, PER_START = #{perStartjdbcType=DATE}
+			, PER_END = #{perEndjdbcType=DATE}
+			, PER_ALLDAY = #{perAlldayjdbcType=NUMERIC}
+			, PER_TEXTCOLOR = #{perTextcolorjdbcType=VARCHAR}
+			, PER_BACKGROUNDCOLOR = #{perBackgroundcolorjdbcType=VARCHAR}
+			, PER_BORDERCOLOR = #{perBordercolorjdbcType=VARCHAR}
+	</update>
+	
+	
+	
+</mapper>
